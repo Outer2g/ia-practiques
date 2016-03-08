@@ -62,6 +62,19 @@ public class DistribFileSystemBoard {
         ++this.nFilesServed[serverID];
     }
 
+    /**
+     *
+     * @param requestID1
+     * @param requestID2
+     */
+    public void swapRequests(int requestID1,int requestID2){
+        int server1 = requestServer[requestID1];
+        int server2 = requestServer[requestID2];
+
+        this.requestServer[requestID2] = server1;
+        this.requestServer[requestID1] = server2;
+    }
+
     private void generateStandard() {
 
     }
