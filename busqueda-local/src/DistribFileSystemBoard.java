@@ -1,8 +1,17 @@
 /**
  * Created by albert on 08/03/16.
  */
+
+import IA.DistFS.Requests;
+import IA.DistFS.Servers;
+
 public class DistribFileSystemBoard {
+    private static Requests requests;
+    private static Servers servers;
+
     private int[] nFilesServed; // How many files does each server serve
+
+    // Documentar decisión
     private int[] requestServer; // Which is the server that serves that request
 
     /**
@@ -51,5 +60,9 @@ public class DistribFileSystemBoard {
 
         this.requestServer[requestID] = serverID;
         ++this.nFilesServed[serverID];
+    }
+
+    private void generateStandard() {
+
     }
 }
