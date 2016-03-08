@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Practica.iml" filepath="$PROJECT_DIR$/Practica.iml" />
+      <module fileurl="file://$PROJECT_DIR$/busqueda-local.iml" filepath="$PROJECT_DIR$/busqueda-local.iml" />
     </modules>
   </component>
 </project>
