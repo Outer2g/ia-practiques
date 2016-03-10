@@ -12,6 +12,7 @@ public class DistribFileSystemBoard {
     public static Requests requests;
     public static Servers servers;
 
+
     private static int nRequests;
     private static int nServers;
     private static int nFiles;
@@ -42,8 +43,6 @@ public class DistribFileSystemBoard {
         requestServer = new int[nRequests];
     }
     public int getnRequests(){return nRequests;}
-    public Requests getRequests(){return requests;}
-    public Servers getServers(){return servers;}
 
     private void checkRequest(int request) { // TODO: Remove on production
         assert(request >= 0 && request < nRequests);
@@ -87,11 +86,12 @@ public class DistribFileSystemBoard {
 
     /**
      * Assumes the request is currently assigned to a server
+     * Returns true if it's already in the server, false otherwise
      *
      * Ramification factor: nServers*nRequests
      * Allows to reach all space of solutions
      */
-    public void assignRequest(int server, int request) {
+    public Boolean assignRequest(int server, int request) {
         checkRequest(request);
         checkServer(server);
 
@@ -100,6 +100,8 @@ public class DistribFileSystemBoard {
 
         requestServer[request] = server;
         ++nFilesServed[server];
+        if (previousServer == server) return true;
+        else return false;
     }
 
     /**
