@@ -229,6 +229,33 @@ public class DistribFileSystemBoard {
         }
     }
 
+    public int calculateTotalTransmissionTime() {
+        int total = 0;
+
+        for (int request = 0; request < nRequests; ++request) {
+            int user = requests.getRequest(request)[0];
+            int server = requestServer[request];
+            total += servers.tranmissionTime(server, user);
+        }
+
+        return total;
+    }
+
+    public double calculateFilesServedVariance() {
+        double mean = 0.0D;
+        double M2 = 0.0D;
+
+        for (int server = 0; server < nServers; ++server) {
+            int filesServed = nFilesServed[server];
+            double delta = filesServed - mean;
+            mean += delta/(server+1);
+            M2 += delta*(filesServed - mean);
+        }
+
+        if (nServers < 2) return 0;
+        else return M2/(nServers - 1);
+    }
+
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();

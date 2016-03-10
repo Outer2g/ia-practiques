@@ -6,6 +6,7 @@ import aima.search.framework.HeuristicFunction;
 public class DistribFileSystemHeuristicFunction implements HeuristicFunction {
     @Override
     public double getHeuristicValue(Object state) {
-        return 0;
+        DistribFileSystemBoard b = (DistribFileSystemBoard) state;
+        return b.calculateTotalTransmissionTime() + b.calculateFilesServedVariance();
     }
 }
