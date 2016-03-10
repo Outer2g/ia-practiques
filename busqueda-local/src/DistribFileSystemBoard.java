@@ -129,7 +129,7 @@ public class DistribFileSystemBoard {
     }
 
     /*
-    Ramification factor: nRequests^2
+    Ramification factor: nRequests*(nRequests-1)/2
     Does not allow to reach all space of solutions
      */
     public void swapRequests(int request1, int request2) {
