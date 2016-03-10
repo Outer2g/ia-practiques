@@ -25,14 +25,14 @@ public class DistribFileSystemBoard {
     private int[] requestServer; // Which is the server that serves that request
 
 
-    public DistribFileSystemBoard(int[] nFilesServedToAssign, int[] requestServerToAssign) {
-        nFilesServed = new int[nFilesServedToAssign.length];
-        requestServer = new int[requestServerToAssign.length];
+    public DistribFileSystemBoard(DistribFileSystemBoard otherBoard) {
+        nFilesServed = new int[otherBoard.nFilesServed.length];
+        requestServer = new int[otherBoard.requestServer.length];
 
-        System.arraycopy(nFilesServedToAssign, 0, nFilesServed, 0,
-                         nFilesServedToAssign.length);
-        System.arraycopy(requestServerToAssign, 0, requestServer, 0,
-                         requestServerToAssign.length);
+        System.arraycopy(otherBoard.nFilesServed, 0, nFilesServed, 0,
+                         nFilesServed.length);
+        System.arraycopy(otherBoard.requestServer, 0, requestServer, 0,
+                         requestServer.length);
     }
 
     public DistribFileSystemBoard() {}
@@ -83,6 +83,9 @@ public class DistribFileSystemBoard {
 
     /**
      * Assumes the request is currently assigned to a server
+     *
+     * Ramification factor: nServers*nRequests
+     * Allows to reach all space of solutions
      */
     public void assignRequest(int server, int request) {
         checkRequest(request);
@@ -121,6 +124,10 @@ public class DistribFileSystemBoard {
                servers.fileLocations(file2).contains(requestServer[request1]);
     }
 
+    /*
+    Ramification factor: nRequests^2
+    Does not allow to reach all space of solutions
+     */
     public void swapRequests(int request1, int request2) {
         assert(interchangeable(request1, request2)); // TODO: Remove on production
 
