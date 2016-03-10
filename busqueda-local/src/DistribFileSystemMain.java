@@ -90,12 +90,18 @@ public class DistribFileSystemMain {
 
         board.generateInitialState1();
         consolelog(board.toString());
+        consolelog("Variance: " + board.calculateFilesServedVariance());
+        consolelog("Total tt: " + board.calculateTotalTransmissionTime());
 
         board.generateInitialState2();
         consolelog(board.toString());
+        consolelog("Variance: " + board.calculateFilesServedVariance());
+        consolelog("Total tt: " + board.calculateTotalTransmissionTime());
 
         board.generateInitialState3();
         consolelog(board.toString());
+        consolelog("Variance: " + board.calculateFilesServedVariance());
+        consolelog("Total tt: " + board.calculateTotalTransmissionTime());
 
         DistribFSHillClimbingSearch(board);
         DistribFSSimulatedAnnealingSearch(board,
