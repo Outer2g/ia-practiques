@@ -52,6 +52,10 @@ public class DistribFileSystemBoard {
     private void checkServer(int server) { // TODO: Remove on production
         assert(server >= 0 && server < nServers);
     }
+    //checks if request is in the set of servers
+    public boolean checkReqOnServers(int request, Set servers){
+        return servers.contains(requestServer[request]);
+    }
 
     public static void generateRequests(int nusers, int nrequests, int seed) {
         requests = new Requests(nusers, nrequests, seed);
