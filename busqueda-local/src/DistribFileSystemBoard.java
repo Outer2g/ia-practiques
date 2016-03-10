@@ -30,6 +30,7 @@ public class DistribFileSystemBoard {
     public DistribFileSystemBoard() {
         // TODO: Implement
     }
+    public int[] getServers(){ return requestServer;}
 
     /**
      *

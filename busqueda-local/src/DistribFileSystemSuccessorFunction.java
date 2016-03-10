@@ -8,6 +8,7 @@ import java.util.List;
 public class   DistribFileSystemSuccessorFunction implements SuccessorFunction {
     @Override
     public List getSuccessors(Object state) {
+
         return null;
     }
 }
