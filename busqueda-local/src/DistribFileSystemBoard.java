@@ -41,7 +41,9 @@ public class DistribFileSystemBoard {
         nFilesServed = new int[nServers]; // All values initialized to 0 by default
         requestServer = new int[nRequests];
     }
-    public int[] getServers(){ return requestServer;}
+    public int getnRequests(){return nRequests;}
+    public Requests getRequests(){return requests;}
+    public Servers getServers(){return servers;}
 
     private void checkRequest(int request) { // TODO: Remove on production
         assert(request >= 0 && request < nRequests);
