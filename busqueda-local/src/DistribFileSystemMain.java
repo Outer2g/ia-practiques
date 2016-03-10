@@ -28,12 +28,12 @@ public class DistribFileSystemMain {
         put(Option.K_ANNEALING, new BigDecimal(5));
         put(Option.LAMBDA_ANNEALING, new BigDecimal(0.001));
 
-        put(Option.N_USERS, new BigDecimal(10));
-        put(Option.MAX_REQUESTS_USER, new BigDecimal(3));
+        put(Option.N_USERS, new BigDecimal(80));
+        put(Option.MAX_REQUESTS_USER, new BigDecimal(4));
         put(Option.RANDOM_SEED_REQUESTS, new BigDecimal(1));
 
-        put(Option.N_SERVERS, new BigDecimal(5));
-        put(Option.MIN_REPLICATIONS_PER_FILE, new BigDecimal(3));
+        put(Option.N_SERVERS, new BigDecimal(500));
+        put(Option.MIN_REPLICATIONS_PER_FILE, new BigDecimal(25));
         put(Option.RANDOM_SEED_SERVERS, new BigDecimal(1));
     }};
 
@@ -74,14 +74,15 @@ public class DistribFileSystemMain {
     public static void main(String[] args) {
         parseArgs(args);
 
-        DistribFileSystemBoard.generateRequests(constants.get(Option.N_USERS).intValue(),
-                                                constants.get(Option.MAX_REQUESTS_USER).intValue(),
-                                                constants.get(Option.RANDOM_SEED_REQUESTS).intValue());
-
         try {
-            DistribFileSystemBoard.generateServers(constants.get(Option.N_SERVERS).intValue(),
-                                                   constants.get(Option.MIN_REPLICATIONS_PER_FILE).intValue(),
-                                                   constants.get(Option.RANDOM_SEED_SERVERS).intValue());
+            DistribFileSystemBoard.generateProblem(
+                    constants.get(Option.N_USERS).intValue(),
+                    constants.get(Option.MAX_REQUESTS_USER).intValue(),
+                    constants.get(Option.N_SERVERS).intValue(),
+                    constants.get(Option.MIN_REPLICATIONS_PER_FILE).intValue(),
+                    constants.get(Option.RANDOM_SEED_REQUESTS).intValue(),
+                    constants.get(Option.RANDOM_SEED_SERVERS).intValue());
+
         } catch (Servers.WrongParametersException e) {
             e.printStackTrace();
         }
@@ -89,6 +90,8 @@ public class DistribFileSystemMain {
         DistribFileSystemBoard board = new DistribFileSystemBoard();
 
         board.generateInitialState1();
+
+        consolelog("Initial solution: " + board.toString());
 
         DistribFSHillClimbingSearch(board);
         DistribFSSimulatedAnnealingSearch(board,
@@ -102,7 +105,7 @@ public class DistribFileSystemMain {
         System.out.println("\nDistribFS HillClimbing  -->");
         try {
             Problem problem = new Problem(board,
-                                          new DistribFileSystemSuccessorFunction(),
+                                          new DistribFileSystemSuccessorFunction2(),
                                           new DistribFileSystemGoalTest(),
                                           new DistribFileSystemHeuristicFunction());
 
@@ -128,7 +131,7 @@ public class DistribFileSystemMain {
 
         try {
             Problem problem =  new Problem(board,
-                                           new DistribFileSystemSuccessorFunction(),
+                                           new DistribFileSystemSuccessorFunction2(),
                                            new DistribFileSystemGoalTest(),
                                            new DistribFileSystemHeuristicFunction());
 

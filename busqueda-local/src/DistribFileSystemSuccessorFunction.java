@@ -44,7 +44,7 @@ public class   DistribFileSystemSuccessorFunction implements SuccessorFunction {
             //move req to available servers (so magic)
             for (Integer s : loc){
                 DistribFileSystemBoard newState = new DistribFileSystemBoard(estat);
-                if (!newState.assignRequest(s,i)) ret.add(new Successor("dadawdaw", newState));
+                //if (!newState.assignRequest(s,i)) ret.add(new Successor("dadawdaw", newState));
             }
         }
         return ret;

@@ -19,16 +19,23 @@ public class DistribFileSystemBoard {
     private static int nUsers;
     private static int maxRequestsPerUser;
     private static int minReplicationsPerFile;
+    private static double alpha;
 
     private int[] nFilesServed; // How many files does each server serve
 
     // Documentar decisión
     private int[] requestServer; // Which is the server that serves that request
 
+    private int totalTransmissionTime;
+
+    private double nFilesServedSSE2;
 
     public DistribFileSystemBoard(DistribFileSystemBoard otherBoard) {
         nFilesServed = new int[otherBoard.nFilesServed.length];
         requestServer = new int[otherBoard.requestServer.length];
+
+        totalTransmissionTime = otherBoard.totalTransmissionTime;
+        nFilesServedSSE2 = otherBoard.nFilesServedSSE2;
 
         System.arraycopy(otherBoard.nFilesServed, 0, nFilesServed, 0,
                          nFilesServed.length);
@@ -41,8 +48,10 @@ public class DistribFileSystemBoard {
     private void createDataStructures() {
         nFilesServed = new int[nServers]; // All values initialized to 0 by default
         requestServer = new int[nRequests];
+
+        totalTransmissionTime = 0;
+        nFilesServedSSE2 = 0.0;
     }
-    public int getnRequests(){return nRequests;}
 
     private void checkRequest(int request) { // TODO: Remove on production
         assert(request >= 0 && request < nRequests);
@@ -56,22 +65,26 @@ public class DistribFileSystemBoard {
         return servers.contains(requestServer[request]);
     }
 
-    public static void generateRequests(int nusers, int nrequests, int seed) {
-        requests = new Requests(nusers, nrequests, seed);
-
-        maxRequestsPerUser = nrequests;
-        nUsers = nusers;
-        nRequests = requests.size();
+    public int getNRequests() {
+        return nRequests;
     }
 
-    public static void generateServers(int nserv, int nrep, int seed)
+
+    public static void generateProblem(int nUsers, int maxRequests, int nServ,
+                                       int nRep, int reqSeed, int servSeed)
             throws Servers.WrongParametersException
     {
-        servers = new Servers(nserv, nrep, seed);
+        assert(nServ > 1);
 
-        nServers = nserv;
+        servers = new Servers(nServ, nRep, servSeed);
+        requests = new Requests(nUsers, maxRequests, reqSeed);
+
+        nServers = nServ;
         nFiles = servers.size();
-        minReplicationsPerFile = nrep;
+        minReplicationsPerFile = nRep;
+        maxRequestsPerUser = maxRequests;
+        DistribFileSystemBoard.nUsers = nUsers;
+        DistribFileSystemBoard.nRequests = requests.size();
     }
 
     public int whoIsServing(int request) {
@@ -84,14 +97,19 @@ public class DistribFileSystemBoard {
         return nFilesServed[server];
     }
 
+    public int getTransmissionTime(int server, int request) {
+        return servers.tranmissionTime(server, requests.getRequest(request)[0]);
+    }
+
     /**
      * Assumes the request is currently assigned to a server
      * Returns true if it's already in the server, false otherwise
      *
-     * Ramification factor: nServers*nRequests
+     * Ramification factor: O(nRequests*replicationsPerFile)
+     (replicationsPerFile es como máximo minReplicationsPerFile + 3)
      * Allows to reach all space of solutions
      */
-    public Boolean assignRequest(int server, int request) {
+    public void assignRequest(int server, int request) {
         checkRequest(request);
         checkServer(server);
 
@@ -100,8 +118,12 @@ public class DistribFileSystemBoard {
 
         requestServer[request] = server;
         ++nFilesServed[server];
-        if (previousServer == server) return true;
-        else return false;
+
+        totalTransmissionTime += getTransmissionTime(server, request)
+                - getTransmissionTime(previousServer, request);
+
+
+        nFilesServedSSE2 += 2*(nFilesServed[server] - nFilesServed[previousServer] - 1);
     }
 
     /**
@@ -113,6 +135,8 @@ public class DistribFileSystemBoard {
 
         requestServer[request] = server;
         ++nFilesServed[server];
+
+        totalTransmissionTime += getTransmissionTime(server, request);
     }
 
     /**
@@ -163,6 +187,8 @@ public class DistribFileSystemBoard {
 
             assignRequestInitial(serverAssigned, request);
 	    }
+
+        calculateFilesServedVarianceInfo();
     }
     
     /**Assigna una petición a cada servidor que contenga el archivo equilibrando el 
@@ -197,6 +223,8 @@ public class DistribFileSystemBoard {
 
             assignRequestInitial(best_server, request);
         }
+
+        calculateFilesServedVarianceInfo();
     }
     
     /**Asigna una petición al servidor que contenga el archivo y que tenga
@@ -229,33 +257,33 @@ public class DistribFileSystemBoard {
 
             assignRequestInitial(best_server, request);
         }
+
+        calculateFilesServedVarianceInfo();
     }
 
-    public int calculateTotalTransmissionTime() {
-        int total = 0;
-
-        for (int request = 0; request < nRequests; ++request) {
-            int user = requests.getRequest(request)[0];
-            int server = requestServer[request];
-            total += servers.tranmissionTime(server, user);
-        }
-
-        return total;
+    public int getTotalTransmissionTime() {
+        return totalTransmissionTime;
     }
 
-    public double calculateFilesServedVariance() {
-        double mean = 0.0D;
-        double M2 = 0.0D;
+    public double getFilesServedVariance() {
+        // Assumes nServers > 1
+        return (nFilesServedSSE2 - alpha)/(nServers - 1);
+    }
+
+    public void calculateFilesServedVarianceInfo() {
+        double nFilesServedMean = (double)(nFiles)/nServers;
+        double nFilesServedSSE = 0.0D;
+        nFilesServedSSE2 = 0.0D;
 
         for (int server = 0; server < nServers; ++server) {
             int filesServed = nFilesServed[server];
-            double delta = filesServed - mean;
-            mean += delta/(server+1);
-            M2 += delta*(filesServed - mean);
+
+            double diff = filesServed - nFilesServedMean;
+            nFilesServedSSE2 += diff*diff;
+            nFilesServedSSE += diff;
         }
 
-        if (nServers < 2) return 0;
-        else return M2/(nServers - 1);
+        alpha = (nFilesServedSSE * nFilesServedSSE)/nServers;
     }
 
     public String toStringVerbose() {
@@ -274,6 +302,6 @@ public class DistribFileSystemBoard {
 
     @Override
     public String toString() {
-        return "Variance: " + calculateFilesServedVariance() + ", TotalTT: " + calculateTotalTransmissionTime();
+        return "Variance: " + getFilesServedVariance() + ", TotalTT: " + getTotalTransmissionTime();
     }
 }
