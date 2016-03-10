@@ -162,8 +162,15 @@ public class DistribFileSystemBoard {
         assert(interchangeable(request1, request2)); // TODO: Remove on production
 
         final int server1 = requestServer[request1];
-        requestServer[request1] = requestServer[request2];
+        final int server2 = requestServer[request2];
+
+        requestServer[request1] = server2;
         requestServer[request2] = server1;
+
+        totalTransmissionTime += getTransmissionTime(server2, request1)
+                                +getTransmissionTime(server1, request2)
+                                -getTransmissionTime(server2, request2)
+                                -getTransmissionTime(server1, request1);
     }
 
     
