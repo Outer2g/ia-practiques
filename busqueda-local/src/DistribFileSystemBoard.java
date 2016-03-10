@@ -5,78 +5,229 @@
 import IA.DistFS.Requests;
 import IA.DistFS.Servers;
 
+import java.util.Iterator;
+import java.util.Set;
+
 public class DistribFileSystemBoard {
-    private static Requests requests;
-    private static Servers servers;
+    public static Requests requests;
+    public static Servers servers;
+
+    private static int nRequests;
+    private static int nServers;
+    private static int nFiles;
+    private static int nUsers;
+    private static int maxRequestsPerUser;
+    private static int minReplicationsPerFile;
 
     private int[] nFilesServed; // How many files does each server serve
 
     // Documentar decisión
     private int[] requestServer; // Which is the server that serves that request
 
-    /**
-     * Creates a new Board from its attributes
-     * @param nFilesServedToAssign
-     * @param requestServerToAssign
-     */
-    public DistribFileSystemBoard(int[] nFilesServedToAssign, int[] requestServerToAssign) {
-        this.nFilesServed = new int[nFilesServedToAssign.length];
-        this.requestServer = new int[requestServerToAssign.length];
 
-        System.arraycopy(nFilesServedToAssign, 0, this.nFilesServed, 0, nFilesServedToAssign.length);
-        System.arraycopy(requestServerToAssign, 0, this.requestServer, 0, requestServerToAssign.length);
+    public DistribFileSystemBoard(int[] nFilesServedToAssign, int[] requestServerToAssign) {
+        nFilesServed = new int[nFilesServedToAssign.length];
+        requestServer = new int[requestServerToAssign.length];
+
+        System.arraycopy(nFilesServedToAssign, 0, nFilesServed, 0,
+                         nFilesServedToAssign.length);
+        System.arraycopy(requestServerToAssign, 0, requestServer, 0,
+                         requestServerToAssign.length);
     }
 
-    public DistribFileSystemBoard() {
-        // TODO: Implement
+    public DistribFileSystemBoard() {}
+
+    private void createDataStructures() {
+        nFilesServed = new int[nServers]; // All values initialized to 0 by default
+        requestServer = new int[nRequests];
     }
     public int[] getServers(){ return requestServer;}
 
-    /**
-     *
-     * @param requestID
-     * @return
-     */
-    public int whoIsServing(int requestID) {
-        return requestServer[requestID];
+    private void checkRequest(int request) { // TODO: Remove on production
+        assert(request >= 0 && request < nRequests);
+    }
+
+    private void checkServer(int server) { // TODO: Remove on production
+        assert(server >= 0 && server < nServers);
+    }
+
+    public static void generateRequests(int nusers, int nrequests, int seed) {
+        requests = new Requests(nusers, nrequests, seed);
+
+        maxRequestsPerUser = nrequests;
+        nUsers = nusers;
+        nRequests = requests.size();
+    }
+
+    public static void generateServers(int nserv, int nrep, int seed)
+            throws Servers.WrongParametersException
+    {
+        servers = new Servers(nserv, nrep, seed);
+
+        nServers = nserv;
+        nFiles = servers.size();
+        minReplicationsPerFile = nrep;
+    }
+
+    public int whoIsServing(int request) {
+        checkRequest(request);
+        return requestServer[request];
+    }
+
+    public int howManyIsServing(int server) {
+        checkServer(server);
+        return nFilesServed[server];
     }
 
     /**
-     *
-     * @param serverID
-     * @return
+     * Assumes the request is currently assigned to a server
      */
-    public int howManyIsServing(int serverID) {
-        return nFilesServed[serverID];
+    public void assignRequest(int server, int request) {
+        checkRequest(request);
+        checkServer(server);
+
+        final int previousServer = requestServer[request];
+        --nFilesServed[previousServer];
+
+        requestServer[request] = server;
+        ++nFilesServed[server];
     }
 
     /**
-     *
-     * @param serverID
-     * @param requestID
+     * Assumes the request is not yet assigned to any server
      */
-    public void assignRequest(int serverID, int requestID) {
-        int previousServer = this.requestServer[requestID];
-        --this.nFilesServed[previousServer];
+    private void assignRequestInitial(int server, int request) {
+        checkRequest(request);
+        checkServer(server);
 
-        this.requestServer[requestID] = serverID;
-        ++this.nFilesServed[serverID];
+        requestServer[request] = server;
+        ++nFilesServed[server];
     }
 
     /**
-     *
-     * @param requestID1
-     * @param requestID2
+     * Assumes both requests are assigned to a server
+     * @return Whether the server assigned to request1 can serve request2 and viceversa
      */
-    public void swapRequests(int requestID1,int requestID2){
-        int server1 = requestServer[requestID1];
-        int server2 = requestServer[requestID2];
+    public boolean interchangeable(int request1, int request2) {
+        checkRequest(request1);
+        checkRequest(request2);
+        
+        final int file1 = requests.getRequest(request1)[1];
+        final int file2 = requests.getRequest(request2)[1];
 
-        this.requestServer[requestID2] = server1;
-        this.requestServer[requestID1] = server2;
+        return servers.fileLocations(file1).contains(requestServer[request2]) &&
+               servers.fileLocations(file2).contains(requestServer[request1]);
     }
 
-    private void generateStandard() {
+    public void swapRequests(int request1, int request2) {
+        assert(interchangeable(request1, request2)); // TODO: Remove on production
 
+        final int server1 = requestServer[request1];
+        requestServer[request1] = requestServer[request2];
+        requestServer[request2] = server1;
+    }
+
+    
+    /**Asigna cada petición al primer servidor que tenga el archivo
+    no tiene en cuenta ni el tiempo ni el equilibrio entre servidores
+    Todas las peticiones se concentrarán en los x primeros servidores del set
+
+     Coste: nRequests
+    **/
+    public void generateInitialState1() {
+        createDataStructures();
+
+    	for (int request = 0; request < nRequests; ++request){
+            final int file = requests.getRequest(request)[1];
+
+            final Set<Integer> serversWithFile = servers.fileLocations(file);
+            final Iterator<Integer> it = serversWithFile.iterator();
+
+            // Asumimos que siempre hay almenos un servidor con el fichero
+            final int serverAssigned = it.next();
+
+            assignRequestInitial(serverAssigned, request);
+	    }
+    }
+    
+    /**Assigna una petición a cada servidor que contenga el archivo equilibrando el 
+    numero de peticiones por servidor. No tiene en cuenta el tiempo de transmision
+
+     Coste en caso peor: O(nRequests*replicationsPerFile)
+     (replicationsPerFile es como máximo minReplicationsPerFile + 3)
+    **/
+    public void generateInitialState2() {
+        createDataStructures();
+
+    	for (int request = 0; request < nRequests; ++request) {
+            final int file = requests.getRequest(request)[1];
+
+            final Set<Integer> serversWithFile = servers.fileLocations(file);
+
+            int min_served = Integer.MAX_VALUE;
+            int best_server = -1;
+
+            for (int server : serversWithFile) {
+                final int nserved = nFilesServed[server];
+
+                if (nserved == 0) {
+                    best_server = server;
+                    break;
+                }
+                else if (nserved < min_served) {
+                    min_served = nserved;
+                    best_server = server;
+                }
+            }
+
+            assignRequestInitial(best_server, request);
+        }
+    }
+    
+    /**Asigna una petición al servidor que contenga el archivo y que tenga
+     * menor tiempo de transmisión con el usuario
+     * Coste en caso peor: O(nRequests*replicationsPerFile)
+     * (replicationsPerFile es como máximo minReplicationsPerFile + 3)
+    **/
+    public void generateInitialState3() {
+        createDataStructures();
+
+        for (int request = 0; request < nRequests; ++request) {
+            final int[] infoRequest = requests.getRequest(request);
+
+            final int user = infoRequest[0];
+            final int file = infoRequest[1];
+
+            final Set<Integer> serversWithFile = servers.fileLocations(file);
+
+            int min_tt = Integer.MAX_VALUE;
+            int best_server = -1;
+
+            for (int server : serversWithFile) {
+                int tt = servers.tranmissionTime(server, user);
+
+                if (tt < min_tt) {
+                    min_tt = tt;
+                    best_server = server;
+                }
+            }
+
+            assignRequestInitial(best_server, request);
+        }
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+
+        builder.append("<Request>: <Server attending request>\n\n");
+        for (int request = 0; request < nRequests;  ++request)
+            builder.append(request).append(": ").append(requestServer[request]).append("\n");
+
+        builder.append("\n<Server>: <Number of files served>\n\n");
+        for (int server = 0; server < nServers; ++server)
+            builder.append(server).append(": ").append(nFilesServed[server]).append("\n");
+
+        return builder.toString();
     }
 }
