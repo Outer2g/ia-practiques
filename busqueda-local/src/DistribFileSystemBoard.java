@@ -80,6 +80,9 @@ public class DistribFileSystemBoard {
 
     /**
      * Assumes the request is currently assigned to a server
+     *
+     * Ramification factor: nServers*nRequests
+     * Allows to reach all space of solutions
      */
     public void assignRequest(int server, int request) {
         checkRequest(request);
@@ -118,6 +121,10 @@ public class DistribFileSystemBoard {
                servers.fileLocations(file2).contains(requestServer[request1]);
     }
 
+    /*
+    Ramification factor: nRequests^2
+    Does not allow to reach all space of solutions
+     */
     public void swapRequests(int request1, int request2) {
         assert(interchangeable(request1, request2)); // TODO: Remove on production
 

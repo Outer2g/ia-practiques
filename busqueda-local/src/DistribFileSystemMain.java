@@ -71,7 +71,7 @@ public class DistribFileSystemMain {
         }
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         parseArgs(args);
 
         DistribFileSystemBoard.generateRequests(constants.get(Option.N_USERS).intValue(),
