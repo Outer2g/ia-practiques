@@ -38,9 +38,6 @@ public class DistribFileSystemBoard {
     public DistribFileSystemBoard() {}
 
     private void createDataStructures() {
-        int nRequests = requests.size();
-        int nServers = servers.size();
-
         nFilesServed = new int[nServers]; // All values initialized to 0 by default
         requestServer = new int[nRequests];
     }
