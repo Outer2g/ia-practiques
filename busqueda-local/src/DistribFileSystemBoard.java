@@ -26,12 +26,12 @@ public class DistribFileSystemBoard {
 
 
     public DistribFileSystemBoard(int[] nFilesServedToAssign, int[] requestServerToAssign) {
-        this.nFilesServed = new int[nFilesServedToAssign.length];
-        this.requestServer = new int[requestServerToAssign.length];
+        nFilesServed = new int[nFilesServedToAssign.length];
+        requestServer = new int[requestServerToAssign.length];
 
-        System.arraycopy(nFilesServedToAssign, 0, this.nFilesServed, 0,
+        System.arraycopy(nFilesServedToAssign, 0, nFilesServed, 0,
                          nFilesServedToAssign.length);
-        System.arraycopy(requestServerToAssign, 0, this.requestServer, 0,
+        System.arraycopy(requestServerToAssign, 0, requestServer, 0,
                          requestServerToAssign.length);
     }
 
@@ -50,21 +50,21 @@ public class DistribFileSystemBoard {
         assert(server >= 0 && server < nServers);
     }
 
-    public static void generateRequests(int users, int requests, int seed) {
-        DistribFileSystemBoard.requests = new Requests(users, requests, seed);
+    public static void generateRequests(int nusers, int nrequests, int seed) {
+        requests = new Requests(nusers, nrequests, seed);
 
-        maxRequestsPerUser = requests;
-        nUsers = users;
-        nRequests = DistribFileSystemBoard.requests.size();
+        maxRequestsPerUser = nrequests;
+        nUsers = nusers;
+        nRequests = requests.size();
     }
 
     public static void generateServers(int nserv, int nrep, int seed)
             throws Servers.WrongParametersException
     {
-        DistribFileSystemBoard.servers = new Servers(nserv, nrep, seed);
+        servers = new Servers(nserv, nrep, seed);
 
         nServers = nserv;
-        nFiles = DistribFileSystemBoard.servers.size();
+        nFiles = servers.size();
         minReplicationsPerFile = nrep;
     }
 
@@ -85,11 +85,11 @@ public class DistribFileSystemBoard {
         checkRequest(request);
         checkServer(server);
 
-        final int previousServer = this.requestServer[request];
-        --this.nFilesServed[previousServer];
+        final int previousServer = requestServer[request];
+        --nFilesServed[previousServer];
 
-        this.requestServer[request] = server;
-        ++this.nFilesServed[server];
+        requestServer[request] = server;
+        ++nFilesServed[server];
     }
 
     /**
@@ -99,36 +99,31 @@ public class DistribFileSystemBoard {
         checkRequest(request);
         checkServer(server);
 
-        this.requestServer[request] = server;
-        ++this.nFilesServed[server];
+        requestServer[request] = server;
+        ++nFilesServed[server];
     }
 
     /**
-     * Assumes both request are assigned to a server
+     * Assumes both requests are assigned to a server
      * @return Whether the server assigned to request1 can serve request2 and viceversa
      */
     public boolean interchangeable(int request1, int request2) {
         checkRequest(request1);
         checkRequest(request2);
-
-        final int server1 = requestServer[request1];
-        final int server2 = requestServer[request2];
-
+        
         final int file1 = requests.getRequest(request1)[1];
         final int file2 = requests.getRequest(request2)[1];
 
-        return servers.fileLocations(file1).contains(server2) &&
-               servers.fileLocations(file2).contains(server1);
+        return servers.fileLocations(file1).contains(requestServer[request2]) &&
+               servers.fileLocations(file2).contains(requestServer[request1]);
     }
 
     public void swapRequests(int request1, int request2) {
         assert(interchangeable(request1, request2)); // TODO: Remove on production
 
-        int server1 = requestServer[request1];
-        int server2 = requestServer[request2];
-
-        this.requestServer[request2] = server1;
-        this.requestServer[request1] = server2;
+        final int server1 = requestServer[request1];
+        requestServer[request1] = requestServer[request2];
+        requestServer[request2] = server1;
     }
 
     
@@ -142,13 +137,13 @@ public class DistribFileSystemBoard {
         createDataStructures();
 
     	for (int request = 0; request < nRequests; ++request){
-            int file = requests.getRequest(request)[1];
+            final int file = requests.getRequest(request)[1];
 
-            Set<Integer> destinationServer = servers.fileLocations(file);
-            Iterator<Integer> it = destinationServer.iterator();
+            final Set<Integer> serversWithFile = servers.fileLocations(file);
+            final Iterator<Integer> it = serversWithFile.iterator();
 
             // Asumimos que siempre hay almenos un servidor con el fichero
-            int serverAssigned = it.next();
+            final int serverAssigned = it.next();
 
             assignRequestInitial(serverAssigned, request);
 	    }
@@ -169,22 +164,22 @@ public class DistribFileSystemBoard {
             final Set<Integer> serversWithFile = servers.fileLocations(file);
 
             int min_served = Integer.MAX_VALUE;
-            int server_min = -1;
+            int best_server = -1;
 
             for (int server : serversWithFile) {
-                int nserved = nFilesServed[server];
+                final int nserved = nFilesServed[server];
 
                 if (nserved == 0) {
-                    server_min = server;
+                    best_server = server;
                     break;
                 }
                 else if (nserved < min_served) {
                     min_served = nserved;
-                    server_min = server;
+                    best_server = server;
                 }
             }
 
-            assignRequestInitial(server_min, request);
+            assignRequestInitial(best_server, request);
         }
     }
     
@@ -199,8 +194,8 @@ public class DistribFileSystemBoard {
         for (int request = 0; request < nRequests; ++request) {
             final int[] infoRequest = requests.getRequest(request);
 
-            int user = infoRequest[0];
-            int file = infoRequest[1];
+            final int user = infoRequest[0];
+            final int file = infoRequest[1];
 
             final Set<Integer> serversWithFile = servers.fileLocations(file);
 
@@ -222,10 +217,9 @@ public class DistribFileSystemBoard {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
 
         builder.append("<Request>: <Server attending request>\n\n");
-
         for (int request = 0; request < nRequests;  ++request)
             builder.append(request).append(": ").append(requestServer[request]).append("\n");
 
