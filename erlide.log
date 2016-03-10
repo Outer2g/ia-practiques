@@ -1,0 +1,27 @@
+10:45:51,341 I: (ErlangCore.java:64) : Starting CORE Thread[Worker-5,5,main]
+10:45:51,344 I: (ErlangCore.java:79) : *** starting Erlide v0.29.11.201502161407 (core=0.24.12.201502161407) (model api=0.24.11.201502161407) *** (UTF-8) ui
+10:45:51,350 I: (ErlangCore.java:86) : Started CORE
+10:45:51,351 F: (ErlangPlugin.java:88) : Core started
+10:45:57,169 F: (ErlangHostnameRetriever.java:40) : Test long hostname: a5s109pc16.fib.upc.es
+10:45:57,495 F: (ErlangHostnameRetriever.java:40) : Test short hostname: a5s109pc16
+10:45:57,504 F: (HostnameUtils.java:74) : Detected:: a5s109pc16 && a5s109pc16.fib.upc.es
+10:45:57,561 F: (BackendActivator.java:25) : Backend plugin started
+10:45:57,562 I: (ErlideUIPlugin.java:130) : Starting UI Thread[Worker-5,5,main]
+10:45:57,593 F: (ModelActivator.java:19) : Starting Erlang model api
+10:45:57,631 F: (BackendFactory.java:42) : Create ide backend 17.1.0
+10:45:57,631 F: (BackendFactory.java:56) : Create backend 3780a_alejandroatienzagarcia_eb1e7e_erlide
+10:45:57,705 F: (OtpNodeProxy.java:302) : Runtime 3780a_alejandroatienzagarcia_eb1e7e_erlide@a5s109pc16.fib.upc.es starting
+10:45:57,705 F: (OtpNodeProxy.java:420) : START node :> [/usr/lib64/erlang/bin/erl, -name, 3780a_alejandroatienzagarcia_eb1e7e_erlide@a5s109pc16.fib.upc.es, -setcookie, erlide] *** /home2/users/alumnes/1161077/Desktop/IA/Practica/ia-practiques
+10:45:57,716 F: (OtpNodeProxy.java:213) : 3780a_alejandroatienzagarcia_eb1e7e_erlide@a5s109pc16.fib.upc.es: waiting connection to peer... 
+10:45:58,123 F: (OtpNodeProxy.java:220) : connected!
+10:45:58,350 F: (OtpNodeProxy.java:307) : Runtime 3780a_alejandroatienzagarcia_eb1e7e_erlide@a5s109pc16.fib.upc.es running
+10:45:58,352 F: (LogEventHandler.java:27) : info: {"Monitoring java node",'jerlide_feb1ed0@a5s109pc16.fib.upc.es'}
+10:45:58,353 F: (LogEventHandler.java:27) : info: {"Start monitor process: ",10000000,50000000}
+10:45:58,753 F: (ModelActivator.java:30) : Started model api
+10:45:58,787 I: (ErlideUIPlugin.java:152) : Started UI
+10:54:01,627 F: (OtpNodeProxy.java:312) : Runtime 3780a_alejandroatienzagarcia_eb1e7e_erlide@a5s109pc16.fib.upc.es stopping
+10:54:02,159 F: (OtpNodeProxy.java:302) : Runtime 3780a_alejandroatienzagarcia_eb1e7e_erlide@a5s109pc16.fib.upc.es starting
+10:54:02,159 F: (OtpNodeProxy.java:420) : START node :> [/usr/lib64/erlang/bin/erl, -name, 3780a_alejandroatienzagarcia_eb1e7e_erlide@a5s109pc16.fib.upc.es, -setcookie, erlide] *** /home2/users/alumnes/1161077/Desktop/IA/Practica/ia-practiques
+10:54:02,169 F: (OtpNodeProxy.java:213) : 3780a_alejandroatienzagarcia_eb1e7e_erlide@a5s109pc16.fib.upc.es: waiting connection to peer... 
+10:54:02,576 F: (OtpNodeProxy.java:220) : connected!
+10:54:02,739 F: (OtpNodeProxy.java:307) : Runtime 3780a_alejandroatienzagarcia_eb1e7e_erlide@a5s109pc16.fib.upc.es running
