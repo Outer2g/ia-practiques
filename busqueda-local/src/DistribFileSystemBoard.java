@@ -25,14 +25,14 @@ public class DistribFileSystemBoard {
     private int[] requestServer; // Which is the server that serves that request
 
 
-    public DistribFileSystemBoard(int[] nFilesServedToAssign, int[] requestServerToAssign) {
-        nFilesServed = new int[nFilesServedToAssign.length];
-        requestServer = new int[requestServerToAssign.length];
+    public DistribFileSystemBoard(DistribFileSystemBoard otherBoard) {
+        nFilesServed = new int[otherBoard.nFilesServed.length];
+        requestServer = new int[otherBoard.requestServer.length];
 
-        System.arraycopy(nFilesServedToAssign, 0, nFilesServed, 0,
-                         nFilesServedToAssign.length);
-        System.arraycopy(requestServerToAssign, 0, requestServer, 0,
-                         requestServerToAssign.length);
+        System.arraycopy(otherBoard.nFilesServed, 0, nFilesServed, 0,
+                         nFilesServed.length);
+        System.arraycopy(otherBoard.requestServer, 0, requestServer, 0,
+                         requestServer.length);
     }
 
     public DistribFileSystemBoard() {}
