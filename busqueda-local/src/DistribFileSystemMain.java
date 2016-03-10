@@ -1,3 +1,4 @@
+import IA.DistFS.Requests;
 import IA.DistFS.Servers;
 import aima.search.framework.Problem;
 import aima.search.framework.Search;
@@ -15,7 +16,7 @@ public class DistribFileSystemMain {
     private enum Option {
         N_STEPS_ANNEALING, STITER_ANNEALING, K_ANNEALING, LAMBDA_ANNEALING,
 
-        N_USERS, N_REQUESTS, RANDOM_SEED_REQUESTS,
+        N_USERS, MAX_REQUESTS_USER, RANDOM_SEED_REQUESTS,
 
         N_SERVERS, MIN_REPLICATIONS_PER_FILE, RANDOM_SEED_SERVERS
     }
@@ -28,7 +29,7 @@ public class DistribFileSystemMain {
         put(Option.LAMBDA_ANNEALING, new BigDecimal(0.001));
 
         put(Option.N_USERS, new BigDecimal(10));
-        put(Option.N_REQUESTS, new BigDecimal(10));
+        put(Option.MAX_REQUESTS_USER, new BigDecimal(3));
         put(Option.RANDOM_SEED_REQUESTS, new BigDecimal(1));
 
         put(Option.N_SERVERS, new BigDecimal(5));
@@ -44,7 +45,7 @@ public class DistribFileSystemMain {
         put("lambda", Option.LAMBDA_ANNEALING);
 
         put("n_users", Option.N_USERS);
-        put("n_requests", Option.N_REQUESTS);
+        put("max_requests", Option.MAX_REQUESTS_USER);
         put("seed_rq", Option.RANDOM_SEED_REQUESTS);
 
         put("n_servers", Option.N_SERVERS);
@@ -52,7 +53,7 @@ public class DistribFileSystemMain {
         put("seed_servers", Option.RANDOM_SEED_SERVERS);
     }};
 
-    private static void consolelog(String msg) {
+    private static void consolelog(final String msg) {
         System.out.println(msg);
     }
 
@@ -63,17 +64,15 @@ public class DistribFileSystemMain {
             Option option = abbreviations.get(key_value[0]);
             if (option == null) throw new IllegalArgumentException("Invalid option \"" + key_value[0] + "\"");
 
-            BigDecimal prev = constants.put(option, new BigDecimal(key_value[1]));
+            constants.put(option, new BigDecimal(key_value[1]));
         }
     }
 
     public static void main(String[] args){
         parseArgs(args);
 
-        consolelog(constants.toString());
-
         DistribFileSystemBoard.generateRequests(constants.get(Option.N_USERS).intValue(),
-                                                constants.get(Option.N_REQUESTS).intValue(),
+                                                constants.get(Option.MAX_REQUESTS_USER).intValue(),
                                                 constants.get(Option.RANDOM_SEED_REQUESTS).intValue());
 
         try {
@@ -85,6 +84,16 @@ public class DistribFileSystemMain {
         }
 
         DistribFileSystemBoard board = new DistribFileSystemBoard();
+
+        board.generateInitialState1();
+        consolelog(board.toString());
+
+        board.generateInitialState2();
+        consolelog(board.toString());
+
+        board.generateInitialState3();
+        consolelog(board.toString());
+
         DistribFSHillClimbingSearch(board);
         DistribFSSimulatedAnnealingSearch(board,
                 constants.get(Option.N_STEPS_ANNEALING).intValue(),
