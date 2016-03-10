@@ -14,7 +14,7 @@ public class DistribFileSystemBoard {
 
     private static int nRequests;
     private static int nServers;
-    private static int nFileLocations;
+    private static int nFiles;
     private static int nUsers;
     private static int maxRequestsPerUser;
     private static int minReplicationsPerFile;
@@ -64,7 +64,7 @@ public class DistribFileSystemBoard {
         DistribFileSystemBoard.servers = new Servers(nserv, nrep, seed);
 
         nServers = nserv;
-        nFileLocations = DistribFileSystemBoard.servers.size();
+        nFiles = DistribFileSystemBoard.servers.size();
         minReplicationsPerFile = nrep;
     }
 
@@ -135,6 +135,8 @@ public class DistribFileSystemBoard {
     /**Asigna cada petición al primer servidor que tenga el archivo
     no tiene en cuenta ni el tiempo ni el equilibrio entre servidores
     Todas las peticiones se concentrarán en los x primeros servidores del set
+
+     Coste: nRequests
     **/
     public void generateInitialState1() {
         createDataStructures();
@@ -153,7 +155,10 @@ public class DistribFileSystemBoard {
     }
     
     /**Assigna una petición a cada servidor que contenga el archivo equilibrando el 
-    numero de peticiones por servidor. No tiene en cuenta el tiempo de transmision   
+    numero de peticiones por servidor. No tiene en cuenta el tiempo de transmision
+
+     Coste en caso peor: O(nRequests*replicationsPerFile)
+     (replicationsPerFile es como máximo minReplicationsPerFile + 3)
     **/
     public void generateInitialState2() {
         createDataStructures();
@@ -185,6 +190,8 @@ public class DistribFileSystemBoard {
     
     /**Asigna una petición al servidor que contenga el archivo y que tenga
      * menor tiempo de transmisión con el usuario
+     * Coste en caso peor: O(nRequests*replicationsPerFile)
+     * (replicationsPerFile es como máximo minReplicationsPerFile + 3)
     **/
     public void generateInitialState3() {
         createDataStructures();

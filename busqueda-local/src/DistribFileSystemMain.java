@@ -33,7 +33,7 @@ public class DistribFileSystemMain {
         put(Option.RANDOM_SEED_REQUESTS, new BigDecimal(1));
 
         put(Option.N_SERVERS, new BigDecimal(5));
-        put(Option.MIN_REPLICATIONS_PER_FILE, new BigDecimal(2));
+        put(Option.MIN_REPLICATIONS_PER_FILE, new BigDecimal(3));
         put(Option.RANDOM_SEED_SERVERS, new BigDecimal(1));
     }};
 
@@ -60,6 +60,9 @@ public class DistribFileSystemMain {
     private static void parseArgs(String[] args) {
         for (String s : args) {
             String[] key_value = s.split("=");
+
+            if (key_value.length != 2)
+                throw new IllegalArgumentException("Invalid argument \"" + s + "\", must be of the form option=value");
 
             Option option = abbreviations.get(key_value[0]);
             if (option == null) throw new IllegalArgumentException("Invalid option \"" + key_value[0] + "\"");
