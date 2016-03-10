@@ -28,14 +28,14 @@ public class   DistribFileSystemSuccessorFunction implements SuccessorFunction {
                 //if both files are equal means that we can swap the two requests
                 if (request[1] == request2[1]){
                     DistribFileSystemBoard newState = new DistribFileSystemBoard(estat);
-                    estat.swapRequests(request[1],request2[2]);
+                    estat.swapRequests(i,j);
                     ret.add(newState);
                 }
                 else {
                     Set<Integer> loc2 = servs.fileLocations(request2[1]);
-                    if (estat.checkReqOnServers(request[1],loc2) && estat.checkReqOnServers(request2[1],loc)){
+                    if (estat.checkReqOnServers(i,loc2) && estat.checkReqOnServers(j,loc)){
                         DistribFileSystemBoard newState = new DistribFileSystemBoard(estat);
-                        newState.swapRequests(request[1],request[2]);
+                        newState.swapRequests(i,j);
                         ret.add(newState);
                     }
                 }
