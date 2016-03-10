@@ -89,19 +89,6 @@ public class DistribFileSystemMain {
         DistribFileSystemBoard board = new DistribFileSystemBoard();
 
         board.generateInitialState1();
-        consolelog(board.toString());
-        consolelog("Variance: " + board.calculateFilesServedVariance());
-        consolelog("Total tt: " + board.calculateTotalTransmissionTime());
-
-        board.generateInitialState2();
-        consolelog(board.toString());
-        consolelog("Variance: " + board.calculateFilesServedVariance());
-        consolelog("Total tt: " + board.calculateTotalTransmissionTime());
-
-        board.generateInitialState3();
-        consolelog(board.toString());
-        consolelog("Variance: " + board.calculateFilesServedVariance());
-        consolelog("Total tt: " + board.calculateTotalTransmissionTime());
 
         DistribFSHillClimbingSearch(board);
         DistribFSSimulatedAnnealingSearch(board,
@@ -124,7 +111,8 @@ public class DistribFileSystemMain {
 
             System.out.println();
 
-            printActions(agent.getActions());
+            consolelog(search.getGoalState().toString());
+            //printActions(agent.getActions());
             printInstrumentation(agent.getInstrumentation());
         } catch (Exception e) {
             e.printStackTrace();
@@ -166,9 +154,8 @@ public class DistribFileSystemMain {
     }
 
     private static void printActions(List actions) {
-        for (Object action1 : actions) {
-            String action = (String) action1;
-            System.out.println(action);
+        for (Object action : actions) {
+            System.out.println(action.toString());
         }
     }
 }

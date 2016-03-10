@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="busqueda-local:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/busqueda_local_jar</output-path>
+    <root id="archive" name="busqueda-local.jar">
+      <element id="module-output" name="busqueda-local" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/distrib-file-system/DistribFileSystem.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

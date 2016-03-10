@@ -258,8 +258,7 @@ public class DistribFileSystemBoard {
         else return M2/(nServers - 1);
     }
 
-    @Override
-    public String toString() {
+    public String toStringVerbose() {
         final StringBuilder builder = new StringBuilder();
 
         builder.append("<Request>: <Server attending request>\n\n");
@@ -271,5 +270,10 @@ public class DistribFileSystemBoard {
             builder.append(server).append(": ").append(nFilesServed[server]).append("\n");
 
         return builder.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "Variance: " + calculateFilesServedVariance() + ", TotalTT: " + calculateTotalTransmissionTime();
     }
 }

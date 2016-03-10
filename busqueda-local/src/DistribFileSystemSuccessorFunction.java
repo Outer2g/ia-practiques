@@ -1,3 +1,4 @@
+import aima.search.framework.Successor;
 import aima.search.framework.SuccessorFunction;
 
 import IA.DistFS.Requests;
@@ -13,7 +14,7 @@ import java.util.Set;
 public class   DistribFileSystemSuccessorFunction implements SuccessorFunction {
     @Override
     public List getSuccessors(Object state) {
-        List<DistribFileSystemBoard> ret = new ArrayList<DistribFileSystemBoard>();
+        List<Successor> ret = new ArrayList<Successor>();
         DistribFileSystemBoard estat = (DistribFileSystemBoard) state;
         Requests reqs = estat.requests;
         Servers servs = estat.servers;
@@ -29,21 +30,21 @@ public class   DistribFileSystemSuccessorFunction implements SuccessorFunction {
                 if (request[1] == request2[1]){
                     DistribFileSystemBoard newState = new DistribFileSystemBoard(estat);
                     estat.swapRequests(i,j);
-                    ret.add(newState);
+                    ret.add(new Successor("grdgdr", newState));
                 }
                 else {
                     Set<Integer> loc2 = servs.fileLocations(request2[1]);
                     if (estat.checkReqOnServers(i,loc2) && estat.checkReqOnServers(j,loc)){
                         DistribFileSystemBoard newState = new DistribFileSystemBoard(estat);
                         newState.swapRequests(i,j);
-                        ret.add(newState);
+                        ret.add(new Successor("gdrgdr", newState));
                     }
                 }
             }
             //move req to available servers (so magic)
             for (Integer s : loc){
                 DistribFileSystemBoard newState = new DistribFileSystemBoard(estat);
-                if (!newState.assignRequest(s,i)) ret.add(newState);
+                if (!newState.assignRequest(s,i)) ret.add(new Successor("dadawdaw", newState));
             }
         }
         return ret;
