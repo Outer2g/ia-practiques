@@ -8,6 +8,7 @@ public class DistribFileSystemHeuristicFunction implements HeuristicFunction {
     public double getHeuristicValue(Object state) {
         DistribFileSystemBoard b = (DistribFileSystemBoard) state;
 
+        // Variance more important than transmission time
         double res = b.getTotalTransmissionTime() + b.getFilesServedVariance()*4000;
 
         return res;

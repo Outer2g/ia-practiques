@@ -1,4 +1,3 @@
-import IA.DistFS.Requests;
 import IA.DistFS.Servers;
 import aima.search.framework.Problem;
 import aima.search.framework.Search;
@@ -105,7 +104,7 @@ public class DistribFileSystemMain {
         System.out.println("\nDistribFS HillClimbing  -->");
         try {
             Problem problem = new Problem(board,
-                                          new DistribFileSystemSuccessorFunction2(),
+                                          new DistribFileSystemSuccessorFunction(),
                                           new DistribFileSystemGoalTest(),
                                           new DistribFileSystemHeuristicFunction());
 
@@ -131,7 +130,7 @@ public class DistribFileSystemMain {
 
         try {
             Problem problem =  new Problem(board,
-                                           new DistribFileSystemSuccessorFunction2(),
+                                           new DistribFileSystemSuccessorFunction(),
                                            new DistribFileSystemGoalTest(),
                                            new DistribFileSystemHeuristicFunction());
 
