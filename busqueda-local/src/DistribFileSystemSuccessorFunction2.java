@@ -21,30 +21,34 @@ public class DistribFileSystemSuccessorFunction2 implements SuccessorFunction {
         // swap requests
         //for each req, swap it with every other possible req
         int nreqs = reqs.size();
-        for (int i = 0 ;i < nreqs;++i){
-            int [] request = reqs.getRequest(i);
+        for (int reqId = 0 ;reqId < nreqs;++reqId){
+            //gets Req info 0 = userID 1 = FileId
+            int [] request = reqs.getRequest(reqId);
             Set<Integer> loc = servs.fileLocations(request[1]);
-            for (int j = i+1; j < nreqs;++j){
-                int [] request2 = reqs.getRequest(j);
+            for (int servId = reqId+1; servId < nreqs;++servId){
+                int [] request2 = reqs.getRequest(servId);
                 //if both files are equal means that we can swap the two requests
                 if (request[1] == request2[1]){
                     DistribFileSystemBoard newState = new DistribFileSystemBoard(estat);
-                    estat.swapRequests(i,j);
-                    ret.add(new Successor("grdgdr", newState));
+                    estat.swapRequests(reqId,servId);
+                    ret.add(new Successor("swapped", newState));
                 }
                 else {
                     Set<Integer> loc2 = servs.fileLocations(request2[1]);
-                    if (estat.checkReqOnServers(i,loc2) && estat.checkReqOnServers(j,loc)){
+                    if (estat.checkReqOnServers(reqId,loc2) && estat.checkReqOnServers(servId,loc)){
                         DistribFileSystemBoard newState = new DistribFileSystemBoard(estat);
-                        newState.swapRequests(i,j);
-                        ret.add(new Successor("gdrgdr", newState));
+                        newState.swapRequests(reqId,servId);
+                        ret.add(new Successor("swapped", newState));
                     }
                 }
             }
             //move req to available servers (so magic)
             for (Integer s : loc){
-                DistribFileSystemBoard newState = new DistribFileSystemBoard(estat);
-                //if (!newState.assignRequest(s,i)) ret.add(new Successor("dadawdaw", newState));
+                if (estat.whoIsServing(reqId) != s){
+                    DistribFileSystemBoard newState = new DistribFileSystemBoard(estat);
+                    newState.assignRequest(s,reqId);
+                    ret.add(new Successor("moved",newState));
+                }
             }
         }
         return ret;
