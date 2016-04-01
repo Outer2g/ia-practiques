@@ -15,35 +15,26 @@ public class DistribFileSystemSuccessorFunction2 implements SuccessorFunction {
     @Override
     public List getSuccessors(Object state) {
         List<Successor> ret = new ArrayList<Successor>();
+
         DistribFileSystemBoard estat = (DistribFileSystemBoard) state;
+
         Requests reqs = estat.requests;
         Servers servs = estat.servers;
         // swap requests
         //for each req, swap it with every other possible req
-        int nreqs = reqs.size();
+        int nreqs = estat.getNRequests();
         for (int reqId = 0 ;reqId < nreqs;++reqId){
-            //gets Req info 0 = userID 1 = FileId
-            int [] request = reqs.getRequest(reqId);
-            Set<Integer> loc = servs.fileLocations(request[1]);
-            for (int servId = reqId+1; servId < nreqs;++servId){
-                int [] request2 = reqs.getRequest(servId);
-                //if both files are equal means that we can swap the two requests
-                if (request[1] == request2[1]){
+            for (int reqId2 = reqId+1; reqId2 < nreqs;++reqId2){
+                if (canSwap(reqId,reqId2,estat)){
                     DistribFileSystemBoard newState = new DistribFileSystemBoard(estat);
-                    estat.swapRequests(reqId,servId);
+                    newState.swapRequests(reqId,reqId2);
                     ret.add(new Successor("swapped", newState));
                 }
-                else {
-                    Set<Integer> loc2 = servs.fileLocations(request2[1]);
-                    if (estat.checkReqOnServers(reqId,loc2) && estat.checkReqOnServers(servId,loc)){
-                        DistribFileSystemBoard newState = new DistribFileSystemBoard(estat);
-                        newState.swapRequests(reqId,servId);
-                        ret.add(new Successor("swapped", newState));
-                    }
-                }
             }
-            //move req to available servers (so magic)
-            for (Integer s : loc){
+            //gets Req info 0 = userID 1 = FileId
+            int file = DistribFileSystemBoard.requests.getRequest(reqId)[1];
+            Set<Integer> serversWithFile = servs.fileLocations(file);
+            for (Integer s : serversWithFile){
                 if (estat.whoIsServing(reqId) != s){
                     DistribFileSystemBoard newState = new DistribFileSystemBoard(estat);
                     newState.assignRequest(s,reqId);
@@ -52,5 +43,25 @@ public class DistribFileSystemSuccessorFunction2 implements SuccessorFunction {
             }
         }
         return ret;
+    }
+    private Boolean canSwap(int reqId1, int reqId2,DistribFileSystemBoard board){
+        int server1 = board.whoIsServing(reqId1);
+        int server2 = board.whoIsServing(reqId2);
+        boolean canFile1, canFile2;
+        canFile1 = false; canFile2 = false;
+        if (server1 == server2) return false; //Si estan en el mismo server, no tiene sentido hacer swap
+
+        int file1 = DistribFileSystemBoard.requests.getRequest(reqId1)[1];
+        int file2 = DistribFileSystemBoard.requests.getRequest(reqId2)[1];
+        if (file1 == file2) return true; //if both files are equal means that we can swap the two requests
+        Set <Integer> serversWithFile = DistribFileSystemBoard.servers.fileLocations(file1);
+        if (serversWithFile.contains(server2)) canFile2 = true;
+        Set <Integer> serversWithFile2 = DistribFileSystemBoard.servers.fileLocations(file2);
+        if (serversWithFile2.contains(server1)) canFile1 = true;
+        return canFile1 && canFile2;
+    }
+
+    private static void consolelog(final String msg) {
+        System.out.println(msg);
     }
 }

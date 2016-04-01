@@ -92,6 +92,10 @@ public class DistribFileSystemBoard {
         return requestServer[request];
     }
 
+    public int getnServers(){
+        return nServers;
+    }
+
     public int howManyIsServing(int server) {
         checkServer(server);
         return nFilesServed[server];
