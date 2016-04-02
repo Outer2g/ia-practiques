@@ -155,8 +155,8 @@ public class DistribFileSystemBoard {
 
         return server1 != server2 && // Doesn't make sense to swap among equal servers
                (file1 == file2 || // Avoids further checks sometimes
-               servers.fileLocations(file1).contains(requestServer[request2]) &&
-               servers.fileLocations(file2).contains(requestServer[request1]));
+               servers.fileLocations(file1).contains(server2) &&
+               servers.fileLocations(file2).contains(server1));
 
     }
 
