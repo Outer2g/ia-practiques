@@ -29,11 +29,11 @@ public class DistribFileSystemMain {
 
         put(Option.N_USERS, new BigDecimal(80));
         put(Option.MAX_REQUESTS_USER, new BigDecimal(4));
-        put(Option.RANDOM_SEED_REQUESTS, new BigDecimal(1));
+        put(Option.RANDOM_SEED_REQUESTS, new BigDecimal(1234));
 
         put(Option.N_SERVERS, new BigDecimal(500));
         put(Option.MIN_REPLICATIONS_PER_FILE, new BigDecimal(25));
-        put(Option.RANDOM_SEED_SERVERS, new BigDecimal(1));
+        put(Option.RANDOM_SEED_SERVERS, new BigDecimal(1234));
     }};
 
     private static final Map<String, Option>
@@ -100,11 +100,22 @@ public class DistribFileSystemMain {
                 constants.get(Option.LAMBDA_ANNEALING).doubleValue());
     }
 
+    private static void checkSolution(DistribFileSystemBoard goal) {
+        for (int i = 0; i < goal.getNRequests(); ++i) {
+            int server = goal.whoIsServing(i);
+
+            int[] request = DistribFileSystemBoard.requests.getRequest(i);
+            Set<Integer> servers = DistribFileSystemBoard.servers.fileLocations(request[1]);
+
+            assert(servers.contains(server));
+        }
+    }
+
     private static void DistribFSHillClimbingSearch(DistribFileSystemBoard board) {
         System.out.println("\nDistribFS HillClimbing  -->");
         try {
             Problem problem = new Problem(board,
-                                          new DistribFileSystemSuccessorFunction(),
+                                          new DistribFileSystemSuccessorFunction2(),
                                           new DistribFileSystemGoalTest(),
                                           new DistribFileSystemHeuristicFunction());
 
@@ -113,7 +124,11 @@ public class DistribFileSystemMain {
 
             System.out.println();
 
-            consolelog(search.getGoalState().toString());
+            DistribFileSystemBoard goal = (DistribFileSystemBoard) search.getGoalState();
+
+            consolelog(goal.toString());
+            checkSolution(goal);
+
             //printActions(agent.getActions());
             printInstrumentation(agent.getInstrumentation());
         } catch (Exception e) {
@@ -130,7 +145,7 @@ public class DistribFileSystemMain {
 
         try {
             Problem problem =  new Problem(board,
-                                           new DistribFileSystemSuccessorFunction(),
+                                           new DistribFileSystemSuccessorFunction2(),
                                            new DistribFileSystemGoalTest(),
                                            new DistribFileSystemHeuristicFunction());
 
@@ -138,6 +153,8 @@ public class DistribFileSystemMain {
 
             //search.traceOn();
             SearchAgent agent = new SearchAgent(problem,search);
+
+            checkSolution((DistribFileSystemBoard) search.getGoalState());
 
             System.out.println();
             printActions(agent.getActions());

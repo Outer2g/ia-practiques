@@ -146,12 +146,14 @@ public class DistribFileSystemBoard {
     public boolean interchangeable(int request1, int request2) {
         checkRequest(request1);
         checkRequest(request2);
-        
+
         final int file1 = requests.getRequest(request1)[1];
         final int file2 = requests.getRequest(request2)[1];
 
-        return servers.fileLocations(file1).contains(requestServer[request2]) &&
+        return file1 == file2 || // Avoids further checks sometimes
+               servers.fileLocations(file1).contains(requestServer[request2]) &&
                servers.fileLocations(file2).contains(requestServer[request1]);
+
     }
 
     /*
