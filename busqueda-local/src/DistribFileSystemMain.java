@@ -93,11 +93,11 @@ public class DistribFileSystemMain {
         consolelog("Initial solution: " + board.toString());
 
         DistribFSHillClimbingSearch(board);
-        DistribFSSimulatedAnnealingSearch(board,
+        /*DistribFSSimulatedAnnealingSearch(board,
                 constants.get(Option.N_STEPS_ANNEALING).intValue(),
                 constants.get(Option.STITER_ANNEALING).intValue(),
                 constants.get(Option.K_ANNEALING).intValue(),
-                constants.get(Option.LAMBDA_ANNEALING).doubleValue());
+                constants.get(Option.LAMBDA_ANNEALING).doubleValue());*/
     }
 
     private static void checkSolution(DistribFileSystemBoard goal) {
@@ -115,7 +115,7 @@ public class DistribFileSystemMain {
         System.out.println("\nDistribFS HillClimbing  -->");
         try {
             Problem problem = new Problem(board,
-                                          new DistribFileSystemSuccessorFunction2(),
+                                          new DistribFileSystemSuccessorFunction(),
                                           new DistribFileSystemGoalTest(),
                                           new DistribFileSystemHeuristicFunction());
 
@@ -145,7 +145,7 @@ public class DistribFileSystemMain {
 
         try {
             Problem problem =  new Problem(board,
-                                           new DistribFileSystemSuccessorFunction2(),
+                                           new DistribFileSystemSuccessorFunction(),
                                            new DistribFileSystemGoalTest(),
                                            new DistribFileSystemHeuristicFunction());
 

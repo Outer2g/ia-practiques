@@ -9,7 +9,9 @@ public class DistribFileSystemHeuristicFunction implements HeuristicFunction {
         DistribFileSystemBoard b = (DistribFileSystemBoard) state;
 
         // Variance more important than transmission time
-        double res = b.getTotalTransmissionTime() + b.getFilesServedVariance()*4000;
+
+
+        double res = b.getTotalTransmissionTime() + b.getTransmissionTimeVariance()*4000 + b.getMaxServerTransmissionTime()*1000;
 
         return res;
     }

@@ -19,38 +19,40 @@ public class DistribFileSystemBoard {
     private static int nUsers;
     private static int maxRequestsPerUser;
     private static int minReplicationsPerFile;
-    private static double alpha;
 
-    private int[] nFilesServed; // How many files does each server serve
+    private int[] transmissionTimeByServer; // How many files does each server serve
 
     // Documentar decisión
     private int[] requestServer; // Which is the server that serves that request
 
     private int totalTransmissionTime;
+    private long totalTransmissionTimeSq;
 
-    private double nFilesServedSSE2;
 
     public DistribFileSystemBoard(DistribFileSystemBoard otherBoard) {
-        nFilesServed = new int[otherBoard.nFilesServed.length];
-        requestServer = new int[otherBoard.requestServer.length];
+        transmissionTimeByServer = new int[nServers];
+        requestServer = new int[nRequests];
+
+        System.out.println("sq" + otherBoard.totalTransmissionTimeSq);
+        System.out.println("normal" + otherBoard.totalTransmissionTime);
 
         totalTransmissionTime = otherBoard.totalTransmissionTime;
-        nFilesServedSSE2 = otherBoard.nFilesServedSSE2;
+        totalTransmissionTimeSq = otherBoard.totalTransmissionTimeSq;
 
-        System.arraycopy(otherBoard.nFilesServed, 0, nFilesServed, 0,
-                         nFilesServed.length);
-        System.arraycopy(otherBoard.requestServer, 0, requestServer, 0,
-                         requestServer.length);
+        System.arraycopy(otherBoard.transmissionTimeByServer, 0,
+                         transmissionTimeByServer, 0, nServers);
+        System.arraycopy(otherBoard.requestServer, 0, requestServer, 0, nRequests);
     }
 
+    // Initialization is done via generateInitialState{n}
     public DistribFileSystemBoard() {}
 
     private void createDataStructures() {
-        nFilesServed = new int[nServers]; // All values initialized to 0 by default
+        transmissionTimeByServer = new int[nServers]; // All values initialized to 0 by default
         requestServer = new int[nRequests];
 
         totalTransmissionTime = 0;
-        nFilesServedSSE2 = 0.0;
+        totalTransmissionTimeSq = 0L;
     }
 
     private void checkRequest(int request) { // TODO: Remove on production
@@ -60,14 +62,12 @@ public class DistribFileSystemBoard {
     private void checkServer(int server) { // TODO: Remove on production
         assert(server >= 0 && server < nServers);
     }
-    //checks if request is in the set of servers
-    public boolean checkReqOnServers(int request, Set servers){
-        return servers.contains(requestServer[request]);
-    }
 
-    public int getNRequests() {
+
+    public static int getNRequests() {
         return nRequests;
     }
+    public static int getNServers() { return nServers; }
 
 
     public static void generateProblem(int nUsers, int maxRequests, int nServ,
@@ -92,13 +92,17 @@ public class DistribFileSystemBoard {
         return requestServer[request];
     }
 
-    public int howManyIsServing(int server) {
+    public int totalServerTransmissionTime(int server) {
         checkServer(server);
-        return nFilesServed[server];
+        return transmissionTimeByServer[server];
     }
 
     public int getTransmissionTime(int server, int request) {
         return servers.tranmissionTime(server, requests.getRequest(request)[0]);
+    }
+
+    public int getTransmissionTimeUser(int server, int user) {
+        return servers.tranmissionTime(server, user);
     }
 
     /**
@@ -114,16 +118,28 @@ public class DistribFileSystemBoard {
         checkServer(server);
 
         final int previousServer = requestServer[request];
-        --nFilesServed[previousServer];
-
         requestServer[request] = server;
-        ++nFilesServed[server];
 
-        totalTransmissionTime += getTransmissionTime(server, request)
-                - getTransmissionTime(previousServer, request);
+        final int user = requests.getRequest(request)[0];
 
+        final int ttPrevious = getTransmissionTimeUser(previousServer, user);
+        final int ttNew      = getTransmissionTimeUser(server,         user);
 
-        nFilesServedSSE2 += 2*(nFilesServed[server] - nFilesServed[previousServer] - 1);
+        totalTransmissionTime += ttNew - ttPrevious;
+
+        final int previousTTbefore = transmissionTimeByServer[previousServer];
+        final int newTTbefore      = transmissionTimeByServer[server];
+
+        transmissionTimeByServer[previousServer] -= ttPrevious;
+        transmissionTimeByServer[server] += ttNew;
+
+        final int previousTTafter = transmissionTimeByServer[previousServer];
+        final int newTTafter      = transmissionTimeByServer[server];
+
+        totalTransmissionTimeSq += newTTafter*newTTafter
+                + previousTTafter*previousTTafter
+                - newTTbefore*newTTbefore
+                - previousTTbefore*previousTTbefore;
     }
 
     /**
@@ -134,9 +150,12 @@ public class DistribFileSystemBoard {
         checkServer(server);
 
         requestServer[request] = server;
-        ++nFilesServed[server];
 
-        totalTransmissionTime += getTransmissionTime(server, request);
+        final int transmissionTime = getTransmissionTime(server, request);
+
+        transmissionTimeByServer[server] += transmissionTime;
+        totalTransmissionTime += transmissionTime;
+        totalTransmissionTimeSq += transmissionTime*transmissionTime;
     }
 
     /**
@@ -175,10 +194,17 @@ public class DistribFileSystemBoard {
         requestServer[request1] = server2;
         requestServer[request2] = server1;
 
-        totalTransmissionTime += getTransmissionTime(server2, request1)
-                                +getTransmissionTime(server1, request2)
-                                -getTransmissionTime(server2, request2)
-                                -getTransmissionTime(server1, request1);
+        final int user1 = requests.getRequest(request1)[0];
+        final int user2 = requests.getRequest(request2)[0];
+
+        final int tt21 = getTransmissionTimeUser(server2, user1);
+        final int tt12 = getTransmissionTimeUser(server1, user2);
+        final int tt22 = getTransmissionTimeUser(server2, user2);
+        final int tt11 = getTransmissionTimeUser(server1, user1);
+
+        totalTransmissionTime += tt21 + tt12 - tt22 - tt11;
+        totalTransmissionTimeSq += tt21*tt21 + tt12*tt12 - tt22*tt22 - tt11*tt11;
+
     }
 
     
@@ -202,12 +228,10 @@ public class DistribFileSystemBoard {
 
             assignRequestInitial(serverAssigned, request);
 	    }
-
-        calculateFilesServedVarianceInfo();
     }
     
     /**Assigna una petición a cada servidor que contenga el archivo equilibrando el 
-    numero de peticiones por servidor. No tiene en cuenta el tiempo de transmision
+    tiempo de transmision de los servidores.
 
      Coste en caso peor: O(nRequests*replicationsPerFile)
      (replicationsPerFile es como máximo minReplicationsPerFile + 3)
@@ -220,26 +244,24 @@ public class DistribFileSystemBoard {
 
             final Set<Integer> serversWithFile = servers.fileLocations(file);
 
-            int min_served = Integer.MAX_VALUE;
-            int best_server = -1;
+            int minTransmissionTime = Integer.MAX_VALUE;
+            int bestServer = -1;
 
             for (int server : serversWithFile) {
-                final int nserved = nFilesServed[server];
+                final int transmissionTime = transmissionTimeByServer[server];
 
-                if (nserved == 0) {
-                    best_server = server;
+                if (transmissionTime == 0) {
+                    bestServer = server;
                     break;
                 }
-                else if (nserved < min_served) {
-                    min_served = nserved;
-                    best_server = server;
+                else if (transmissionTime < minTransmissionTime) {
+                    minTransmissionTime = transmissionTime;
+                    bestServer = server;
                 }
             }
 
-            assignRequestInitial(best_server, request);
+            assignRequestInitial(bestServer, request);
         }
-
-        calculateFilesServedVarianceInfo();
     }
     
     /**Asigna una petición al servidor que contenga el archivo y que tenga
@@ -272,34 +294,28 @@ public class DistribFileSystemBoard {
 
             assignRequestInitial(best_server, request);
         }
+    }
 
-        calculateFilesServedVarianceInfo();
+    public int getMaxServerTransmissionTime() {
+        int max = 0;
+
+        for (int tt : transmissionTimeByServer)
+            if (tt > max) max = tt;
+
+        return max;
     }
 
     public int getTotalTransmissionTime() {
         return totalTransmissionTime;
     }
 
-    public double getFilesServedVariance() {
-        // Assumes nServers > 1
-        return (nFilesServedSSE2 - alpha)/(nServers - 1);
+    public double getTransmissionTimeVariance() {
+
+        final double totalTransmissionTimeSq2 = totalTransmissionTime*((double)(totalTransmissionTime)/nServers);
+
+        return (totalTransmissionTimeSq - totalTransmissionTimeSq2)/nServers;
     }
 
-    public void calculateFilesServedVarianceInfo() {
-        double nFilesServedMean = (double)(nFiles)/nServers;
-        double nFilesServedSSE = 0.0D;
-        nFilesServedSSE2 = 0.0D;
-
-        for (int server = 0; server < nServers; ++server) {
-            int filesServed = nFilesServed[server];
-
-            double diff = filesServed - nFilesServedMean;
-            nFilesServedSSE2 += diff*diff;
-            nFilesServedSSE += diff;
-        }
-
-        alpha = (nFilesServedSSE * nFilesServedSSE)/nServers;
-    }
 
     public String toStringVerbose() {
         final StringBuilder builder = new StringBuilder();
@@ -308,15 +324,15 @@ public class DistribFileSystemBoard {
         for (int request = 0; request < nRequests;  ++request)
             builder.append(request).append(": ").append(requestServer[request]).append("\n");
 
-        builder.append("\n<Server>: <Number of files served>\n\n");
+        builder.append("\n<Server>: <Total transmission time>\n\n");
         for (int server = 0; server < nServers; ++server)
-            builder.append(server).append(": ").append(nFilesServed[server]).append("\n");
+            builder.append(server).append(": ").append(transmissionTimeByServer[server]).append("\n");
 
         return builder.toString();
     }
 
     @Override
     public String toString() {
-        return "Variance: " + getFilesServedVariance() + ", TotalTT: " + getTotalTransmissionTime();
+        return "Variance: " + getTransmissionTimeVariance() + ", TotalTT: " + getTotalTransmissionTime() + ", MaxTT: " + getMaxServerTransmissionTime();
     }
 }
