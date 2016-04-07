@@ -33,9 +33,6 @@ public class DistribFileSystemBoard {
         transmissionTimeByServer = new int[nServers];
         requestServer = new int[nRequests];
 
-        System.out.println("sq" + otherBoard.totalTransmissionTimeSq);
-        System.out.println("normal" + otherBoard.totalTransmissionTime);
-
         totalTransmissionTime = otherBoard.totalTransmissionTime;
         totalTransmissionTimeSq = otherBoard.totalTransmissionTimeSq;
 
@@ -334,5 +331,14 @@ public class DistribFileSystemBoard {
     @Override
     public String toString() {
         return "Variance: " + getTransmissionTimeVariance() + ", TotalTT: " + getTotalTransmissionTime() + ", MaxTT: " + getMaxServerTransmissionTime();
+    }
+
+    public String toJson() {
+        return "{ \"tt_variance\": " + getTransmissionTimeVariance() +
+               ", \"total_tt\": "    + getTotalTransmissionTime()    +
+               ", \"max_tt\": "      + getMaxServerTransmissionTime() +
+               ", \"heuristic\": "   + DistribFileSystemMain.heuristicFunction
+                                       .getHeuristicValue(this) +
+               " }";
     }
 }

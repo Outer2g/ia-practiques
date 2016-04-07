@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="busqueda-local:jar">
+  <artifact type="jar" build-on-make="true" name="busqueda-local:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/busqueda_local_jar</output-path>
     <root id="archive" name="busqueda-local.jar">
       <element id="module-output" name="busqueda-local" />

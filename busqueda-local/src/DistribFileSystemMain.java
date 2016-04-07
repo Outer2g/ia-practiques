@@ -1,7 +1,5 @@
 import IA.DistFS.Servers;
-import aima.search.framework.Problem;
-import aima.search.framework.Search;
-import aima.search.framework.SearchAgent;
+import aima.search.framework.*;
 import aima.search.informed.HillClimbingSearch;
 import aima.search.informed.SimulatedAnnealingSearch;
 
@@ -12,16 +10,26 @@ import java.util.*;
  * Created by albert on 10/03/16.
  */
 public class DistribFileSystemMain {
+
+    private static boolean NON_INTERACTIVE = false;
+    public static boolean PRINT_HEURISTICS = false;
+
+
+    public static HeuristicFunction heuristicFunction;
+    private static SuccessorFunction successorFunction;
+
     private enum Option {
         N_STEPS_ANNEALING, STITER_ANNEALING, K_ANNEALING, LAMBDA_ANNEALING,
 
         N_USERS, MAX_REQUESTS_USER, RANDOM_SEED_REQUESTS,
 
-        N_SERVERS, MIN_REPLICATIONS_PER_FILE, RANDOM_SEED_SERVERS
+        N_SERVERS, MIN_REPLICATIONS_PER_FILE, RANDOM_SEED_SERVERS,
+
+        HEURISTIC, SUCCESSOR, GENERATOR, ALGORITHM
     }
 
-    private static EnumMap<Option, BigDecimal>
-            constants = new EnumMap<Option, BigDecimal>(Option.class) {{
+    private static EnumMap<Option, Object>
+            constants = new EnumMap<Option, Object>(Option.class) {{
         put(Option.N_STEPS_ANNEALING, new BigDecimal(2000));
         put(Option.STITER_ANNEALING, new BigDecimal(100));
         put(Option.K_ANNEALING, new BigDecimal(5));
@@ -34,6 +42,11 @@ public class DistribFileSystemMain {
         put(Option.N_SERVERS, new BigDecimal(500));
         put(Option.MIN_REPLICATIONS_PER_FILE, new BigDecimal(25));
         put(Option.RANDOM_SEED_SERVERS, new BigDecimal(1234));
+
+        put(Option.HEURISTIC, "1");
+        put(Option.SUCCESSOR, "move"); // move, move+swap
+        put(Option.GENERATOR, "sequential"); // sequential, minvariance, mintt
+        put(Option.ALGORITHM, "hill_climbing"); // hill_climbing, simulated_annealing
     }};
 
     private static final Map<String, Option>
@@ -50,24 +63,51 @@ public class DistribFileSystemMain {
         put("n_servers", Option.N_SERVERS);
         put("repl_per_file", Option.MIN_REPLICATIONS_PER_FILE);
         put("seed_servers", Option.RANDOM_SEED_SERVERS);
+
+        put("heuristic", Option.HEURISTIC);
+        put("successor", Option.SUCCESSOR);
+        put("generator", Option.GENERATOR);
+        put("algorithm", Option.ALGORITHM);
     }};
 
     private static void consolelog(final String msg) {
-        System.out.println(msg);
+        if (!NON_INTERACTIVE) System.out.println(msg);
     }
 
     private static void parseArgs(String[] args) {
         for (String s : args) {
             String[] key_value = s.split("=");
 
-            if (key_value.length != 2)
-                throw new IllegalArgumentException("Invalid argument \"" + s + "\", must be of the form option=value");
+            if (key_value.length != 2) {
+                if (key_value.length == 1) {
+                    switch(key_value[0]) {
+                        case "--non-interactive": NON_INTERACTIVE = true; break;
+                        case "--print-heuristics": PRINT_HEURISTICS = true; break;
+                        default: assert false;
+                    }
+                    continue;
+                }
+                else
+                    throw new IllegalArgumentException("Invalid argument \"" + s + "\", must be of the form option=value");
+            }
 
-            Option option = abbreviations.get(key_value[0]);
+            Option option = abbreviations.get(key_value[0].toLowerCase());
             if (option == null) throw new IllegalArgumentException("Invalid option \"" + key_value[0] + "\"");
 
-            constants.put(option, new BigDecimal(key_value[1]));
+            if (option != Option.HEURISTIC && option != Option.ALGORITHM &&
+                option != Option.GENERATOR && option != Option.SUCCESSOR)
+                constants.put(option, new BigDecimal(key_value[1]));
+            else
+                constants.put(option, key_value[1]);
         }
+    }
+
+    private static int getIntConstant(Option o) {
+        return ((BigDecimal) constants.get(o)).intValue();
+    }
+
+    private static double getDoubleConstant(Option o) {
+        return ((BigDecimal) constants.get(o)).doubleValue();
     }
 
     public static void main(String[] args) {
@@ -75,33 +115,63 @@ public class DistribFileSystemMain {
 
         try {
             DistribFileSystemBoard.generateProblem(
-                    constants.get(Option.N_USERS).intValue(),
-                    constants.get(Option.MAX_REQUESTS_USER).intValue(),
-                    constants.get(Option.N_SERVERS).intValue(),
-                    constants.get(Option.MIN_REPLICATIONS_PER_FILE).intValue(),
-                    constants.get(Option.RANDOM_SEED_REQUESTS).intValue(),
-                    constants.get(Option.RANDOM_SEED_SERVERS).intValue());
+                    getIntConstant(Option.N_USERS),
+                    getIntConstant(Option.MAX_REQUESTS_USER),
+                    getIntConstant(Option.N_SERVERS),
+                    getIntConstant(Option.MIN_REPLICATIONS_PER_FILE),
+                    getIntConstant(Option.RANDOM_SEED_REQUESTS),
+                    getIntConstant(Option.RANDOM_SEED_SERVERS));
 
         } catch (Servers.WrongParametersException e) {
             e.printStackTrace();
+            System.exit(1);
         }
 
         DistribFileSystemBoard board = new DistribFileSystemBoard();
 
-        board.generateInitialState1();
+        String gen = constants.get(Option.GENERATOR).toString();
+
+        switch(gen.toLowerCase()) {
+            case "sequential": board.generateInitialState1(); break;
+            case "minvariance": board.generateInitialState2(); break;
+            case "mintt": board.generateInitialState3(); break;
+            default: assert false;
+        }
+
+        String heuristic = constants.get(Option.HEURISTIC).toString();
+
+        switch(heuristic.toLowerCase()) {
+            case "1": heuristicFunction = new DistribFileSystemHeuristicFunction(); break;
+            default: assert false;
+        }
+
+        String successor = constants.get(Option.SUCCESSOR).toString();
+
+        switch(successor.toLowerCase()) {
+            case "move": successorFunction = new DistribFileSystemSuccessorFunctionMove(); break;
+            case "move+swap": successorFunction = new DistribFileSystemSuccessorFunctionMoveSwap(); break;
+            default: assert false;
+        }
 
         consolelog("Initial solution: " + board.toString());
 
-        DistribFSHillClimbingSearch(board);
-        /*DistribFSSimulatedAnnealingSearch(board,
-                constants.get(Option.N_STEPS_ANNEALING).intValue(),
-                constants.get(Option.STITER_ANNEALING).intValue(),
-                constants.get(Option.K_ANNEALING).intValue(),
-                constants.get(Option.LAMBDA_ANNEALING).doubleValue());*/
+        DistribFileSystemBoard goal;
+
+        if (constants.get(Option.ALGORITHM).toString().toLowerCase().equals("hill_climbing"))
+            goal = DistribFSHillClimbingSearch(board);
+        else
+            goal = DistribFSSimulatedAnnealingSearch(board,
+                    getIntConstant(Option.N_STEPS_ANNEALING),
+                    getIntConstant(Option.STITER_ANNEALING),
+                    getIntConstant(Option.K_ANNEALING),
+                    getDoubleConstant(Option.LAMBDA_ANNEALING));
+
+
+        if (NON_INTERACTIVE) System.out.print(goal.toJson());
     }
 
     private static void checkSolution(DistribFileSystemBoard goal) {
-        for (int i = 0; i < goal.getNRequests(); ++i) {
+        for (int i = 0; i < DistribFileSystemBoard.getNRequests(); ++i) {
             int server = goal.whoIsServing(i);
 
             int[] request = DistribFileSystemBoard.requests.getRequest(i);
@@ -111,70 +181,82 @@ public class DistribFileSystemMain {
         }
     }
 
-    private static void DistribFSHillClimbingSearch(DistribFileSystemBoard board) {
-        System.out.println("\nDistribFS HillClimbing  -->");
+    private static DistribFileSystemBoard DistribFSHillClimbingSearch(DistribFileSystemBoard board) {
+        consolelog("\nDistribFS HillClimbing  -->");
+
+        DistribFileSystemBoard goal = null;
         try {
             Problem problem = new Problem(board,
-                                          new DistribFileSystemSuccessorFunction(),
+                                          successorFunction,
                                           new DistribFileSystemGoalTest(),
-                                          new DistribFileSystemHeuristicFunction());
+                                          heuristicFunction);
 
             Search search =  new HillClimbingSearch();
             SearchAgent agent = new SearchAgent(problem, search);
 
-            System.out.println();
+            consolelog("");
 
-            DistribFileSystemBoard goal = (DistribFileSystemBoard) search.getGoalState();
+            goal = (DistribFileSystemBoard) search.getGoalState();
 
             consolelog(goal.toString());
             checkSolution(goal);
-
             //printActions(agent.getActions());
             printInstrumentation(agent.getInstrumentation());
         } catch (Exception e) {
             e.printStackTrace();
+            assert false;
         }
+
+        return goal;
     }
 
-    private static void DistribFSSimulatedAnnealingSearch(DistribFileSystemBoard board,
+    private static DistribFileSystemBoard DistribFSSimulatedAnnealingSearch(DistribFileSystemBoard board,
                                                           int n_steps,
                                                           int stiter,
                                                           int k,
                                                           double lambda) {
-        System.out.println("\nDistribFS Simulated Annealing  -->");
+        consolelog("\nDistribFS Simulated Annealing  -->");
 
+        DistribFileSystemBoard goal = null;
         try {
             Problem problem =  new Problem(board,
-                                           new DistribFileSystemSuccessorFunction(),
+                                           successorFunction,
                                            new DistribFileSystemGoalTest(),
-                                           new DistribFileSystemHeuristicFunction());
+                                           heuristicFunction);
 
             SimulatedAnnealingSearch search = new SimulatedAnnealingSearch(n_steps, stiter, k, lambda);
 
             //search.traceOn();
             SearchAgent agent = new SearchAgent(problem,search);
 
-            checkSolution((DistribFileSystemBoard) search.getGoalState());
+            goal = (DistribFileSystemBoard) search.getGoalState();
 
-            System.out.println();
+            checkSolution(goal);
+
+            consolelog("");
             printActions(agent.getActions());
             printInstrumentation(agent.getInstrumentation());
+
+            return goal;
         } catch (Exception e) {
             e.printStackTrace();
+            assert false;
         }
+
+        return goal;
     }
 
     private static void printInstrumentation(Properties properties) {
         for (Object o : properties.keySet()) {
             String key = (String) o;
             String property = properties.getProperty(key);
-            System.out.println(key + " : " + property);
+            consolelog(key + " : " + property);
         }
     }
 
     private static void printActions(List actions) {
         for (Object action : actions) {
-            System.out.println(action.toString());
+            consolelog(action.toString());
         }
     }
 }
