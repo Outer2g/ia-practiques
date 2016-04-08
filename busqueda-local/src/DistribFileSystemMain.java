@@ -146,6 +146,8 @@ public class DistribFileSystemMain {
             default: assert false;
         }
 
+        consolelog("Initial solution: " + board.toString());
+
         String heuristic = constants.get(Option.HEURISTIC).toString();
 
         switch(heuristic.toLowerCase()) {
@@ -154,25 +156,30 @@ public class DistribFileSystemMain {
         }
 
         String successor = constants.get(Option.SUCCESSOR).toString();
-
-        switch(successor.toLowerCase()) {
-            case "move": successorFunction = new DistribFileSystemSuccessorFunctionMove(); break;
-            case "move+swap": successorFunction = new DistribFileSystemSuccessorFunctionMoveSwap(); break;
-            default: assert false;
-        }
-
-        consolelog("Initial solution: " + board.toString());
-
         DistribFileSystemBoard goal;
 
-        if (constants.get(Option.ALGORITHM).toString().toLowerCase().equals("hill_climbing"))
+        if (constants.get(Option.ALGORITHM).toString().toLowerCase().equals("hill_climbing")) {
+            switch(successor.toLowerCase()) {
+                case "move": successorFunction = new DistribFileSystemSuccessorFunctionMove(); break;
+                case "move+swap": successorFunction = new DistribFileSystemSuccessorFunctionMoveSwap(); break;
+                default: assert false;
+            }
+
             goal = DistribFSHillClimbingSearch(board);
-        else
+        }
+        else {
+            switch(successor.toLowerCase()) {
+                case "move": successorFunction = new DistribFileSystemSuccessorFunctionMoveSA(); break;
+                case "move+swap": successorFunction = new DistribFileSystemSuccessorFunctionMoveSwap(); break; // TODO: Cambiar por SA cuando este implementada
+                default: assert false;
+            }
+
             goal = DistribFSSimulatedAnnealingSearch(board,
                     getIntConstant(Option.N_STEPS_ANNEALING),
                     getIntConstant(Option.STITER_ANNEALING),
                     getIntConstant(Option.K_ANNEALING),
                     getDoubleConstant(Option.LAMBDA_ANNEALING));
+        }
 
 
         if (NON_INTERACTIVE) System.out.print(goal.toJson());
