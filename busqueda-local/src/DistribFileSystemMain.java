@@ -47,7 +47,7 @@ public class DistribFileSystemMain {
 
         put(Option.VARIANCE_FACTOR, new BigDecimal(1.0D));
 
-        put(Option.HEURISTIC, "1");
+        put(Option.HEURISTIC, "crit1"); // crit1, crit2
         put(Option.SUCCESSOR, "move"); // move, move+swap
         put(Option.GENERATOR, "sequential"); // sequential, minvariance, mintt
         put(Option.ALGORITHM, "hill_climbing"); // hill_climbing, simulated_annealing
@@ -151,7 +151,8 @@ public class DistribFileSystemMain {
         String heuristic = constants.get(Option.HEURISTIC).toString();
 
         switch(heuristic.toLowerCase()) {
-            case "1": heuristicFunction = new DistribFileSystemHeuristicFunctionCrit1(); break;
+            case "crit1": heuristicFunction = new DistribFileSystemHeuristicFunctionCrit1(); break;
+            case "crit2": heuristicFunction = new DistribFileSystemHeuristicFunctionCrit2(); break;
             default: assert false;
         }
 
