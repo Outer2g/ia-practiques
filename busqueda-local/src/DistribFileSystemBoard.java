@@ -24,10 +24,41 @@ public class DistribFileSystemBoard {
     // Tiempo de transmisión total de cada servidor
     private int[] serverTT;
 
-    // Que servidor sirve cada peticion
-    private int[] requestServer;
+    /**
+     * Explicacion:
+     *  La estructura de datos Set<Integer>[] requestsByServer
+     *  seria equivalente. Además, nos iria bien tanto para el operador de
+     *  swap como para el operador de move.
+     *
+     *  Nos iria bien en el swap porque para ver que peticiones podemos
+     *  intercambiar con una peticion dada X actualmente servida por S
+     *  (sabemos rapidamente quien la sirve por la forma en la que recorremos las peticiones),
+     *  solo tendriamos que mirar aquellas peticiones Y que estan siendo servidas
+     *  por algun servidor T de los que pueden servir X, comprobar que S puede servir Y,
+     *  y intercambiar X con Y borrando X del set de S y Y del set de T y añadiendo
+     *  X al set de T y Y al set de S.
+     *
+     *  Nos iria bien en el move porque para mover una peticion X actualmente
+     *  servida por S solo tendriamos que borrar X del set de S y añadirla
+     *  en el set de alguno de los otros servidores que pueden servir X.
+     *  Nuevamente podemos saber rapidamente que servidor atiende una peticion
+     *  por la forma en la que recorremos las peticiones.
+     *
+     *  Hemos escogido esta otra implementacion (que nos sigue yendo bien para
+     *  el operador de move, pero no para el de swap, ya que no podemos saber
+     *  rapidamente que peticiones esta sirviendo un servidor X dado), porque
+     *  en los experimentos hemos visto que el conjunto de operadores swap+move
+     *  no daba soluciones mejores que el conjunto move, y esta estructura de datos,
+     *  si bien nos da un coste asimptotico igual para el operador de move,
+     *  tiene una constante mas pequeña que la estructura de datos con el set,
+     *  que tendra su overhead en el recorrido del Set y por los dos bucles
+     *  anidados que tendriamos que hacer siempre que quisieramos recorrer todas
+     *  las peticiones.
+     *  */
+    // TODO: Si vemos que el operador de swap+move da mejores resultados habra que cambiar esto
+    private int[] requestServer; // Que servidor sirve cada peticion
 
-    // TODO: Quizas mantener la suma de tiempos de transmission, o de sus cuadrados
+    // TODO: Quizas mantener la suma de tiempos de transmision, o de sus cuadrados
 
     public DistribFileSystemBoard(DistribFileSystemBoard otherBoard) {
         serverTT = new int[nServers];

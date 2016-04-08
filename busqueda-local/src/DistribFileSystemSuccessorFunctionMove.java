@@ -22,7 +22,7 @@ public class DistribFileSystemSuccessorFunctionMove implements SuccessorFunction
         if (DistribFileSystemMain.PRINT_HEURISTICS)
             System.out.println(DistribFileSystemMain.heuristicFunction.getHeuristicValue(board));
 
-        for (int request = 0; request < DistribFileSystemBoard.getNRequests(); ++request){
+        for (int request = 0; request < DistribFileSystemBoard.getNRequests(); ++request) {
             int file = DistribFileSystemBoard.requests.getRequest(request)[1];
 
             int actualServer = board.whoIsServing(request);
