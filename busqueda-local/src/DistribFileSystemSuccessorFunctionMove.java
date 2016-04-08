@@ -25,15 +25,22 @@ public class DistribFileSystemSuccessorFunctionMove implements SuccessorFunction
         for (int request = 0; request < DistribFileSystemBoard.getNRequests(); ++request){
             int file = DistribFileSystemBoard.requests.getRequest(request)[1];
 
+            int actualServer = board.whoIsServing(request);
+
             Set<Integer> serversWithFile = DistribFileSystemBoard.servers.fileLocations(file);
 
+            // Borramos el que lo este sirviendo ahora mismo para evitar
+            // añadir como sucesor el mismo estado actual
+            serversWithFile.remove(actualServer);
+
             for (int server : serversWithFile) {
-                if (board.whoIsServing(request) != server) {
-                    DistribFileSystemBoard newBoard = new DistribFileSystemBoard(board);
-                    newBoard.assignRequest(server, request);
-                    successors.add(new Successor("Now " + request + " served by " + server, newBoard));
-                }
+                DistribFileSystemBoard newBoard = new DistribFileSystemBoard(board);
+                newBoard.assignRequest(server, request);
+                successors.add(new Successor("Now " + request + " served by " + server, newBoard));
             }
+
+            // Y luego lo volvemos a añadir al conjunto para dejarlo como estaba
+            serversWithFile.add(actualServer);
         }
 
         return successors;
