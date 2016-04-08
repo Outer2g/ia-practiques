@@ -11,7 +11,7 @@ public class DistribFileSystemHeuristicFunction implements HeuristicFunction {
         // Variance more important than transmission time
 
 
-        double res = b.getTotalTransmissionTime() + b.getTransmissionTimeVariance()*4000 + b.getMaxServerTransmissionTime()*1000;
+        double res = b.getTotalTT() + b.getTTVariance()*4000 + b.getMaxServerTT()*1000;
 
         return res;
     }

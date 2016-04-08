@@ -132,9 +132,9 @@ public class DistribFileSystemMain {
         String gen = constants.get(Option.GENERATOR).toString();
 
         switch(gen.toLowerCase()) {
-            case "sequential": board.generateInitialState1(); break;
-            case "minvariance": board.generateInitialState2(); break;
-            case "mintt": board.generateInitialState3(); break;
+            case "sequential": board.generateInitialStateSequential(); break;
+            case "minvariance": board.generateInitialStateMinVar(); break;
+            case "mintt": board.generateInitialStateMinTT(); break;
             default: assert false;
         }
 
