@@ -25,6 +25,8 @@ public class DistribFileSystemMain {
 
         N_SERVERS, MIN_REPLICATIONS_PER_FILE, RANDOM_SEED_SERVERS,
 
+        VARIANCE_FACTOR, // Factor de la varianza en el heuristico que optimiza el criterio 2
+
         HEURISTIC, SUCCESSOR, GENERATOR, ALGORITHM
     }
 
@@ -42,6 +44,8 @@ public class DistribFileSystemMain {
         put(Option.N_SERVERS, new BigDecimal(500));
         put(Option.MIN_REPLICATIONS_PER_FILE, new BigDecimal(25));
         put(Option.RANDOM_SEED_SERVERS, new BigDecimal(1234));
+
+        put(Option.VARIANCE_FACTOR, new BigDecimal(1.0D));
 
         put(Option.HEURISTIC, "1");
         put(Option.SUCCESSOR, "move"); // move, move+swap
@@ -63,6 +67,8 @@ public class DistribFileSystemMain {
         put("n_servers", Option.N_SERVERS);
         put("repl_per_file", Option.MIN_REPLICATIONS_PER_FILE);
         put("seed_servers", Option.RANDOM_SEED_SERVERS);
+
+        put("variance_factor", Option.VARIANCE_FACTOR);
 
         put("heuristic", Option.HEURISTIC);
         put("successor", Option.SUCCESSOR);
@@ -127,6 +133,8 @@ public class DistribFileSystemMain {
             System.exit(1);
         }
 
+        DistribFileSystemHeuristicFunctionCrit2.setVarianceFactor(getDoubleConstant(Option.VARIANCE_FACTOR));
+
         DistribFileSystemBoard board = new DistribFileSystemBoard();
 
         String gen = constants.get(Option.GENERATOR).toString();
@@ -141,7 +149,7 @@ public class DistribFileSystemMain {
         String heuristic = constants.get(Option.HEURISTIC).toString();
 
         switch(heuristic.toLowerCase()) {
-            case "1": heuristicFunction = new DistribFileSystemHeuristicFunction(); break;
+            case "1": heuristicFunction = new DistribFileSystemHeuristicFunctionCrit1(); break;
             default: assert false;
         }
 

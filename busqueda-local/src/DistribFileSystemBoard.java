@@ -15,6 +15,7 @@ public class DistribFileSystemBoard {
 
     private static int nRequests; // O(nUsers*requestsPerUser)
     private static int nServers;
+    private static double nServersInverse; // Multiplicar por el inverso es mas eficiente que dividir
     private static int nFiles; // Siempre es 1000
     private static int nUsers;
     private static int maxRequestsPerUser; // 1 <= requestsPerUser <= maxRequestsPerUser
@@ -76,6 +77,7 @@ public class DistribFileSystemBoard {
         requests = new Requests(nUsers, maxRequests, reqSeed);
 
         nServers = nServ;
+        nServersInverse = 1.0D/nServers;
         nFiles = servers.size();
 
         minReplicationsPerFile = nRep;
@@ -109,6 +111,7 @@ public class DistribFileSystemBoard {
      * Factor de ramificacion: nRequests*minReplicationsPerFile
      *
      * Permite llegar a cualquier solucion del espacio
+     *
      * No se sale del espacio de soluciones
      */
     public void assignRequest(int server, int request) {
@@ -338,9 +341,9 @@ public class DistribFileSystemBoard {
     }*/
 
     // Poco estable numericamente
-    public double getTTVariance() {
+    public double[] getTTMeanVariance() {
         final int totalTT = getTotalTT();
-        final double mean = totalTT/(double)(nServers);
+        final double mean = totalTT+nServersInverse;
 
         double sumDiff = 0.0D;
 
@@ -349,11 +352,11 @@ public class DistribFileSystemBoard {
             sumDiff += diff*diff;
         }
 
-        return sumDiff/nServers;
+        return new double[] { mean, sumDiff*nServersInverse };
     }
 
     // Estable numericamente pero mucho mas costoso por la division
-    public double getTTVarianceStable() {
+    public double[] getTTMeanVarianceStable() {
         double mean = 0.0D;
         double M2 = 0.0D;
 
@@ -365,9 +368,9 @@ public class DistribFileSystemBoard {
         }
 
         if (nServers < 2)
-            return 0;
+            return new double[] { serverTT[0], 0 };
         else
-            return M2/(nServers - 1);
+            return new double[] { mean, M2/(nServers - 1) };
     }
 
 
@@ -387,11 +390,11 @@ public class DistribFileSystemBoard {
 
     @Override
     public String toString() {
-        return "Variance: " + getTTVariance() + ", TotalTT: " + getTotalTT() + ", MaxTT: " + getMaxServerTT();
+        return "Variance: " + getTTMeanVariance()[1] + ", TotalTT: " + getTotalTT() + ", MaxTT: " + getMaxServerTT();
     }
 
     public String toJson() {
-        return "{ \"tt_variance\": " + getTTVariance() +
+        return "{ \"tt_variance\": " + getTTMeanVariance()[1] +
                ", \"total_tt\": "    + getTotalTT()    +
                ", \"max_tt\": "      + getMaxServerTT() +
                ", \"heuristic\": "   + DistribFileSystemMain.heuristicFunction

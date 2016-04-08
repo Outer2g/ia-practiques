@@ -18,8 +18,9 @@ public class DistribFileSystemSuccessorFunctionMove implements SuccessorFunction
 
         DistribFileSystemBoard board = (DistribFileSystemBoard) state;
 
+        // TODO: Comentar cuando se testee el tiempo de ejecucion
         if (DistribFileSystemMain.PRINT_HEURISTICS)
-            System.out.println(DistribFileSystemMain.heuristicFunction.getHeuristicValue(board)); // TODO: Remove on production
+            System.out.println(DistribFileSystemMain.heuristicFunction.getHeuristicValue(board));
 
         for (int request = 0; request < DistribFileSystemBoard.getNRequests(); ++request){
             int file = DistribFileSystemBoard.requests.getRequest(request)[1];
