@@ -46,7 +46,6 @@ public class DistribFileSystemSuccessorFunctionMoveSA implements SuccessorFuncti
 
         final DistribFileSystemBoard board = (DistribFileSystemBoard) state;
 
-        // TODO: Comentar cuando se testee el tiempo de ejecucion
         if (DistribFileSystemMain.PRINT_HEURISTICS)
             System.out.println(DistribFileSystemMain.heuristicFunction.getHeuristicValue(board));
 

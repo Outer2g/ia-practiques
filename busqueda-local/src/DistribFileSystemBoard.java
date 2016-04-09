@@ -7,7 +7,6 @@ import IA.DistFS.Servers;
 
 import java.util.Iterator;
 import java.util.Set;
-import java.util.stream.IntStream;
 
 public class DistribFileSystemBoard {
     public static Requests requests;
@@ -55,14 +54,16 @@ public class DistribFileSystemBoard {
      *  anidados que tendriamos que hacer siempre que quisieramos recorrer todas
      *  las peticiones.
      *  */
-    // TODO: Si vemos que el operador de swap+move da mejores resultados habra que cambiar esto
     private int[] requestServer; // Que servidor sirve cada peticion
 
-    // TODO: Quizas mantener la suma de tiempos de transmision, o de sus cuadrados
+    public int totalTT;
+
 
     public DistribFileSystemBoard(DistribFileSystemBoard otherBoard) {
         serverTT = new int[nServers];
         requestServer = new int[nRequests];
+
+        totalTT = otherBoard.totalTT;
 
         System.arraycopy(otherBoard.serverTT, 0,
                 serverTT, 0, nServers);
@@ -78,26 +79,15 @@ public class DistribFileSystemBoard {
 
     private void createDataStructures() {
         // Todos los valores inicializados a 0 por defecto
+        totalTT = 0;
 
         serverTT = new int[nServers];
         requestServer = new int[nRequests];
     }
 
-    // TODO: Borrar en la entrega
-    private void checkRequest(int request) {
-        assert(request >= 0 && request < nRequests);
-    }
-
-    // TODO: Borrar en la entrega
-    private void checkServer(int server) {
-        assert(server >= 0 && server < nServers);
-    }
-
-
     public static int getNRequests() {
         return nRequests;
     }
-    public static int getNServers() { return nServers; }
 
 
     public static void generateProblem(int nUsers, int maxRequests, int nServ,
@@ -119,12 +109,10 @@ public class DistribFileSystemBoard {
     }
 
     public int whoIsServing(int request) {
-        checkRequest(request);
         return requestServer[request];
     }
 
     public int totalServerTT(int server) {
-        checkServer(server);
         return serverTT[server];
     }
 
@@ -146,25 +134,24 @@ public class DistribFileSystemBoard {
      * No se sale del espacio de soluciones
      */
     public void assignRequest(int server, int request) {
-        checkRequest(request);
-        checkServer(server);
-
         final int previousServer = requestServer[request];
         requestServer[request] = server;
 
         final int user = requests.getRequest(request)[0];
 
-        serverTT[previousServer] -= getTTUser(previousServer, user);
-        serverTT[server]         += getTTUser(server,         user);
+        final int previousTT = getTTUser(previousServer, user);
+        final int newTT      = getTTUser(server,         user);
+
+        serverTT[previousServer] -= previousTT;
+        serverTT[server]         += newTT;
+
+        totalTT += newTT - previousTT;
     }
 
     /**
      * Asume que la peticion no esta asignada a ningun servidor
      */
     private void assignRequestInitial(int server, int request) {
-        checkRequest(request);
-        checkServer(server);
-
         requestServer[request] = server;
         serverTT[server] += getTT(server, request);
     }
@@ -175,9 +162,6 @@ public class DistribFileSystemBoard {
      *         viceversa y los dos servidores son diferentes
      */
     public boolean interchangeable(int request1, int request2) {
-        checkRequest(request1);
-        checkRequest(request2);
-
         final int file1 = requests.getRequest(request1)[1];
         final int file2 = requests.getRequest(request2)[1];
 
@@ -198,14 +182,21 @@ public class DistribFileSystemBoard {
         No se sale del espacio de soluciones
      */
     public void swapRequests(int request1, int request2) {
-        // TODO: Borrar en la entrega
-        assert(interchangeable(request1, request2));
-
         final int server1 = requestServer[request1];
         final int server2 = requestServer[request2];
 
         requestServer[request1] = server2;
         requestServer[request2] = server1;
+
+        final int tt21 = getTT(server2, request1);
+        final int tt12 = getTT(server1, request2);
+        final int tt22 = getTT(server2, request2);
+        final int tt11 = getTT(server1, request1);
+
+        serverTT[server1] += tt12 - tt11;
+        serverTT[server2] += tt21 - tt22;
+
+        totalTT += tt21 + tt12 - tt22 - tt11;
     }
 
 
@@ -232,6 +223,8 @@ public class DistribFileSystemBoard {
 
             assignRequestInitial(serverAssigned, request);
 	    }
+
+        totalTT = computeTotalTT();
     }
 
 
@@ -269,6 +262,8 @@ public class DistribFileSystemBoard {
 
             assignRequestInitial(best_server, request);
         }
+
+        totalTT = computeTotalTT();
     }
 
     /**
@@ -308,6 +303,8 @@ public class DistribFileSystemBoard {
 
             assignRequestInitial(bestServer, request);
         }
+
+        totalTT = computeTotalTT();
     }*/
 
     /**
@@ -343,6 +340,8 @@ public class DistribFileSystemBoard {
                 maxServer = server;
             }
         }
+
+        totalTT = computeTotalTT();
     }
 
 
@@ -355,7 +354,7 @@ public class DistribFileSystemBoard {
         return max;
     }
 
-    public int getTotalTT() {
+    public int computeTotalTT() {
         int sum = 0;
 
         for (int tt : serverTT) sum += tt;
@@ -363,8 +362,13 @@ public class DistribFileSystemBoard {
         return sum;
     }
 
+    public int getTotalTT() {
+        return totalTT;
+    }
+
+
     public double[] getTTMeanVariance() {
-        double mean = getTotalTT()*nServersInverse;
+        double mean = totalTT*nServersInverse;
 
         double temp = 0;
 

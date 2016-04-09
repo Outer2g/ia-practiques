@@ -122,7 +122,7 @@ public class DistribFileSystemMain {
 
     public static String solutionToJson(DistribFileSystemBoard board, int nsteps) {
         return "{ \"tt_variance\": " + board.getTTMeanVariance()[1] +
-                ", \"total_tt\": "   + board.getTotalTT()    +
+                ", \"total_tt\": "   + board.computeTotalTT()    +
                 ", \"max_tt\": "     + board.getMaxServerTT() +
                 ", \"heuristic\": "  + heuristicFunction.getHeuristicValue(board) +
                 ", \"steps\": "      + nsteps +
