@@ -376,21 +376,6 @@ public class DistribFileSystemBoard {
         return new double[] { mean, temp*nServersInverse };
     }
 
-
-    public String toStringVerbose() {
-        final StringBuilder builder = new StringBuilder();
-
-        builder.append("<Request>: <Server attending request>\n\n");
-        for (int request = 0; request < nRequests;  ++request)
-            builder.append(request).append(": ").append(requestServer[request]).append("\n");
-
-        builder.append("\n<Server>: <Total transmission time>\n\n");
-        for (int server = 0; server < nServers; ++server)
-            builder.append(server).append(": ").append(serverTT[server]).append("\n");
-
-        return builder.toString();
-    }
-
     @Override
     public String toString() {
         return "Variance: " + getTTMeanVariance()[1] + ", TotalTT: " + getTotalTT() + ", MaxTT: " + getMaxServerTT();
