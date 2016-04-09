@@ -49,11 +49,11 @@ public class DistribFileSystemMain {
         put(Option.MIN_REPLICATIONS_PER_FILE, new BigDecimal(25));
         put(Option.RANDOM_SEED_SERVERS, new BigDecimal(1234));
 
-        put(Option.VARIANCE_FACTOR, new BigDecimal(1.0D));
+        put(Option.VARIANCE_FACTOR, new BigDecimal(35.0D));
 
-        put(Option.HEURISTIC, "criteria 1"); // crit1, crit2
+        put(Option.HEURISTIC, "criteria 2"); // crit1, crit2
         put(Option.SUCCESSOR, "move"); // move, move+swap
-        put(Option.GENERATOR, "sequential"); // sequential, minvariance, mintt
+        put(Option.GENERATOR, "mintt"); // sequential, minvariance, mintt
         put(Option.ALGORITHM, "hill_climbing"); // hill_climbing, simulated_annealing
     }};
 

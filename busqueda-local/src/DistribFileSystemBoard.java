@@ -316,6 +316,7 @@ public class DistribFileSystemBoard {
      *
      * Coste: theta(nRequests)
      */
+
     public void generateInitialStateMinMax() {
         createDataStructures();
 
@@ -353,8 +354,6 @@ public class DistribFileSystemBoard {
 
         return max;
     }
-
-
 
     public int getTotalTT() {
         int sum = 0;

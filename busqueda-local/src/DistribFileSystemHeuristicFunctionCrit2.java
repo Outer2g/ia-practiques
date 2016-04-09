@@ -18,6 +18,7 @@ public class DistribFileSystemHeuristicFunctionCrit2 implements HeuristicFunctio
 
         final double mean = meanVariance[0];
         final double variance = meanVariance[1];
+        final double meanSq = mean*mean;
 
         // En vez de calcular la desviacion mediana con una raiz cuadrada (costosa)
         // Elevamos al cuadrado la media para que este en el mismo orden que la varianza
@@ -25,6 +26,6 @@ public class DistribFileSystemHeuristicFunctionCrit2 implements HeuristicFunctio
         // Notar que la mediana ya nos da la info del tiempo total de transmision
         // ya que el numero de servidores es constante
 
-        return mean*mean + VARIANCE_FACTOR*variance;
+        return meanSq + VARIANCE_FACTOR*variance;
     }
 }
