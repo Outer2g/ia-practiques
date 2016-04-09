@@ -49,7 +49,7 @@ public class DistribFileSystemBoard {
      *  rapidamente que peticiones esta sirviendo un servidor X dado), porque
      *  en los experimentos hemos visto que el conjunto de operadores swap+move
      *  no daba soluciones mejores que el conjunto move, y esta estructura de datos,
-     *  si bien nos da un coste asimptotico igual para el operador de move,
+     *  si bien nos da un coste asimptotico en mediana igual para el operador de move,
      *  tiene una constante mas pequeña que la estructura de datos con el set,
      *  que tendra su overhead en el recorrido del Set y por los dos bucles
      *  anidados que tendriamos que hacer siempre que quisieramos recorrer todas
@@ -277,6 +277,7 @@ public class DistribFileSystemBoard {
      *
      * Coste en caso peor: O(nRequests*minReplicationsPerFile)
      */
+    /*
     public void generateInitialStateMinVar() {
         createDataStructures();
 
@@ -303,9 +304,11 @@ public class DistribFileSystemBoard {
                 }
             }
 
+            //System.out.println("best: " + bestServer + ", tt: " + minTransmissionTime);
+
             assignRequestInitial(bestServer, request);
         }
-    }
+    }*/
 
     /**
      * Asigna las peticiones intentando minimizar el tiempo de transmision
@@ -342,12 +345,6 @@ public class DistribFileSystemBoard {
     }
 
 
-    // TODO: Mirar cual de las dos alternativas es mejor
-    public int getMaxServerTT() {
-        return IntStream.of(serverTT).parallel().max().getAsInt();
-    }
-
-    /*
     public int getMaxServerTT() {
         int max = 0;
 
@@ -355,53 +352,29 @@ public class DistribFileSystemBoard {
             if (tt > max) max = tt;
 
         return max;
-    }*/
-
-    public int getTotalTT() {
-        // TODO: Mirar si esto funca en la FIB
-        return IntStream.of(serverTT).parallel().sum();
     }
 
-    /*
+
+
     public int getTotalTT() {
         int sum = 0;
 
         for (int tt : serverTT) sum += tt;
 
-        return tt;
-    }*/
-
-    // Poco estable numericamente
-    public double[] getTTMeanVariance() {
-        final int totalTT = getTotalTT();
-        final double mean = totalTT+nServersInverse;
-
-        double sumDiff = 0.0D;
-
-        for (int tt : serverTT) {
-            final double diff = tt - mean;
-            sumDiff += diff*diff;
-        }
-
-        return new double[] { mean, sumDiff*nServersInverse };
+        return sum;
     }
 
-    // Estable numericamente pero mucho mas costoso por la division
-    public double[] getTTMeanVarianceStable() {
-        double mean = 0.0D;
-        double M2 = 0.0D;
+    public double[] getTTMeanVariance() {
+        double mean = getTotalTT()*nServersInverse;
 
-        for (int i = 0; i < nServers; ++i) {
-            final int tt = serverTT[i];
-            final double delta = tt - mean;
-            mean += delta/(i + 1);
-            M2 += delta*(tt - mean);
+        double temp = 0;
+
+        for (int tt : serverTT) {
+            double diff = mean - tt;
+            temp += diff*diff;
         }
 
-        if (nServers < 2)
-            return new double[] { serverTT[0], 0 };
-        else
-            return new double[] { mean, M2/(nServers - 1) };
+        return new double[] { mean, temp*nServersInverse };
     }
 
 
@@ -422,14 +395,5 @@ public class DistribFileSystemBoard {
     @Override
     public String toString() {
         return "Variance: " + getTTMeanVariance()[1] + ", TotalTT: " + getTotalTT() + ", MaxTT: " + getMaxServerTT();
-    }
-
-    public String toJson() {
-        return "{ \"tt_variance\": " + getTTMeanVariance()[1] +
-               ", \"total_tt\": "    + getTotalTT()    +
-               ", \"max_tt\": "      + getMaxServerTT() +
-               ", \"heuristic\": "   + DistribFileSystemMain.heuristicFunction
-                                       .getHeuristicValue(this) +
-               " }";
     }
 }

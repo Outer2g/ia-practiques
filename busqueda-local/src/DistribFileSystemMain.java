@@ -18,6 +18,10 @@ public class DistribFileSystemMain {
     public static HeuristicFunction heuristicFunction;
     private static SuccessorFunction successorFunction;
 
+    private static SearchAgent agent;
+
+    private static DistribFileSystemBoard board;
+
     private enum Option {
         N_STEPS_ANNEALING, STITER_ANNEALING, K_ANNEALING, LAMBDA_ANNEALING,
 
@@ -47,7 +51,7 @@ public class DistribFileSystemMain {
 
         put(Option.VARIANCE_FACTOR, new BigDecimal(1.0D));
 
-        put(Option.HEURISTIC, "crit1"); // crit1, crit2
+        put(Option.HEURISTIC, "criteria 1"); // crit1, crit2
         put(Option.SUCCESSOR, "move"); // move, move+swap
         put(Option.GENERATOR, "sequential"); // sequential, minvariance, mintt
         put(Option.ALGORITHM, "hill_climbing"); // hill_climbing, simulated_annealing
@@ -116,6 +120,15 @@ public class DistribFileSystemMain {
         return ((BigDecimal) constants.get(o)).doubleValue();
     }
 
+    public static String solutionToJson(DistribFileSystemBoard board, int nsteps) {
+        return "{ \"tt_variance\": " + board.getTTMeanVariance()[1] +
+                ", \"total_tt\": "   + board.getTotalTT()    +
+                ", \"max_tt\": "     + board.getMaxServerTT() +
+                ", \"heuristic\": "  + heuristicFunction.getHeuristicValue(board) +
+                ", \"steps\": "      + nsteps +
+                " }";
+    }
+
     public static void main(String[] args) {
         parseArgs(args);
 
@@ -135,14 +148,15 @@ public class DistribFileSystemMain {
 
         DistribFileSystemHeuristicFunctionCrit2.setVarianceFactor(getDoubleConstant(Option.VARIANCE_FACTOR));
 
-        DistribFileSystemBoard board = new DistribFileSystemBoard();
+        board = new DistribFileSystemBoard();
 
         String gen = constants.get(Option.GENERATOR).toString();
 
         switch(gen.toLowerCase()) {
             case "sequential": board.generateInitialStateSequential(); break;
-            case "minvariance": board.generateInitialStateMinVar(); break;
+            //case "minvariance": board.generateInitialStateMinVar(); break;
             case "mintt": board.generateInitialStateMinTT(); break;
+            case "minmax": board.generateInitialStateMinMax(); break;
             default: assert false;
         }
 
@@ -151,8 +165,8 @@ public class DistribFileSystemMain {
         String heuristic = constants.get(Option.HEURISTIC).toString();
 
         switch(heuristic.toLowerCase()) {
-            case "crit1": heuristicFunction = new DistribFileSystemHeuristicFunctionCrit1(); break;
-            case "crit2": heuristicFunction = new DistribFileSystemHeuristicFunctionCrit2(); break;
+            case "criteria 1": heuristicFunction = new DistribFileSystemHeuristicFunctionCrit1(); break;
+            case "criteria 2": heuristicFunction = new DistribFileSystemHeuristicFunctionCrit2(); break;
             default: assert false;
         }
 
@@ -183,7 +197,7 @@ public class DistribFileSystemMain {
         }
 
 
-        if (NON_INTERACTIVE) System.out.print(goal.toJson());
+        if (NON_INTERACTIVE) System.out.print(solutionToJson(goal, Integer.parseInt(agent.getInstrumentation().getProperty("nodesExpanded"))));
     }
 
     private static void checkSolution(DistribFileSystemBoard goal) {
@@ -208,7 +222,7 @@ public class DistribFileSystemMain {
                                           heuristicFunction);
 
             Search search =  new HillClimbingSearch();
-            SearchAgent agent = new SearchAgent(problem, search);
+            agent = new SearchAgent(problem, search);
 
             consolelog("");
 
@@ -243,7 +257,7 @@ public class DistribFileSystemMain {
             SimulatedAnnealingSearch search = new SimulatedAnnealingSearch(n_steps, stiter, k, lambda);
 
             //search.traceOn();
-            SearchAgent agent = new SearchAgent(problem,search);
+            agent = new SearchAgent(problem,search);
 
             goal = (DistribFileSystemBoard) search.getGoalState();
 

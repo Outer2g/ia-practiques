@@ -8,27 +8,15 @@ import java.util.*;
  * version will be using the operator move from one server to another
  */
 public class DistribFileSystemSuccessorFunctionMoveSA implements SuccessorFunction {
-    @Override
-    public List getSuccessors(Object state) {
-        List<Successor> successors = new ArrayList<>(1);
 
-        DistribFileSystemBoard board = (DistribFileSystemBoard) state;
+    public static void applyMoveSA(DistribFileSystemBoard board, int request, List<Successor> successors, Random r) {
+        final int file = DistribFileSystemBoard.requests.getRequest(request)[1];
 
-        // TODO: Comentar cuando se testee el tiempo de ejecucion
-        if (DistribFileSystemMain.PRINT_HEURISTICS)
-            System.out.println(DistribFileSystemMain.heuristicFunction.getHeuristicValue(board));
+        final int actualServer = board.whoIsServing(request);
 
+        final Set<Integer> serversWithFile = DistribFileSystemBoard.servers.fileLocations(file);
 
-        Random r = new Random();
-        int request = r.nextInt(DistribFileSystemBoard.getNRequests());
-
-        int file = DistribFileSystemBoard.requests.getRequest(request)[1];
-
-        int actualServer = board.whoIsServing(request);
-
-        Set<Integer> serversWithFile = DistribFileSystemBoard.servers.fileLocations(file);
-
-        int size = serversWithFile.size();
+        final int size = serversWithFile.size();
 
         // Solo puede pasar si minReplications < 2, pero hacer la especializacion seria demasiado codigo
         if (size == 1)
@@ -38,19 +26,37 @@ public class DistribFileSystemSuccessorFunctionMoveSA implements SuccessorFuncti
             // añadir como sucesor el mismo estado actual
             serversWithFile.remove(actualServer);
 
-            Iterator<Integer> it = serversWithFile.iterator();
+            final Iterator<Integer> it = serversWithFile.iterator();
 
-            int its = r.nextInt(size);
-            while (its-- > 0) it.next();
+            int its = r.nextInt(size - 1); // Size-1 porque hemos borrado el actual
+            while (--its >= 0) it.next();
+            final int server = it.next();
 
-            int server = it.next();
-
-            DistribFileSystemBoard newBoard = new DistribFileSystemBoard(board);
+            final DistribFileSystemBoard newBoard = new DistribFileSystemBoard(board);
             newBoard.assignRequest(server, request);
             successors.add(new Successor("Now " + request + " served by " + server, newBoard));
 
             serversWithFile.add(actualServer);
         }
+    }
+
+    @Override
+    public List getSuccessors(Object state) {
+        final List<Successor> successors = new ArrayList<>(1);
+
+        final DistribFileSystemBoard board = (DistribFileSystemBoard) state;
+
+        // TODO: Comentar cuando se testee el tiempo de ejecucion
+        if (DistribFileSystemMain.PRINT_HEURISTICS)
+            System.out.println(DistribFileSystemMain.heuristicFunction.getHeuristicValue(board));
+
+
+        final Random r = new Random();
+        final int request = r.nextInt(DistribFileSystemBoard.getNRequests());
+
+        applyMoveSA(board, request, successors, r);
+
+        assert(!successors.isEmpty());
 
         return successors;
     }
