@@ -15,10 +15,6 @@ public class DistribFileSystemBoard {
     private static int nRequests; // O(nUsers*requestsPerUser)
     private static int nServers;
     private static double nServersInverse; // Multiplicar por el inverso es mas eficiente que dividir
-    private static int nFiles; // Siempre es 1000
-    private static int nUsers;
-    private static int maxRequestsPerUser; // 1 <= requestsPerUser <= maxRequestsPerUser
-    private static int minReplicationsPerFile; // minReplicationsPerFile <= replicationsPerFile <= minReplicationsPerFile + 2
 
     // Tiempo de transmisión total de cada servidor
     private int[] serverTT;
@@ -99,21 +95,12 @@ public class DistribFileSystemBoard {
 
         nServers = nServ;
         nServersInverse = 1.0D/nServers;
-        nFiles = servers.size();
 
-        minReplicationsPerFile = nRep;
-        maxRequestsPerUser = maxRequests;
-
-        DistribFileSystemBoard.nUsers = nUsers;
         DistribFileSystemBoard.nRequests = requests.size();
     }
 
     public int whoIsServing(int request) {
         return requestServer[request];
-    }
-
-    public int totalServerTT(int server) {
-        return serverTT[server];
     }
 
     public int getTT(int server, int request) {
@@ -199,7 +186,6 @@ public class DistribFileSystemBoard {
         totalTT += tt21 + tt12 - tt22 - tt11;
     }
 
-
     /**
      * Asigna cada peticion al primer servidor que tenga el archivo
      * No tiene en cuenta ni el tiempo ni el equilibrio entre servidores
@@ -268,7 +254,9 @@ public class DistribFileSystemBoard {
 
     /**
      * Asigna las peticiones intentando minimizar la variabilidad entre el
-     * tiempo de transmision entre servidores
+     * tiempo de transmision entre servidores.
+     *
+     * Descartado por no dar el resultado que se esperaba
      *
      * Coste en caso peor: O(nRequests*minReplicationsPerFile)
      */
@@ -313,7 +301,6 @@ public class DistribFileSystemBoard {
      *
      * Coste: theta(nRequests)
      */
-
     public void generateInitialStateMinMax() {
         createDataStructures();
 
@@ -366,7 +353,6 @@ public class DistribFileSystemBoard {
         return totalTT;
     }
 
-
     public double[] getTTMeanVariance() {
         double mean = totalTT*nServersInverse;
 
@@ -380,8 +366,22 @@ public class DistribFileSystemBoard {
         return new double[] { mean, temp*nServersInverse };
     }
 
+    public String getSolutionDescription() {
+        final StringBuilder builder = new StringBuilder();
+
+        builder.append("<Request>: <Server attending request>\n\n");
+        for (int request = 0; request < nRequests;  ++request)
+            builder.append(request).append(": ").append(requestServer[request]).append("\n");
+
+        builder.append("\n<Server>: <Total transmission time>\n\n");
+        for (int server = 0; server < nServers; ++server)
+            builder.append(server).append(": ").append(serverTT[server]).append("\n");
+
+        return builder.toString();
+    }
+
     @Override
     public String toString() {
-        return "Variance: " + getTTMeanVariance()[1] + ", TotalTT: " + getTotalTT() + ", MaxTT: " + getMaxServerTT();
+        return "StdDevTT: " + Math.sqrt(getTTMeanVariance()[1]) + ", TotalTT: " + getTotalTT() + ", MaxTT: " + getMaxServerTT();
     }
 }

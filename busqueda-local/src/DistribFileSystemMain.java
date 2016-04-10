@@ -36,10 +36,10 @@ public class DistribFileSystemMain {
 
     private static EnumMap<Option, Object>
             constants = new EnumMap<Option, Object>(Option.class) {{
-        put(Option.N_STEPS_ANNEALING, new BigDecimal(2000));
+        put(Option.N_STEPS_ANNEALING, new BigDecimal(10000));
         put(Option.STITER_ANNEALING, new BigDecimal(100));
         put(Option.K_ANNEALING, new BigDecimal(5));
-        put(Option.LAMBDA_ANNEALING, new BigDecimal(0.001));
+        put(Option.LAMBDA_ANNEALING, new BigDecimal(0.0001));
 
         put(Option.N_USERS, new BigDecimal(80));
         put(Option.MAX_REQUESTS_USER, new BigDecimal(4));
