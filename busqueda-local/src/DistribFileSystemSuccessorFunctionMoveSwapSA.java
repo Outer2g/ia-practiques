@@ -50,8 +50,6 @@ public class DistribFileSystemSuccessorFunctionMoveSwapSA implements SuccessorFu
             successors.add(new Successor("swapped " + reqs[0] + " with " + reqs[1], newBoard));
         }
 
-        assert(!successors.isEmpty());
-
         return successors;
     }
 }

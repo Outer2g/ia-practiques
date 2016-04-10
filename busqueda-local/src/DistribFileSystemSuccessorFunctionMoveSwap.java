@@ -35,8 +35,6 @@ public class DistribFileSystemSuccessorFunctionMoveSwap implements SuccessorFunc
             DistribFileSystemSuccessorFunctionMove.applyMove(board, request, successors);
         }
 
-        assert(!successors.isEmpty());
-
         return successors;
     }
 }

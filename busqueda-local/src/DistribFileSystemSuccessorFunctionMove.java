@@ -45,8 +45,6 @@ public class DistribFileSystemSuccessorFunctionMove implements SuccessorFunction
         for (int request = 0; request < DistribFileSystemBoard.getNRequests(); ++request)
             applyMove(board, request, successors);
 
-        assert(!successors.isEmpty());
-
         return successors;
     }
 }

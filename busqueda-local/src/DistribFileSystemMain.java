@@ -185,7 +185,7 @@ public class DistribFileSystemMain {
         else {
             switch(successor.toLowerCase()) {
                 case "move": successorFunction = new DistribFileSystemSuccessorFunctionMoveSA(); break;
-                case "move+swap": successorFunction = new DistribFileSystemSuccessorFunctionMoveSwap(); break; // TODO: Cambiar por SA cuando este implementada
+                case "move+swap": successorFunction = new DistribFileSystemSuccessorFunctionMoveSwapSA(); break;
                 default: assert false;
             }
 
@@ -229,12 +229,12 @@ public class DistribFileSystemMain {
             goal = (DistribFileSystemBoard) search.getGoalState();
 
             consolelog(goal.toString());
-            checkSolution(goal);
+            //checkSolution(goal);
             //printActions(agent.getActions());
             printInstrumentation(agent.getInstrumentation());
         } catch (Exception e) {
             e.printStackTrace();
-            assert false;
+            System.exit(1);
         }
 
         return goal;
@@ -261,7 +261,7 @@ public class DistribFileSystemMain {
 
             goal = (DistribFileSystemBoard) search.getGoalState();
 
-            checkSolution(goal);
+            //checkSolution(goal);
 
             consolelog("");
             printActions(agent.getActions());
@@ -270,7 +270,7 @@ public class DistribFileSystemMain {
             return goal;
         } catch (Exception e) {
             e.printStackTrace();
-            assert false;
+            System.exit(1);
         }
 
         return goal;

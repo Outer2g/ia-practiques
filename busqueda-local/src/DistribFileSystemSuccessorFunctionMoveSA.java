@@ -55,8 +55,6 @@ public class DistribFileSystemSuccessorFunctionMoveSA implements SuccessorFuncti
 
         applyMoveSA(board, request, successors, r);
 
-        assert(!successors.isEmpty());
-
         return successors;
     }
 }
