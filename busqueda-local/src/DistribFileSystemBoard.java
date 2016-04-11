@@ -52,7 +52,7 @@ public class DistribFileSystemBoard {
      *  */
     private int[] requestServer; // Que servidor sirve cada peticion
 
-    public int totalTT;
+    private int totalTT;
 
 
     public DistribFileSystemBoard(DistribFileSystemBoard otherBoard) {

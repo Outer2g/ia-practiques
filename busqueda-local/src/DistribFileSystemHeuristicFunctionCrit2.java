@@ -4,11 +4,7 @@ import aima.search.framework.HeuristicFunction;
  * Created by albert on 08/03/16.
  */
 public class DistribFileSystemHeuristicFunctionCrit2 implements HeuristicFunction {
-    private static double VARIANCE_FACTOR = 1.0D;
-
-    public static void setVarianceFactor(double v) {
-        VARIANCE_FACTOR = v;
-    }
+    private static final double VARIANCE_FACTOR = 20.0D;
 
     @Override
     public double getHeuristicValue(Object state) {
