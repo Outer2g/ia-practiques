@@ -41,11 +41,11 @@ public class DistribFileSystemMain {
         put(Option.K_ANNEALING, new BigDecimal(500000));
         put(Option.LAMBDA_ANNEALING, new BigDecimal(0.0001));
 
-        put(Option.N_USERS, new BigDecimal(R.nextInt(298) + 2));
-        put(Option.MAX_REQUESTS_USER, new BigDecimal(R.nextInt(14) + 1));
+        put(Option.N_USERS, new BigDecimal(R.nextInt(299) + 2));
+        put(Option.MAX_REQUESTS_USER, new BigDecimal(R.nextInt(15) + 1));
         put(Option.RANDOM_SEED_REQUESTS, new BigDecimal(1234));
 
-        put(Option.N_SERVERS, new BigDecimal(R.nextInt(98) + 2));
+        put(Option.N_SERVERS, new BigDecimal(R.nextInt(99) + 2));
         put(Option.RANDOM_SEED_SERVERS, new BigDecimal(1234));
 
         put(Option.HEURISTIC, "criteria 2"); // criteria 1, criteria 2
@@ -130,7 +130,7 @@ public class DistribFileSystemMain {
                         case "-n":case "--non-interactive": NON_INTERACTIVE = true; break;
                         case "-H":case "--print-heuristics": PRINT_HEURISTICS = true; break;
                         default:
-                            consolelog("Invalid argument " + key_value[0]);
+                            System.out.println("Invalid argument " + key_value[0]);
                             outputHelp();
                             System.exit(1);
                     }
@@ -170,7 +170,7 @@ public class DistribFileSystemMain {
 
     public static void main(String[] args) {
         constants.put(Option.MIN_REPLICATIONS_PER_FILE,
-                new BigDecimal(R.nextInt(getIntConstant(Option.N_SERVERS)/2 - 1) + 1));
+                new BigDecimal(R.nextInt(getIntConstant(Option.N_SERVERS)/2) + 1));
 
         parseArgs(args);
 
