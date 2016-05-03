@@ -15,7 +15,7 @@ habitos personales
 		esttaticas {televisión, lectura, ...}
 		tareas domesticas {planchar, barrer, fregar,
 colada, ...}
-		desplazamientos{compra a pie, paseos, paseo de mascotas, ...}
+		desplazamientos
 	freq & duracion
 salud
 	problemas muscul-esqueleticos {dolor de espalda, articulaciones, cervicales, ...}

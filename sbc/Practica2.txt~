@@ -5,7 +5,6 @@ Problema Abstracto:
 	Estado de salud: {Sano(Bool)}
 	limitaciones fisicas: {espalda, articulaciones, cervicales, ...}
 	actividad fisica: {poca,moderada,mucha}
-	Objetivo ? 
 	
 Restricciones:
 Joven -> le da a to

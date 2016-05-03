@@ -1,3 +1,5 @@
+
+
 condiciones fisicaas generales:
 	peso
 	altura {indice masa corporal}
@@ -8,18 +10,16 @@ condiciones fisicaas generales:
 	sensacion de cansancio/mareo
 	tirantez muscular
 habitos personales
-	actividades fisicas del trabajo sentado,
-	{de pie, desplazamientos a pie, movimientos repetitivos, levantamiento de peso, esfuerzos musculares, ...}
-
+	actividades fisicas del trabajo
+		sentado,depie,desplazamientos a pie, movimientos repetitivos..
 	actividades fuera del trabajo
-		esttaticas {televisión, lectura, ...}
-		tareas domesticas {planchar, barrer, fregar,
-colada, ...}
-		desplazamientos{compra a pie, paseos, paseo de mascotas, ...}
+		esttaticas
+		tareas domesticas
+		desplazamientos
 	freq & duracion
 salud
-	problemas muscul-esqueleticos {dolor de espalda, articulaciones, cervicales, ...}
-	dieta {consumo de fruta, abuso de sal, picar entre horas,...}
+	problemas muscul-esqueleticos
+	dieta
 Objetivos
 	mantenimiento
 	ponerse en forma
