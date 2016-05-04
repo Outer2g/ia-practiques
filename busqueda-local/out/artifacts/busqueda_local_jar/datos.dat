@@ -1,0 +1,60 @@
+
+DistribFS HillClimbing  -->
+
+StdDevTT: 1193.0851118347064, TotalTT: 486600, MaxTT: 4005
+nodesExpanded : 32
+execution time: 233
+
+DistribFS HillClimbing  -->
+
+StdDevTT: 1315.4439805352895, TotalTT: 539032, MaxTT: 4569
+nodesExpanded : 32
+execution time: 263
+
+DistribFS HillClimbing  -->
+
+StdDevTT: 1378.6967965378294, TotalTT: 564588, MaxTT: 4919
+nodesExpanded : 25
+execution time: 247
+
+DistribFS HillClimbing  -->
+
+StdDevTT: 1355.43279931887, TotalTT: 528720, MaxTT: 4550
+nodesExpanded : 27
+execution time: 262
+
+DistribFS HillClimbing  -->
+
+StdDevTT: 1288.6951163981994, TotalTT: 517027, MaxTT: 4437
+nodesExpanded : 25
+execution time: 267
+
+DistribFS HillClimbing  -->
+
+StdDevTT: 1377.7454423359736, TotalTT: 486095, MaxTT: 5266
+nodesExpanded : 8
+execution time: 117
+
+DistribFS HillClimbing  -->
+
+StdDevTT: 1172.410324427626, TotalTT: 492963, MaxTT: 4050
+nodesExpanded : 30
+execution time: 278
+
+DistribFS HillClimbing  -->
+
+StdDevTT: 1392.8266761092825, TotalTT: 517158, MaxTT: 4773
+nodesExpanded : 18
+execution time: 170
+
+DistribFS HillClimbing  -->
+
+StdDevTT: 1158.587607359293, TotalTT: 501987, MaxTT: 3954
+nodesExpanded : 26
+execution time: 265
+
+DistribFS HillClimbing  -->
+
+StdDevTT: 1266.0396475592052, TotalTT: 554168, MaxTT: 4074
+nodesExpanded : 41
+execution time: 377

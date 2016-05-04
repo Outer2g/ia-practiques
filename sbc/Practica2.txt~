@@ -1,0 +1,41 @@
+Practica 2
+Problema Abstracto:
+	Edad biologica : {Adolescente,Joven,Maduro,Tercera edad}
+	Estado fisico : {Obeso,infraPeso,Normal,Fuerte}
+	Estado de salud: {Sano(Bool)}
+	limitaciones fisicas: {espalda, articulaciones, cervicales, ...}
+	actividad fisica: {poca,moderada,mucha}
+	
+Restricciones:
+Joven -> le da a to
+Viejo -> solo maquinas, pesas baja intensidad
+----
+Fuelte -> le da a to
+Normal -> Prioridad ej dif 1,2 
+Gordaco -> prioridad ej sin pesas, cardio, bajar rep
+----
+Musculación -> 3x8-10 (si NP subir 4)
+Resistencia -> 4x12-15 (si NP subir 5)
+Fuerza -> 5x4-6 (si joven, fuelte, y NP poner P)
+Equilibrio -> Otros ej
+Mantenimiento -> 3x10
+Ponerse en forma -> 4x10
+Adelgazar -> Cardio, 3x10
+----
+Sano, activo -> tiempo descanso min, intensidad alta
+Sano, sedentario -> tiempo descanso +, intensidad moderadas
+Exo mierda -> tiempo descanso ++, intensidad baja
+
+Si hay lesión rebajar peso maximo en musculos que incluyan la zona
+Pecho: Hombro, triceps
+Espalda: Hombro, biceps, (pecho)
+Hombro: triceps
+Piernas: freelance
+Orden rutina: Pecho, Espalda, Pierna, Hombro, Brazo (Para descanso muscular)
+
+
+
+Kcal. pesas moderadas: Peso en kg x minutos de actividad / 11
+Kcal. pesas intensas: Peso en kg x minutos de actividad / 9.5
+Kcal. cardio moderado: 0,06 x (peso en kg x 2,2) x minutos de práctica
+Kcal. cardio intenso: 0,129 x (peso en kg x 2,2) x minutos de práctica

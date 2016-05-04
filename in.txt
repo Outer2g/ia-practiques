@@ -1,0 +1,3 @@
+(load restricProblSol.clp)
+(reset)
+(run)
