@@ -1,0 +1,524 @@
+; Wed Nov 02 10:40:13 CET 2005
+; 
+;+ (version "2.1.2")
+;+ (build "Build 246")
+
+([ia03042q-prot_Instance_0] of %3APAL-CONSTRAINT)
+
+([ia04052q-prot_Instance_0] of Ofimatica
+	(Precio 0.0)
+	(Programa "OpenOffice")
+	(Version Windows Linux))
+
+([ia04052q-prot_Instance_100] of CPU_domestico
+	(Fabricante "Intel")
+	(Frecuencia 2.4)
+	(Modelo "Celeron")
+	(Precio 50.0))
+
+([ia04052q-prot_Instance_10000] of Tarjeta_red
+	(Conector PCMCIA)
+	(Fabricante "generico")
+	(Precio 60.0)
+	(Tipo_red WiFi))
+
+([ia04052q-prot_Instance_10002] of Tarjeta_red
+	(Conector PCI)
+	(Fabricante "generico")
+	(Precio 50.0)
+	(Tipo_red WiFi))
+
+([ia04052q-prot_Instance_10003] of Bateria
+	(Duracion 8)
+	(Fabricante "generico")
+	(Precio 200.0))
+
+([ia04052q-prot_Instance_10004] of Bateria
+	(Duracion 10)
+	(Fabricante "generico")
+	(Precio 400.0))
+
+([ia04052q-prot_Instance_10005] of Disco_duro
+	(Capacidad 200Gb)
+	(Conector Serial_ATA)
+	(Fabricante "IBM")
+	(Para_portatil No)
+	(Precio 120.0))
+
+([ia04052q-prot_Instance_101] of CPU_domestico
+	(Fabricante "Intel")
+	(Frecuencia 2.6)
+	(Modelo "Celeron")
+	(Precio 70.0))
+
+([ia04052q-prot_Instance_102] of CPU_portatil
+	(Fabricante "Intel")
+	(Frecuencia 2.4)
+	(Modelo "Mobile")
+	(Precio 80.0))
+
+([ia04052q-prot_Instance_103] of CPU_portatil
+	(Fabricante "AMD")
+	(Frecuencia 2.6)
+	(Modelo "Mobile-Athlon")
+	(Precio 80.0))
+
+([ia04052q-prot_Instance_2] of Bateria
+	(Duracion 3)
+	(Fabricante "generico")
+	(Precio 100.0))
+
+([ia04052q-prot_Instance_20000] of Disco_flexible
+	(Fabricante "generico")
+	(Para_portatil Si)
+	(Precio 20.0))
+
+([ia04052q-prot_Instance_20001] of Modem
+	(Conector PCMCIA)
+	(Fabricante "generico")
+	(Precio 40.0))
+
+([ia04052q-prot_Instance_20002] of Monitor
+	(Fabricante "generico")
+	(Para_portatil Si)
+	(Precio 300.0)
+	(Pulgadas 15p)
+	(Tipo_monitor LCD))
+
+([ia04052q-prot_Instance_20005] of Monitor
+	(Fabricante "generico")
+	(Para_portatil Si)
+	(Precio 200.0)
+	(Pulgadas 14p)
+	(Tipo_monitor LCD))
+
+([ia04052q-prot_Instance_20006] of DVD
+	(Conector IDE)
+	(Fabricante "generico")
+	(Grabador no)
+	(Para_portatil Si)
+	(Precio 100.0))
+
+([ia04052q-prot_Instance_20007] of DVD
+	(Conector IDE)
+	(Fabricante "generico")
+	(Grabador si)
+	(Para_portatil Si)
+	(Precio 150.0))
+
+([ia04052q-prot_Instance_20008] of Teclado
+	(Conector USB)
+	(Fabricante "generico")
+	(Precio 30.0))
+
+([ia04052q-prot_Instance_20009] of Raton
+	(Conector USB)
+	(Fabricante "generico")
+	(Para_portatil Si)
+	(Precio 30.0)
+	(Tipo_raton optico))
+
+([ia04052q-prot_Instance_20010] of CDROM
+	(Conector IDE)
+	(Fabricante "generico")
+	(Grabador si)
+	(Para_portatil Si)
+	(Precio 50.0))
+
+([ia04052q-prot_Instance_20011] of CDROM
+	(Conector IDE)
+	(Fabricante "Sony")
+	(Grabador si)
+	(Para_portatil No)
+	(Precio 40.0))
+
+([ia04052q-prot_Instance_20012] of CDROM
+	(Conector IDE)
+	(Fabricante "generico")
+	(Grabador no)
+	(Para_portatil Si)
+	(Precio 30.0))
+
+([ia04052q-prot_Instance_20013] of Tarjeta_sonido
+	(Fabricante "generico")
+	(Precio 70.0))
+
+([ia04052q-prot_Instance_20014] of Tarjeta_video
+	(Fabricante "ATI-mobile")
+	(Memoria_Video 32Mb)
+	(Para_portatil Si)
+	(Precio 100.0))
+
+([ia04052q-prot_Instance_20015] of Tarjeta_video
+	(Fabricante "ATI-mobile")
+	(Memoria_Video 64Mb)
+	(Para_portatil Si)
+	(Precio 150.0))
+
+([ia04052q-prot_Instance_20016] of Monitor
+	(Fabricante "Sony")
+	(Para_portatil No)
+	(Precio 1000.0)
+	(Pulgadas 21p)
+	(Tipo_monitor LCD))
+
+([ia04052q-prot_Instance_20017] of Monitor
+	(Fabricante "Sony")
+	(Para_portatil No)
+	(Precio 300.0)
+	(Pulgadas 17p)
+	(Tipo_monitor LCD))
+
+([ia04052q-prot_Instance_20018] of Monitor
+	(Fabricante "Sony")
+	(Para_portatil No)
+	(Precio 250.0)
+	(Pulgadas 15p)
+	(Tipo_monitor LCD))
+
+([ia04052q-prot_Instance_20019] of Modem
+	(Conector PCI)
+	(Fabricante "generico")
+	(Precio 20.0))
+
+([ia04052q-prot_Instance_20020] of Tarjeta_red
+	(Conector PCMCIA)
+	(Fabricante "generico")
+	(Precio 50.0)
+	(Tipo_red Ethernet))
+
+([ia04052q-prot_Instance_20021] of Modem_ADSL
+	(Conector USB)
+	(Fabricante "generico")
+	(Precio 50.0))
+
+([ia04052q-prot_Instance_20022] of Router
+	(Fabricante "generico")
+	(Num_puertos 4)
+	(Precio 100.0))
+
+([ia04052q-prot_Instance_20023] of Placa_base
+	(Conectores_IDE 2)
+	(Conectores_Serial_ATA 1)
+	(Fabricante "generico")
+	(Para_portatil Si)
+	(Precio 200.0)
+	(Puertos_Firewire 0)
+	(Puertos_USB 2)
+	(Slots_AGP 1)
+	(Slots_PCI 2))
+
+([ia04052q-prot_Instance_3] of Disco_duro
+	(Capacidad 40Gb)
+	(Conector IDE)
+	(Fabricante "Seagate")
+	(Para_portatil Si)
+	(Precio 200.0))
+
+([ia04052q-prot_Instance_30000] of Disco_duro
+	(Capacidad 80Gb)
+	(Conector IDE)
+	(Fabricante "Seagate")
+	(Para_portatil No)
+	(Precio 40.0))
+
+([ia04052q-prot_Instance_37] of CPU_domestico
+	(Fabricante "Intel")
+	(Frecuencia 2.8)
+	(Modelo "Pentium")
+	(Precio 250.0))
+
+([ia04052q-prot_Instance_38] of CPU_domestico
+	(Fabricante "Intel")
+	(Frecuencia 3.0)
+	(Modelo "Pentium")
+	(Precio 500.0))
+
+([ia04052q-prot_Instance_39] of CPU_domestico
+	(Fabricante "intel")
+	(Frecuencia 3.2)
+	(Modelo "Pentium")
+	(Precio 750.0))
+
+([ia04052q-prot_Instance_41] of CPU_servidor
+	(Fabricante "Intel")
+	(Frecuencia 3.4)
+	(Modelo "Pentium Xeon")
+	(Precio 1200.0))
+
+([ia04052q-prot_Instance_42] of CPU_servidor
+	(Fabricante "Intel")
+	(Frecuencia 3.2)
+	(Modelo "Pentium Xeon")
+	(Precio 1000.0))
+
+([ia04052q-prot_Instance_43] of CPU_servidor
+	(Fabricante "Intel")
+	(Frecuencia 3.6)
+	(Modelo "Pentium Xeon")
+	(Precio 1600.0))
+
+([ia04052q-prot_Instance_44] of CPU_domestico
+	(Fabricante "AMD")
+	(Frecuencia 2.8)
+	(Modelo "Athlon")
+	(Precio 100.0))
+
+([ia04052q-prot_Instance_45] of CPU_domestico
+	(Fabricante "AMD")
+	(Frecuencia 3.0)
+	(Modelo "Athlon")
+	(Precio 200.0))
+
+([ia04052q-prot_Instance_46] of CPU_domestico
+	(Fabricante "AMD")
+	(Frecuencia 3.2)
+	(Modelo "Athlon")
+	(Precio 300.0))
+
+([ia04052q-prot_Instance_47] of CPU_servidor
+	(Fabricante "AMD")
+	(Frecuencia 3.2)
+	(Modelo "Opteron")
+	(Precio 600.0))
+
+([ia04052q-prot_Instance_48] of CPU_servidor
+	(Fabricante "AMD")
+	(Frecuencia 3.4)
+	(Modelo "Opteron")
+	(Precio 800.0))
+
+([ia04052q-prot_Instance_49] of CPU_servidor
+	(Fabricante "AMD")
+	(Frecuencia 3.6)
+	(Modelo "Opteron")
+	(Precio 1000.0))
+
+([ia04052q-prot_Instance_51] of Placa_base
+	(Conectores_IDE 1)
+	(Conectores_Serial_ATA 2)
+	(Fabricante "ASUS")
+	(Para_portatil No)
+	(Precio 100.0)
+	(Puertos_Firewire 0)
+	(Puertos_USB 8)
+	(Slots_AGP 1)
+	(Slots_PCI 3))
+
+([ia04052q-prot_Instance_52] of Monitor
+	(Fabricante "Sony")
+	(Para_portatil No)
+	(Precio 500.0)
+	(Pulgadas 19p)
+	(Tipo_monitor LCD))
+
+([ia04052q-prot_Instance_53] of Monitor
+	(Fabricante "LG")
+	(Para_portatil No)
+	(Precio 200.0)
+	(Pulgadas 15p)
+	(Tipo_monitor LCD))
+
+([ia04052q-prot_Instance_54] of Tarjeta_video
+	(Fabricante "nVidia")
+	(Memoria_Video 128Mb)
+	(Para_portatil No)
+	(Precio 150.0))
+
+([ia04052q-prot_Instance_55] of Tarjeta_video
+	(Fabricante "nVidia")
+	(Memoria_Video 64Mb)
+	(Para_portatil No)
+	(Precio 100.0))
+
+([ia04052q-prot_Instance_56] of Tarjeta_video
+	(Fabricante "ATI")
+	(Memoria_Video 64Mb)
+	(Para_portatil No)
+	(Precio 75.0))
+
+([ia04052q-prot_Instance_57] of Tarjeta_video
+	(Fabricante "ATI")
+	(Memoria_Video 128Mb)
+	(Para_portatil No)
+	(Precio 100.0))
+
+([ia04052q-prot_Instance_58] of Tarjeta_sonido
+	(Fabricante "Creative")
+	(Precio 50.0))
+
+([ia04052q-prot_Instance_59] of DVD
+	(Conector IDE)
+	(Fabricante "LG")
+	(Grabador no)
+	(Para_portatil No)
+	(Precio 25.0))
+
+([ia04052q-prot_Instance_60] of DVD
+	(Conector IDE)
+	(Fabricante "LG")
+	(Grabador si)
+	(Para_portatil No)
+	(Precio 75.0))
+
+([ia04052q-prot_Instance_61] of Disco_flexible
+	(Fabricante "generico")
+	(Para_portatil No)
+	(Precio 15.0))
+
+([ia04052q-prot_Instance_62] of Disco_duro
+	(Capacidad 160Gb)
+	(Conector Serial_ATA)
+	(Fabricante "Seagate")
+	(Para_portatil No)
+	(Precio 100.0))
+
+([ia04052q-prot_Instance_63] of Disco_duro
+	(Capacidad 80Gb)
+	(Conector IDE)
+	(Fabricante "Seagate")
+	(Para_portatil Si)
+	(Precio 60.0))
+
+([ia04052q-prot_Instance_64] of Linux
+	(Distribucion "RedHat Enterprise")
+	(Precio 100.0))
+
+([ia04052q-prot_Instance_68] of Linux
+	(Distribucion "Debian")
+	(Precio 5.0))
+
+([ia04052q-prot_Instance_69] of Linux
+	(Distribucion "Mandrake")
+	(Precio 50.0))
+
+([ia04052q-prot_Instance_70] of Linux
+	(Distribucion "Fedora Core")
+	(Precio 0.0))
+
+([ia04052q-prot_Instance_71] of Linux
+	(Distribucion "Suse")
+	(Precio 50.0))
+
+([ia04052q-prot_Instance_72] of Altavoces
+	(Fabricante "generico")
+	(Precio 10.0))
+
+([ia04052q-prot_Instance_73] of Impresora
+	(Conector USB)
+	(Fabricante "HP")
+	(Precio 300.0)
+	(Tipo_impresora Laser))
+
+([ia04052q-prot_Instance_74] of Impresora
+	(Conector USB)
+	(Fabricante "Canon")
+	(Precio 120.0)
+	(Tipo_impresora Inyeccion))
+
+([ia04052q-prot_Instance_75] of Impresora
+	(Conector USB)
+	(Fabricante "Epson")
+	(Precio 90.0)
+	(Tipo_impresora Inyeccion))
+
+([ia04052q-prot_Instance_76] of Impresora
+	(Conector USB)
+	(Fabricante "HP")
+	(Precio 100.0)
+	(Tipo_impresora Inyeccion))
+
+([ia04052q-prot_Instance_77] of Tarjeta_red
+	(Conector PCI)
+	(Fabricante "generico")
+	(Precio 25.0)
+	(Tipo_red Ethernet))
+
+([ia04052q-prot_Instance_78] of Modem
+	(Conector USB)
+	(Fabricante "3com")
+	(Precio 50.0))
+
+([ia04052q-prot_Instance_79] of Teclado
+	(Conector inalambrico)
+	(Fabricante "Microsoft")
+	(Precio 90.0))
+
+([ia04052q-prot_Instance_80] of Scanner
+	(Conector USB)
+	(Fabricante "Canon")
+	(Precio 60.0))
+
+([ia04052q-prot_Instance_81] of Disco_duro
+	(Capacidad 20Gb)
+	(Conector USB)
+	(Fabricante "LG")
+	(Para_portatil Si)
+	(Precio 120.0))
+
+([ia04052q-prot_Instance_87] of CPU_portatil
+	(Fabricante "Intel")
+	(Frecuencia 2.6)
+	(Modelo "Mobile")
+	(Precio 100.0))
+
+([ia04052q-prot_Instance_88] of CPU_workstation
+	(Fabricante "AMD")
+	(Frecuencia 3.2)
+	(Modelo "Athlon64")
+	(Precio 200.0))
+
+([ia04052q-prot_Instance_89] of Router_ADSL
+	(Conector inalambrico)
+	(Fabricante "3Com")
+	(Num_puertos 4)
+	(Precio 90.0))
+
+([ia04052q-prot_Instance_90] of Raton
+	(Conector inalambrico)
+	(Fabricante "Microsoft")
+	(Para_portatil No)
+	(Precio 50.0)
+	(Tipo_raton optico))
+
+([ia04052q-prot_Instance_92] of CDROM
+	(Conector IDE)
+	(Fabricante "Sony")
+	(Grabador no)
+	(Para_portatil No)
+	(Precio 25.0))
+
+([ia04052q-prot_Instance_93] of Juegos
+	(Precio 50.0)
+	(Programa "Quake III")
+	(Version Windows))
+
+([ia04052q-prot_Instance_95] of Ofimatica
+	(Precio 300.0)
+	(Programa "Microsoft Office")
+	(Version Windows))
+
+([ia04052q-prot_Instance_96] of Disenyo_Grafico
+	(Precio 600.0)
+	(Programa "Photoshop")
+	(Version Windows))
+
+([ia04052q-prot_Instance_97] of Base_de_Datos
+	(Precio 3000.0)
+	(Programa "Oracle 10i")
+	(Version Windows Linux))
+
+([ia04052q-prot_Instance_98] of Base_de_Datos
+	(Precio 0.0)
+	(Programa "MySQL")
+	(Version Windows Linux))
+
+([ia04052q-prot_Instance_99] of CPU_portatil
+	(Fabricante "AMD")
+	(Frecuencia 2.4)
+	(Modelo "Mobile-Athlon")
+	(Precio 60.0))
+
+([SO_Windows] of Windows
+	(Distribucion "WinXP")
+	(Precio 120.0))

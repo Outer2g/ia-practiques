@@ -1,0 +1,626 @@
+; Wed Nov 02 10:40:13 CET 2005
+; 
+;+ (version "2.1.2")
+;+ (build "Build 246")
+
+
+(defclass %3ACLIPS_TOP_LEVEL_SLOT_CLASS "Fake class to save top-level slot information"
+	(is-a USER)
+	(role abstract)
+	(single-slot Capacidad
+;+		(comment "Capacidad de almacenamiento del componente en Gbytes")
+		(type SYMBOL)
+		(allowed-values 20Gb 40Gb 80Gb 160Gb 200Gb 320Gb 240Gb)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Distribucion
+;+		(comment "Version del SO")
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Fabricante
+;+		(comment "Fabricante del componente")
+		(type STRING)
+		(default "generico")
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Tipo_monitor
+;+		(comment "Tipo del monitor")
+		(type SYMBOL)
+		(allowed-values CRT LCD)
+		(default CRT)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Grabador
+;+		(comment "Es una unidad grabadora")
+		(type SYMBOL)
+		(allowed-values Si No)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Frecuencia
+;+		(comment "Frecuencia de reloj de la CPU")
+		(type FLOAT)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot Software
+;+		(comment "Software que necesita el PC")
+		(type INSTANCE)
+;+		(allowed-classes Soft)
+		(create-accessor read-write))
+	(single-slot Placa
+;+		(comment "Placa base del PC")
+		(type INSTANCE)
+;+		(allowed-classes Placa_base)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Procesador
+;+		(comment "Tipo de procesador del PC")
+		(type INSTANCE)
+;+		(allowed-classes CPU)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot Dispositivos_de_Almacenamiento
+;+		(comment "Dispositivos de almacenamiento del PC")
+		(type INSTANCE)
+;+		(allowed-classes Almacenamiento)
+		(create-accessor read-write))
+	(single-slot Memoria
+;+		(comment "Tamaño de la memoria")
+		(type SYMBOL)
+		(allowed-values 256Mb 512Mb 1Gb 2Gb 4Gb 8Gb 16Gb)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Num_puertos
+;+		(comment "Numero de puertos del router")
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Conector
+;+		(comment "Tipo de conexion que usa el dispositivo")
+		(type SYMBOL)
+		(allowed-values USB Serie Paralelo inalambrico PS-2 IDE SCSI Serial_ATA PCI PCMCIA)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Conectores_IDE
+;+		(comment "Numero de conectores IDE")
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Puertos_USB
+;+		(comment "numero de puertos USB")
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Puertos_Firewire
+;+		(comment "Numero de puertos firewire")
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Slots_PCI
+;+		(comment "Numero de slots PCI")
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Slots_AGP
+;+		(comment "Numero de slots AGP")
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Conectores_Serial_ATA
+;+		(comment "Numero de conectores serial ATA")
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Pulgadas
+;+		(comment "Pulgadas del monitor")
+		(type SYMBOL)
+		(allowed-values 15p 17p 19p 21p 14p)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot Memoria_Video
+;+		(comment "Tamaño de la memoria de video")
+		(type SYMBOL)
+		(allowed-values 32Mb 64Mb 128Mb 256Mb)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot Tipo_impresora
+;+		(comment "Tipo de impresora")
+		(type SYMBOL)
+		(allowed-values Inyeccion Laser)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(multislot Dispositivos_de_Entrada
+;+		(comment "Dispositivos de entrada del PC")
+		(type INSTANCE)
+;+		(allowed-classes Entrada)
+		(create-accessor read-write))
+	(multislot Dispositivos_de_Salida
+;+		(comment "Dispositivos de salida del PC")
+		(type INSTANCE)
+;+		(allowed-classes Salida)
+		(create-accessor read-write))
+	(multislot Dispositivos_de_Comunicacion
+;+		(comment "Dispositivos de comunicacion del PC")
+		(type INSTANCE)
+;+		(allowed-classes Comunicacion)
+		(create-accessor read-write))
+	(single-slot Modelo
+;+		(comment "Modelo de la CPU")
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Precio
+;+		(comment "Precio del componente")
+		(type FLOAT)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(multislot Version
+;+		(comment "SOs sobre los que se ejecuta el software")
+		(type SYMBOL)
+		(allowed-values Windows Linux)
+		(create-accessor read-write))
+	(single-slot Tipo_raton
+;+		(comment "Tipo de raton")
+		(type SYMBOL)
+		(allowed-values bola optico)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Programa
+;+		(comment "Nombre del programa")
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Para_portatil
+;+		(comment "Es para portatil?")
+		(type SYMBOL)
+		(allowed-values Si No)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot Tipo_red
+;+		(comment "Tipo de tecnologia de red")
+		(type SYMBOL)
+		(allowed-values Ethernet WiFi)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Duracion
+;+		(comment "Duracion de la bateria en horas")
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Tipo_bateria
+;+		(comment "Tipo de bateria del PC")
+		(type INSTANCE)
+;+		(allowed-classes Bateria)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass componente "Componentes de un PC"
+	(is-a USER)
+	(role concrete)
+	(single-slot Precio
+;+		(comment "Precio del componente")
+		(type FLOAT)
+;+		(cardinality 1 1)
+		(create-accessor read-write)))
+
+(defclass Soft "Elementos Software"
+	(is-a componente)
+	(role concrete))
+
+(defclass SO "Sistema operativo"
+	(is-a Soft)
+	(role concrete)
+	(single-slot Distribucion
+;+		(comment "Version del SO")
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Linux "SO Linux"
+	(is-a SO)
+	(role concrete))
+
+(defclass Windows "SO Windows"
+	(is-a SO)
+	(role concrete))
+
+(defclass Aplicacion "Aplicaciones software"
+	(is-a Soft)
+	(role concrete)
+	(multislot Version
+;+		(comment "SOs sobre los que se ejecuta el software")
+		(type SYMBOL)
+		(allowed-values Windows Linux)
+		(create-accessor read-write))
+	(single-slot Programa
+;+		(comment "Nombre del programa")
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Juegos "Aplicaciones ludicas"
+	(is-a Aplicacion)
+	(role concrete))
+
+(defclass Ofimatica "Programas o suites para edicion, hojas de calculop, presentaciones, etc"
+	(is-a Aplicacion)
+	(role concrete))
+
+(defclass Disenyo_Grafico "Aplicaciones para el diseño grafico"
+	(is-a Aplicacion)
+	(role concrete))
+
+(defclass Base_de_Datos "SGBDs"
+	(is-a Aplicacion)
+	(role concrete))
+
+(defclass Contabilidad "Aplicaciones de contabilidad"
+	(is-a Aplicacion)
+	(role concrete))
+
+(defclass Hard "Elementos hardware"
+	(is-a componente)
+	(role concrete)
+	(single-slot Fabricante
+;+		(comment "Fabricante del componente")
+		(type STRING)
+		(default "generico")
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Comunicacion "Dispositiv de comunicacionn"
+	(is-a Hard)
+	(role concrete)
+	(single-slot Conector
+;+		(comment "Tipo de conexion que usa el dispositivo")
+		(type SYMBOL)
+		(allowed-values USB Serie Paralelo inalambrico PS-2 IDE SCSI Serial_ATA PCI PCMCIA)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Modem "Modem telefonico"
+	(is-a Comunicacion)
+	(role concrete))
+
+(defclass Tarjeta_red "Tarjeta de red"
+	(is-a Comunicacion)
+	(role concrete)
+	(single-slot Tipo_red
+;+		(comment "Tipo de tecnologia de red")
+		(type SYMBOL)
+		(allowed-values Ethernet WiFi)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass ADSL "Dispositivos ADSL"
+	(is-a Comunicacion)
+	(role concrete))
+
+(defclass Modem_ADSL "Modem ADSL"
+	(is-a ADSL)
+	(role concrete))
+
+(defclass Router_ADSL "Router ADSL"
+	(is-a ADSL)
+	(role concrete)
+	(single-slot Num_puertos
+;+		(comment "Numero de puertos del router")
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Router "Router de red"
+	(is-a Comunicacion)
+	(role concrete)
+	(single-slot Num_puertos
+;+		(comment "Numero de puertos del router")
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass CPU "Cpu del PC"
+	(is-a Hard)
+	(role concrete)
+	(single-slot Frecuencia
+;+		(comment "Frecuencia de reloj de la CPU")
+		(type FLOAT)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Modelo
+;+		(comment "Modelo de la CPU")
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass CPU_portatil "CPUs para portatiles"
+	(is-a CPU)
+	(role concrete))
+
+(defclass CPU_workstation "CPUs para workstations"
+	(is-a CPU)
+	(role concrete))
+
+(defclass CPU_servidor "CPUs para servidores"
+	(is-a CPU)
+	(role concrete))
+
+(defclass CPU_domestico "CPUs para PCs domesticos"
+	(is-a CPU)
+	(role concrete))
+
+(defclass Placa_base "Placa base del PC"
+	(is-a Hard)
+	(role concrete)
+	(single-slot Conectores_IDE
+;+		(comment "Numero de conectores IDE")
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Puertos_USB
+;+		(comment "numero de puertos USB")
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Puertos_Firewire
+;+		(comment "Numero de puertos firewire")
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Slots_PCI
+;+		(comment "Numero de slots PCI")
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Slots_AGP
+;+		(comment "Numero de slots AGP")
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Conectores_Serial_ATA
+;+		(comment "Numero de conectores serial ATA")
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Para_portatil
+;+		(comment "Es para portatil?")
+		(type SYMBOL)
+		(allowed-values Si No)
+;+		(cardinality 1 1)
+		(create-accessor read-write)))
+
+(defclass Salida "Dispositivos de salida"
+	(is-a Hard)
+	(role concrete))
+
+(defclass Monitor "Monitor"
+	(is-a Salida)
+	(role concrete)
+	(single-slot Tipo_monitor
+;+		(comment "Tipo del monitor")
+		(type SYMBOL)
+		(allowed-values CRT LCD)
+		(default CRT)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Pulgadas
+;+		(comment "Pulgadas del monitor")
+		(type SYMBOL)
+		(allowed-values 15p 17p 19p 21p 14p)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot Para_portatil
+;+		(comment "Es para portatil?")
+		(type SYMBOL)
+		(allowed-values Si No)
+;+		(cardinality 1 1)
+		(create-accessor read-write)))
+
+(defclass Tarjeta_video "Tarjeta de video"
+	(is-a Salida)
+	(role concrete)
+	(single-slot Memoria_Video
+;+		(comment "Tamaño de la memoria de video")
+		(type SYMBOL)
+		(allowed-values 32Mb 64Mb 128Mb 256Mb)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot Para_portatil
+;+		(comment "Es para portatil?")
+		(type SYMBOL)
+		(allowed-values Si No)
+;+		(cardinality 1 1)
+		(create-accessor read-write)))
+
+(defclass Tarjeta_sonido "Tarjeta de sonido"
+	(is-a Salida)
+	(role concrete))
+
+(defclass Altavoces "Altavoces"
+	(is-a Salida)
+	(role concrete))
+
+(defclass Impresora "Impresora"
+	(is-a Salida)
+	(role concrete)
+	(single-slot Conector
+;+		(comment "Tipo de conexion que usa el dispositivo")
+		(type SYMBOL)
+		(allowed-values USB Serie Paralelo inalambrico PS-2 IDE SCSI Serial_ATA PCI PCMCIA)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Tipo_impresora
+;+		(comment "Tipo de impresora")
+		(type SYMBOL)
+		(allowed-values Inyeccion Laser)
+;+		(cardinality 1 1)
+		(create-accessor read-write)))
+
+(defclass Entrada "Dispositivos de entrada"
+	(is-a Hard)
+	(role concrete)
+	(single-slot Conector
+;+		(comment "Tipo de conexion que usa el dispositivo")
+		(type SYMBOL)
+		(allowed-values USB Serie Paralelo inalambrico PS-2 IDE SCSI Serial_ATA PCI PCMCIA)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Teclado "Teclado"
+	(is-a Entrada)
+	(role concrete))
+
+(defclass Scanner "Scanner"
+	(is-a Entrada)
+	(role concrete))
+
+(defclass Raton "raton"
+	(is-a Entrada)
+	(role concrete)
+	(single-slot Tipo_raton
+;+		(comment "Tipo de raton")
+		(type SYMBOL)
+		(allowed-values bola optico)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Para_portatil
+;+		(comment "Es para portatil?")
+		(type SYMBOL)
+		(allowed-values Si No)
+;+		(cardinality 1 1)
+		(create-accessor read-write)))
+
+(defclass Tableta_Grafica "Tableta grafica"
+	(is-a Entrada)
+	(role concrete))
+
+(defclass Almacenamiento "Dispositivos de almacenamiento"
+	(is-a Hard)
+	(role concrete)
+	(single-slot Conector
+;+		(comment "Tipo de conexion que usa el dispositivo")
+		(type SYMBOL)
+		(allowed-values USB Serie Paralelo inalambrico PS-2 IDE SCSI Serial_ATA PCI PCMCIA)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Para_portatil
+;+		(comment "Es para portatil?")
+		(type SYMBOL)
+		(allowed-values Si No)
+;+		(cardinality 1 1)
+		(create-accessor read-write)))
+
+(defclass DVD "DVD"
+	(is-a Almacenamiento)
+	(role concrete)
+	(single-slot Grabador
+;+		(comment "Es una unidad grabadora")
+		(type SYMBOL)
+		(allowed-values Si No)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass CDROM "CDROM"
+	(is-a Almacenamiento)
+	(role concrete)
+	(single-slot Grabador
+;+		(comment "Es una unidad grabadora")
+		(type SYMBOL)
+		(allowed-values Si No)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Disco_flexible "Disquetera"
+	(is-a Almacenamiento)
+	(role concrete))
+
+(defclass Disco_duro "Disco duro"
+	(is-a Almacenamiento)
+	(role concrete)
+	(single-slot Capacidad
+;+		(comment "Capacidad de almacenamiento del componente en Gbytes")
+		(type SYMBOL)
+		(allowed-values 20Gb 40Gb 80Gb 160Gb 200Gb 320Gb 240Gb)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Bateria "Bateria para portatil"
+	(is-a Hard)
+	(role concrete)
+	(single-slot Duracion
+;+		(comment "Duracion de la bateria en horas")
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass PC "Clase generica para elaborar la recomendacion"
+	(is-a USER)
+	(role concrete)
+	(multislot Software
+;+		(comment "Software que necesita el PC")
+		(type INSTANCE)
+;+		(allowed-classes Soft)
+		(create-accessor read-write))
+	(single-slot Placa
+;+		(comment "Placa base del PC")
+		(type INSTANCE)
+;+		(allowed-classes Placa_base)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot Procesador
+;+		(comment "Tipo de procesador del PC")
+		(type INSTANCE)
+;+		(allowed-classes CPU)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot Dispositivos_de_Almacenamiento
+;+		(comment "Dispositivos de almacenamiento del PC")
+		(type INSTANCE)
+;+		(allowed-classes Almacenamiento)
+		(create-accessor read-write))
+	(single-slot Memoria
+;+		(comment "Tamaño de la memoria")
+		(type SYMBOL)
+		(allowed-values 256Mb 512Mb 1Gb 2Gb 4Gb 8Gb 16Gb)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot Dispositivos_de_Entrada
+;+		(comment "Dispositivos de entrada del PC")
+		(type INSTANCE)
+;+		(allowed-classes Entrada)
+		(create-accessor read-write))
+	(multislot Dispositivos_de_Salida
+;+		(comment "Dispositivos de salida del PC")
+		(type INSTANCE)
+;+		(allowed-classes Salida)
+		(create-accessor read-write))
+	(multislot Dispositivos_de_Comunicacion
+;+		(comment "Dispositivos de comunicacion del PC")
+		(type INSTANCE)
+;+		(allowed-classes Comunicacion)
+		(create-accessor read-write)))
+
+(defclass Portatil "PC portatil"
+	(is-a PC)
+	(role concrete)
+	(single-slot Tipo_bateria
+;+		(comment "Tipo de bateria del PC")
+		(type INSTANCE)
+;+		(allowed-classes Bateria)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Servidor "Servidor"
+	(is-a PC)
+	(role concrete))
+
+(defclass Sobremesa
+	(is-a PC)
+	(role concrete))
+
+(defclass Workstation "Estacion de trabajo"
+	(is-a Sobremesa)
+	(role concrete))
+
+(defclass Domestico "PC domestico"
+	(is-a Sobremesa)
+	(role concrete))
