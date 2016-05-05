@@ -1,3 +1,4 @@
-(load ontologia.pont)
+(load rules.clp)
 (reset)
 (run)
+(facts)
