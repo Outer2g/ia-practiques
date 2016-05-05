@@ -1,7 +1,7 @@
 Practica 2
 Problema Abstracto:
 	Edad biologica : {Adolescente,Joven,Maduro,Tercera edad}
-	Estado fisico : {Obeso,infraPeso,Normal,Fuerte}
+	Estado fisico : {Obeso,infraPeso,Normal,sobrepeso,(Fuerte)}
 	Estado de salud: {Sano(Bool)}
 	limitaciones fisicas: {espalda, articulaciones, cervicales, ...}
 	actividad fisica: {poca,moderada,mucha}
