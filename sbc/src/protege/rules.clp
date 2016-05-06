@@ -454,7 +454,7 @@
 
 
 (defrule preguntaEdad "regla para preguntar edad"
-        (declare (salience 2))
+        (declare (salience 5))
         (not (tengoEdad))
         =>
         (bind ?edad (pregunta-num "Que edad tienes: " 12 99))
@@ -481,7 +481,7 @@
         (assert (tengoEdad))
         )
 (defrule preguntaAltura "regla para preguntar altura"
-    (declare (salience 2))
+    (declare (salience 5))
     (not (tengoAltura))
     =>
     (bind ?altura (pregunta-num "Cúal es tu altura (en cm): " 1.20 2.20))
@@ -489,7 +489,7 @@
     (assert (tengoAltura))
     )
 (defrule preguntaPeso "regla para preguntar peso"
-    (declare (salience 2))
+    (declare (salience 5))
     (not (tengoPeso))
     =>
     (bind ?peso (pregunta-num "Cuanto pesas (en kg): " 30 200))
@@ -509,14 +509,12 @@
     (assert ( estado-fisico obeso))
     )
 (defrule estado-sobrepeso "la persona tiene sobrepeso si masa entre 25 y 29.9"
-    (masa ?x&:(> ?x 25))
-    (test (< ?x 29.9))
+    (masa ?x&:(and (> ?x 25) (< ?x 30)))
     =>
     (assert ( estado-fisico sobrepeso))
     )
 (defrule estado-peso-normal "la persona tiene peso normal si masa entre 18.5 y 24.9"
-    (masa ?x&:(> ?x 18.5))
-    (test (< ?x 24.9))
+    (masa ?x&:(and (> ?x 18.5) (< ?x 25)))
     =>
     (assert ( estado-fisico normal))
     )
@@ -533,23 +531,6 @@
 ;================================================================================
 ;================= Problema Abstracto a Solucion Abstracta ======================
 ;================================================================================
-
-Salida standard para prototipo (sin objetivo)
-    Ejercicios (Ej grupo dia + abds + cardio)
-    Series est: 3
-    Repeticiones est: 10
-    Peso: 65% Repeticion maxima (1RM)
-    Descanso est: 120s
-    Tiempo total del dia:
-    Calorias consumidas:
-
-Adolescente Dificultad ej 1,2 , +3%RM
-Joven       Na, +5%RM
-Maduro      Todo menos ej sin pesas
-Viejo       Solo maquinas, -5% RM
-
-Obeso       No pesas, series +1, rep-4 -5%RM
-Sobrepeso   Dificultad ej 1,2 , rep-2
 
 (defrule puede-Basico"regla que decide si el usuario puede hacer los ejercicios basicos"
     (tengoEdad)
@@ -573,6 +554,7 @@ Sobrepeso   Dificultad ej 1,2 , rep-2
     =>
     (assert(puedeCurlMancuernas))
     )
+
 (defrule intensidad-baja "Cual sera la intensidad del ejercicio segun la edad de la persona, mas adelante dependera tambien de la condicion fisica y objetivos"
     (or (edadBiologica viejo) (edadBiologica adolescente))
     =>
@@ -620,4 +602,122 @@ Sobrepeso   Dificultad ej 1,2 , rep-2
         (printout t "------- I'm no couch potato - Recomendador de rutinas --------" crlf)
         (printout t "--------------------------------------------------------------" crlf)
         (printout t crlf)
+        (assert (imprimeElevacionesLaterales 0))
+        (assert (imprimeCurlMancuernas 0))
 )
+(defrule final "regla final"
+    (declare (salience 1))
+    =>
+    (printout t crlf)
+    (printout t "--------------------------------------------------------------" crlf)
+    (printout t "--------------- Ejercicios que puedes realizar ---------------" crlf)
+    (printout t "--------------------------------------------------------------" crlf)
+    (printout t crlf)
+    )
+(defrule puedesbasico-r "imprime los ejercicios que puedes hacer"
+    (declare (salience 0))
+    (puedePressBanca)
+    (puedeExtensionesCuerda)
+    (puedeSentadillas)
+    (puedeAbdominalesSinPesas)
+    (puedeCaminarPuntillas)
+    (puedeTocarSuelo)
+    (puedeRemo)
+    (puedeBicicleta)
+    =>
+    (printout t crlf)
+    (printout t "Press Banca" crlf)
+    (printout t crlf)
+    (printout t "Extensiones cuerda" crlf)
+    (printout t crlf)
+    (printout t "Sentadillas" crlf)
+    (printout t crlf)
+    (printout t "Abdominales sin pesas" crlf)
+    (printout t crlf)
+    (printout t "Caminar de puntillas" crlf)
+    (printout t crlf)
+    (printout t "Tocar el suelo con los dedos con piernas estiradas" crlf)
+    (printout t crlf)
+    (printout t "Remo" crlf)
+    (printout t crlf)
+    (printout t "Bicicleta" crlf)
+)
+(defrule puedes-elevaciones-disco-r
+    (declare (salience 0))
+    (puedeElevacionesDisco)
+    ?f<-(imprimeElevacionesLaterales ?x&:(= ?x 0))
+    =>
+    (printout t crlf)
+    (printout t "Elevaciones de disco" crlf)
+    (retract ?f)
+    (assert (imprimeElevacionesLaterales 1))
+    )
+(defrule puedes-Curl-mancuernas-r
+    (declare(salience 0))
+    (puedeCurlMancuernas)
+    ?f <- (imprimeCurlMancuernas ?x&:(= ?x 0))
+    =>
+    (printout t crlf)
+    (printout t "Curl mancuernas" crlf)
+    (retract ?f)
+    (assert (imprimeCurlMancuernas 1))
+    )
+(defrule horariofinal "Totalmente arbitrario"
+    (declare (salience -1))
+    (imprimeCurlMancuernas ?x)
+    (imprimeElevacionesLaterales ?y)
+    (intensidad ?intensidad)
+    (repes ?nrepes)
+    =>
+    (printout t "----------Horario semana ---------------------" crlf)
+    (printout t crlf)
+    (printout t crlf)
+    (printout t "Lunes" crlf)
+    (printout t crlf)
+    (printout t "Press Banca" crlf)
+    (if (= ?x 1) then 
+        (printout t crlf)
+        (printout t "Curl Mancuernas" crlf))
+
+    (printout t crlf)
+    (printout t "-------------------------------" crlf)
+    (printout t crlf)
+    (printout t "Martes" crlf)
+    (printout t crlf)
+    (printout t "Extensiones cuerda" crlf)
+    (if (= ?y 1) then
+        (printout t crlf)
+        (printout t "Elevaciones disco" crlf))
+    (printout t crlf)
+    (printout t "-------------------------------" crlf)
+    (printout t crlf)
+    (printout t "Miercoles" crlf)
+    (printout t crlf)
+    (printout t "Sentadillas" crlf)
+    (printout t crlf)
+    (printout t "Bicicleta" crlf)
+    (printout t crlf)
+    (printout t "-------------------------------" crlf)
+    (printout t crlf)
+    (printout t "Jueves" crlf)
+    (printout t crlf)
+    (printout t "Abdominales sin pesas" crlf)
+    (printout t crlf)
+    (printout t "Remo" crlf)
+    (printout t crlf)
+    (printout t "----------------" crlf)
+    (printout t crlf)
+    (printout t "Viernes" crlf)
+    (printout t crlf)
+    (printout t "Caminar de puntillas" crlf)
+    (printout t crlf)
+    (printout t "Tocar suelo con los dedos con piernas estirada" crlf)
+    (printout t "---------------- Intensidad ---------------" crlf)
+    (printout t crlf)
+    (printout t ?intensidad crlf)
+    (printout t crlf)
+    (printout t "---------------- Numero repeticiones ---------------" crlf)
+    (printout t crlf)
+    (printout t ?nrepes crlf)
+    (printout t crlf)
+    )
