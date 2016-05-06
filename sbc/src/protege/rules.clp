@@ -211,6 +211,36 @@
                 (type INTEGER)
 ;+              (cardinality 1 1)
                 (create-accessor read-write)))
+
+;================================================================================
+;============================== Instancias ======================================
+;================================================================================
+(definstances instancies 
+; Tue Nov 24 19:23:09 CET 2015
+; 
+;+ (version "3.4.8")
+;+ (build "Build 629")
+
+([Press_Banca] of Ejercicio
+    (repeticiones_max 15)
+    (repeticiones_min 6)
+    (duracion_ejercicio_min 5)
+    (duracion_ejercicio_max 10)
+    (grupos_musculares Pectorales)
+    (nombre_ejercicio "Press Banca")
+    (calorias_por_minuto 20)
+    )
+)
+([Press_Banca] of Ejercicio
+    (repeticiones_max 15)
+    (repeticiones_min 6)
+    (duracion_ejercicio_min 5)
+    (duracion_ejercicio_max 10)
+    (grupos_musculares Pectorales)
+    (nombre_ejercicio "Press Inclinado")
+    (calorias_por_minuto 20)
+    )
+)
 ;================================================================================
 ;============================== Preguntas =======================================
 ;================================================================================
@@ -331,6 +361,51 @@
 ;"si la persona tiene sobrepeso, entre 25 y 29.9"
 ;"si la persona tiene peso normal, entre 18.5-24.9"
 ;"si la persona tiene infrapeso, entre 18.5"
+
+;================================================================================
+;================= Problema Abstracto a Solucion Abstracta ======================
+;================================================================================
+
+Salida standard para prototipo (sin objetivo)
+    Ejercicios (Ej grupo dia + abds + cardio)
+    Series est: 3
+    Repeticiones est: 10
+    Peso: 65% Repeticion maxima (1RM)
+    Descanso est: 120s
+    Tiempo total del dia:
+    Calorias consumidas:
+
+Adolescente Dificultad ej 1,2 , +3%RM
+Joven       Na, +5%RM
+Maduro      Todo menos ej sin pesas
+Viejo       Solo maquinas, -5% RM
+
+Obeso       No pesas, series +1, rep-4 -5%RM
+Sobrepeso   Dificultad ej 1,2 , rep-2
+
+(defrule puede-Press-Banca-adolescente-joven "regla que decide si el usuario adolescente o joven esta capacitado para hacer pressBanca"
+    (or (edadBiologica adolescente) (edadBiologica joven))
+    ?ejercicio <- (object (is-a Ejercicio) (nombre_ejercicio "Press Banca"))
+    =>
+    (assert (puedePressBanca))
+    (assert (Repes 13))
+    )
+(defrule puede-Press-Banca-Maduro-viejo
+    (or (edadBiologica maduro) (edadBiologica viejo))
+    ?ejercicio <- (object (is-a Ejercicio) (nombre_ejercicio "Press Banca"))
+    =>
+    (assert (puedePressBanca))
+    (assert (Repes 10))
+    )
+(defrule puede-Press-inclinado
+    (or (edadBiologica joven) (edadBiologica maduro))
+    ?ejercicio <- (object (is-a Ejercicio) (nombre_ejercicio "Press Inclinado"))
+    =>
+    (assert (puedePressInclinado))
+    (assert (repesInc 24))
+    )
+
+
 
 ;================================================================================
 ;================================ MAIN ==========================================
