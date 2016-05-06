@@ -1,4 +1,4 @@
-; Thu May 05 19:21:52 CEST 2016
+; Fri May 06 11:46:49 CEST 2016
 ; 
 ;+ (version "3.4.8")
 ;+ (build "Build 629")
@@ -10,18 +10,17 @@
 	(single-slot edad
 ;+		(comment "Edad de la persona en anyos")
 		(type INTEGER)
-;+		(cardinality 1 1)
-		(create-accessor read-write))
-	(single-slot objetivo
-;+		(comment "Objetivo que se desea conseguir con el programa de entrenamiento")
-		(type STRING)
-;+		(value "MANTENIMIENTO" "FORMA" "REBAJAR_PESO" "EQUILIBRIO" "MUSCULACIÓN" "FLEXIBILIDAD")
-;+		(cardinality 1 1)
+;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot peso
 ;+		(comment "Peso de la persona en KG")
 		(type FLOAT)
-;+		(cardinality 1 1)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot programa_entrenamiento
+		(type INSTANCE)
+;+		(allowed-classes Programa_entrenamiento)
+;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot tiempo_diario
 ;+		(comment "Tiempo diario que se dispone para el entrenamiento")
@@ -32,67 +31,86 @@
 	(single-slot duracion_actividad
 ;+		(comment "Duracion de la actividad en minutos")
 		(type INTEGER)
-;+		(cardinality 1 1)
+;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot duracion_ejercicio_max
 ;+		(comment "Duracion maxima del ejercicio en minutos")
 		(type INTEGER)
-;+		(cardinality 1 1)
-		(create-accessor read-write))
-	(multislot grupos_musculares
-		(type STRING)
-;+		(value "Abdominales" "Pectorales" "Biceps" "Triceps" "Gemelos" "Quadriceps" "Espalda")
-		(cardinality 1 ?VARIABLE)
+;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot calorias_por_minuto
 ;+		(comment "Nombre de calorias por minuto que se consumen haciendo el ejercicio")
 		(type INTEGER)
-;+		(cardinality 1 1)
+;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot ontologia_Class14
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot ontologia_Class8
 		(type STRING)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot duracion_ejercicio_min
 ;+		(comment "Duracion minima del ejercicio en minutos")
 		(type INTEGER)
-;+		(cardinality 1 1)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot ontologia_Class2
+		(type STRING)
+;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(multislot actividades
 ;+		(comment "Actividades fisicas que realiza la persona")
 		(type INSTANCE)
-;+		(allowed-classes)
+;+		(allowed-classes Actividad_fisica)
+		(create-accessor read-write))
+	(single-slot dificultad
+;+		(comment "Dificultad del ejercicio, del 1 al 3 indicando el 3 la dificultad máxima y el 1 la dificultad mínima")
+		(type INTEGER)
+		(range 1 3)
+;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot nombre_ejercicio
 ;+		(comment "Nombre del ejercicio")
 		(type STRING)
-;+		(cardinality 1 1)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot objetivo_programa
+;+		(comment "Objetivo que se desea conseguir con el programa de entrenamiento")
+		(type INSTANCE)
+;+		(allowed-classes Objetivo)
+;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot nombre_actividad
 ;+		(comment "Nombre de la actividad")
 		(type STRING)
-;+		(cardinality 1 1)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot objetivos_ejercicio
+		(type INSTANCE)
+;+		(allowed-classes Objetivo)
 		(create-accessor read-write))
 	(single-slot repeticiones_min
 ;+		(comment "Numero minimo de repeticiones del ejercicio")
 		(type INTEGER)
-;+		(cardinality 1 1)
+;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot frecuencia_actividad
 ;+		(comment "Frecuencia de la actividad")
-		(type STRING)
-;+		(value "DIARIA" "SEMANAL" "MENSUAL")
-;+		(cardinality 1 1)
+		(type SYMBOL)
+		(allowed-values DIARIA SEMANAL MENSUAL)
+;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot altura
 ;+		(comment "Altura de la persona en cm")
 		(type INTEGER)
-;+		(cardinality 1 1)
+;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot repeticiones_max
 ;+		(comment "Numero maximo de repeticiones del ejercicio")
 		(type INTEGER)
-;+		(cardinality 1 1)
+;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot ontologia_Class23
 		(type STRING)
@@ -105,56 +123,65 @@
 	(single-slot presion_sanguinea
 ;+		(comment "Presion sanguinea en mmHg")
 		(type INTEGER)
-;+		(cardinality 1 1)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot nombre_objetivo
+		(type STRING)
+;+		(cardinality 0 1)
 		(create-accessor read-write)))
 
 (defclass Persona
 	(is-a USER)
 	(role concrete)
+	(single-slot programa_entrenamiento
+		(type INSTANCE)
+;+		(allowed-classes Programa_entrenamiento)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
 	(multislot actividades
 ;+		(comment "Actividades fisicas que realiza la persona")
 		(type INSTANCE)
-;+		(allowed-classes)
+;+		(allowed-classes Actividad_fisica)
 		(create-accessor read-write))
 	(single-slot edad
 ;+		(comment "Edad de la persona en anyos")
 		(type INTEGER)
-;+		(cardinality 1 1)
+;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot presion_sanguinea
 ;+		(comment "Presion sanguinea en mmHg")
 		(type INTEGER)
-;+		(cardinality 1 1)
+;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot altura
 ;+		(comment "Altura de la persona en cm")
 		(type INTEGER)
-;+		(cardinality 1 1)
+;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot peso
 ;+		(comment "Peso de la persona en KG")
 		(type FLOAT)
-;+		(cardinality 1 1)
+;+		(cardinality 0 1)
 		(create-accessor read-write)))
 
-(defclass Actividad
+(defclass Actividad_fisica
 	(is-a USER)
 	(role concrete)
 	(single-slot nombre_actividad
 ;+		(comment "Nombre de la actividad")
 		(type STRING)
-;+		(cardinality 1 1)
+;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot duracion_actividad
 ;+		(comment "Duracion de la actividad en minutos")
 		(type INTEGER)
-;+		(cardinality 1 1)
+;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot frecuencia_actividad
 ;+		(comment "Frecuencia de la actividad")
-		(type STRING)
-;+		(value "DIARIA" "SEMANAL" "MENSUAL")
-;+		(cardinality 1 1)
+		(type SYMBOL)
+		(allowed-values DIARIA SEMANAL MENSUAL)
+;+		(cardinality 0 1)
 		(create-accessor read-write)))
 
 (defclass Programa_entrenamiento
@@ -166,11 +193,11 @@
 		(range 30 %3FVARIABLE)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
-	(single-slot objetivo
+	(single-slot objetivo_programa
 ;+		(comment "Objetivo que se desea conseguir con el programa de entrenamiento")
-		(type STRING)
-;+		(value "MANTENIMIENTO" "FORMA" "REBAJAR_PESO" "EQUILIBRIO" "MUSCULACIÓN" "FLEXIBILIDAD")
-;+		(cardinality 1 1)
+		(type INSTANCE)
+;+		(allowed-classes Objetivo)
+;+		(cardinality 0 1)
 		(create-accessor read-write)))
 
 (defclass Ejercicio
@@ -179,35 +206,48 @@
 	(single-slot repeticiones_max
 ;+		(comment "Numero maximo de repeticiones del ejercicio")
 		(type INTEGER)
-;+		(cardinality 1 1)
+;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot repeticiones_min
 ;+		(comment "Numero minimo de repeticiones del ejercicio")
 		(type INTEGER)
-;+		(cardinality 1 1)
+;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot duracion_ejercicio_min
 ;+		(comment "Duracion minima del ejercicio en minutos")
 		(type INTEGER)
-;+		(cardinality 1 1)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot dificultad
+;+		(comment "Dificultad del ejercicio, del 1 al 3 indicando el 3 la dificultad máxima y el 1 la dificultad mínima")
+		(type INTEGER)
+		(range 1 3)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot objetivos_ejercicio
+		(type INSTANCE)
+;+		(allowed-classes Objetivo)
 		(create-accessor read-write))
 	(single-slot duracion_ejercicio_max
 ;+		(comment "Duracion maxima del ejercicio en minutos")
 		(type INTEGER)
-;+		(cardinality 1 1)
-		(create-accessor read-write))
-	(multislot grupos_musculares
-		(type STRING)
-;+		(value "Abdominales" "Pectorales" "Biceps" "Triceps" "Gemelos" "Quadriceps" "Espalda")
-		(cardinality 1 ?VARIABLE)
+;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot nombre_ejercicio
 ;+		(comment "Nombre del ejercicio")
 		(type STRING)
-;+		(cardinality 1 1)
+;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot calorias_por_minuto
 ;+		(comment "Nombre de calorias por minuto que se consumen haciendo el ejercicio")
 		(type INTEGER)
-;+		(cardinality 1 1)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Objetivo
+	(is-a USER)
+	(role concrete)
+	(single-slot nombre_objetivo
+		(type STRING)
+;+		(cardinality 0 1)
 		(create-accessor read-write)))
