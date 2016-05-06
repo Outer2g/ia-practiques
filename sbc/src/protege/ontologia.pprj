@@ -1,4 +1,4 @@
-; Thu May 05 19:21:52 CEST 2016
+; Fri May 06 11:46:35 CEST 2016
 ; 
 ;+ (version "3.4.8")
 ;+ (build "Build 629")
@@ -12,6 +12,7 @@
 	(height 100)
 	(is_hidden FALSE)
 	(name ":ANNOTATION-TEXT")
+	(property_list [ontologia_ProjectKB_Class10099])
 	(widget_class_name "edu.stanford.smi.protege.widget.YellowStickyWidget")
 	(width 200)
 	(x 0)
@@ -20,9 +21,9 @@
 ([BROWSER_SLOT_NAMES] of  Property_List
 
 	(properties
-		[ontologia_ProjectKB_Class81]
-		[ontologia_ProjectKB_Class82]
-		[ontologia_ProjectKB_Class83]))
+		[ontologia_ProjectKB_Class10123]
+		[ontologia_ProjectKB_Class10124]
+		[ontologia_ProjectKB_Class10125]))
 
 ([CLSES_TAB] of  Widget
 
@@ -57,7 +58,8 @@
 		[ANNOTATED_INSTANCE_WIDGET]
 		[CREATOR_WIDGET]
 		[CREATION_TIMESTAMP_WIDGET]
-		[ANNOTATION_TEXT_WIDGET]))
+		[ANNOTATION_TEXT_WIDGET]
+		[ontologia_ProjectKB_Class10098]))
 
 ([INSTANCES_TAB] of  Widget
 
@@ -69,7 +71,9 @@
 	(string_value "edu.stanford.smi.protege.storage.clips.ClipsKnowledgeBaseFactory"))
 
 ([KB_266786_Class1] of  Map
-)
+
+	(entries [ontologia_ProjectKB_Class10127])
+	(referenced_maps [ontologia_ProjectKB_Class10126]))
 
 ([KB_266786_Class100] of  Property_List
 )
@@ -163,7 +167,7 @@
 ([KB_266786_Class99] of  Property_List
 )
 
-([KB_843392_Class0] of  Map
+([KB_669328_Class0] of  Map
 )
 
 ([LAYOUT_PROPERTIES] of  Property_List
@@ -179,6 +183,134 @@
 
 ([ontologia_ProjectKB_Class10] of  Property_List
 )
+
+([ontologia_ProjectKB_Class10092] of  Widget
+
+	(height 120)
+	(is_hidden FALSE)
+	(name "objetivo_ejercicio")
+	(property_list [ontologia_ProjectKB_Class10093])
+	(widget_class_name "edu.stanford.smi.protege.widget.SymbolListWidget")
+	(width 200)
+	(x 200)
+	(y 60))
+
+([ontologia_ProjectKB_Class10093] of  Property_List
+)
+
+([ontologia_ProjectKB_Class10098] of  Property_List
+
+	(name "layout properties"))
+
+([ontologia_ProjectKB_Class10099] of  Property_List
+)
+
+([ontologia_ProjectKB_Class10100] of  Widget
+
+	(height 120)
+	(is_hidden FALSE)
+	(name "objetivo_ejercicio")
+	(property_list [ontologia_ProjectKB_Class10101])
+	(widget_class_name "edu.stanford.smi.protege.widget.IntegerListWidget")
+	(width 200)
+	(x 0)
+	(y 180))
+
+([ontologia_ProjectKB_Class10101] of  Property_List
+)
+
+([ontologia_ProjectKB_Class10102] of  Widget
+
+	(height 120)
+	(is_hidden FALSE)
+	(name "objetivo_ejercicio")
+	(property_list [ontologia_ProjectKB_Class10103])
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceListWidget")
+	(width 200)
+	(x 0)
+	(y 180))
+
+([ontologia_ProjectKB_Class10103] of  Property_List
+
+	(properties
+		[ontologia_ProjectKB_Class10104]
+		[ontologia_ProjectKB_Class10105]))
+
+([ontologia_ProjectKB_Class10104] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-View References to Value"))
+
+([ontologia_ProjectKB_Class10105] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
+
+([ontologia_ProjectKB_Class10106] of  Widget
+
+	(height 60)
+	(is_hidden FALSE)
+	(name "objetivo_ejercicio")
+	(property_list [ontologia_ProjectKB_Class10107])
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceFieldWidget")
+	(width 200)
+	(x 0)
+	(y 180))
+
+([ontologia_ProjectKB_Class10107] of  Property_List
+
+	(properties
+		[ontologia_ProjectKB_Class10108]
+		[ontologia_ProjectKB_Class10109]))
+
+([ontologia_ProjectKB_Class10108] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-View References to Value"))
+
+([ontologia_ProjectKB_Class10109] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
+
+([ontologia_ProjectKB_Class10119] of  Widget
+
+	(height 60)
+	(is_hidden FALSE)
+	(name "dificultad")
+	(property_list [ontologia_ProjectKB_Class10120])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(width 200)
+	(x 0)
+	(y 300))
+
+([ontologia_ProjectKB_Class10120] of  Property_List
+)
+
+([ontologia_ProjectKB_Class10123] of  String
+
+	(name ":INSTANCE-ANNOTATION")
+	(string_value "%3AANNOTATION-TEXT"))
+
+([ontologia_ProjectKB_Class10124] of  String
+
+	(name ":PAL-CONSTRAINT")
+	(string_value "%3APAL-NAME"))
+
+([ontologia_ProjectKB_Class10125] of  String
+
+	(name ":META-CLASS")
+	(string_value "%3ANAME"))
+
+([ontologia_ProjectKB_Class10126] of  Map
+)
+
+([ontologia_ProjectKB_Class10127] of  Map_Entry
+
+	(key "InstanceDisplay.yellow_stickies")
+	(key_class "java.lang.String")
+	(value "ontologia_ProjectKB_Class10126")
+	(value_class "java.util.Map"))
 
 ([ontologia_ProjectKB_Class107] of  String
 
@@ -528,21 +660,6 @@
 
 ([ontologia_ProjectKB_Class80] of  Property_List
 )
-
-([ontologia_ProjectKB_Class81] of  String
-
-	(name ":INSTANCE-ANNOTATION")
-	(string_value "%3AANNOTATION-TEXT"))
-
-([ontologia_ProjectKB_Class82] of  String
-
-	(name ":PAL-CONSTRAINT")
-	(string_value "%3APAL-NAME"))
-
-([ontologia_ProjectKB_Class83] of  String
-
-	(name ":META-CLASS")
-	(string_value "%3ANAME"))
 
 ([ontologia_ProjectKB_Class9] of  Widget
 
