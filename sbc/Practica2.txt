@@ -8,12 +8,15 @@ Problema Abstracto:
 	Objetivo ? 
 	
 Restricciones:
+Adolescente-> dif 1,2
 Joven -> le da a to
+Maduro -> 
 Viejo -> solo maquinas, pesas baja intensidad
 ----
-Fuelte -> le da a to
-Normal -> Prioridad ej dif 1,2 
-Gordaco -> prioridad ej sin pesas, cardio, bajar rep
+Normal -> le da a to
+Sobrepeso -> Prioridad ej dif 1,2 , cardio
+Infrapeso -> Prioridad maquinas
+Gordaco -> prioridad ej sin pesas, cardio, bajar rep, subir serie
 ----
 Musculación -> 3x8-10 (si NP subir 4)
 Resistencia -> 4x12-15 (si NP subir 5)
