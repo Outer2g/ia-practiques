@@ -1,0 +1,201 @@
+; Tue May 17 00:53:09 CEST 2016
+; 
+;+ (version "3.4.8")
+;+ (build "Build 629")
+
+([ontologia_prototipo1_Class18] of  Objetivo
+
+	(objetivo "Musculacion"))
+
+([ontologia_prototipo1_Class19] of  Objetivo
+
+	(objetivo "Flexibilidad"))
+
+([ontologia_prototipo1_Class20] of  Objetivo
+
+	(objetivo "Equilibrio"))
+
+([ontologia_prototipo1_Class21] of  Objetivo
+
+	(objetivo "Mantenimiento"))
+
+([ontologia_prototipo1_Class22] of  Objetivo
+
+	(objetivo "Forma"))
+
+([ontologia_prototipo1_Class23] of  Objetivo
+
+	(objetivo "Adelgazar"))
+
+([ontologia_prototipo1_Class24] of  Grupo_Muscular
+
+	(grupo_muscular "Abdominales"))
+
+([ontologia_prototipo1_Class25] of  Grupo_Muscular
+
+	(grupo_muscular "Pectorales"))
+
+([ontologia_prototipo1_Class26] of  Grupo_Muscular
+
+	(grupo_muscular "Espalda"))
+
+([ontologia_prototipo1_Class27] of  Grupo_Muscular
+
+	(grupo_muscular "Hombro"))
+
+([ontologia_prototipo1_Class28] of  Grupo_Muscular
+
+	(grupo_muscular "Biceps"))
+
+([ontologia_prototipo1_Class29] of  Grupo_Muscular
+
+	(grupo_muscular "Triceps"))
+
+([ontologia_prototipo1_Class30] of  Grupo_Muscular
+
+	(grupo_muscular "Quadriceps"))
+
+([ontologia_prototipo1_Class31] of  Grupo_Muscular
+
+	(grupo_muscular "Gemelos"))
+
+([ontologia_prototipo1_Class32] of  Pesas
+
+	(calorias_por_minuto 6.56)
+	(duracion_max 15)
+	(duracion_min 6)
+	(ejercicio "Press Banca")
+	(grupos_musculares [ontologia_prototipo1_Class25])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 15)
+	(repeticiones_min 2)
+	(series_max 5)
+	(series_min 3))
+
+([ontologia_prototipo1_Class35] of  Pesas
+
+	(calorias_por_minuto 4.5)
+	(duracion_max 20)
+	(duracion_min 6)
+	(ejercicio "Pullover")
+	(repeticiones_max 20)
+	(repeticiones_min 5)
+	(series_max 8)
+	(series_min 3))
+
+([ontologia_prototipo1_Class36] of  Suelo
+
+	(calorias_por_minuto 5.0)
+	(duracion_max 40)
+	(duracion_min 8)
+	(ejercicio "Flexiones")
+	(grupos_musculares
+		[ontologia_prototipo1_Class25]
+		[ontologia_prototipo1_Class29])
+	(metas
+		[ontologia_prototipo1_Class18]
+		[ontologia_prototipo1_Class21])
+	(repeticiones_max 100)
+	(repeticiones_min 3)
+	(series_max 8)
+	(series_min 4))
+
+([ontologia_prototipo1_Class37] of  %3AINSTANCE-ANNOTATION
+
+	(%3AANNOTATED-INSTANCE [ontologia_prototipo1_Class22])
+	(%3AANNOTATION-TEXT "Nose en q ejercicios ponerlo")
+	(%3ACREATION-TIMESTAMP "2016.05.17 00:17:00.881 CEST")
+	(%3ACREATOR "albert"))
+
+([ontologia_prototipo1_Class38] of  Maquina
+
+	(calorias_por_minuto 9.5)
+	(ejercicio "Remo")
+	(grupos_musculares [ontologia_prototipo1_Class26])
+	(metas [ontologia_prototipo1_Class18])
+	(series_max 10))
+
+([ontologia_prototipo1_Class39] of  Maquina
+
+	(calorias_por_minuto 3.5)
+	(duracion_max 25)
+	(duracion_min 10)
+	(ejercicio "Polea tras-nuca")
+	(grupos_musculares [ontologia_prototipo1_Class26])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 15)
+	(repeticiones_min 5)
+	(series_max 10)
+	(series_min 5))
+
+([ontologia_prototipo1_Class40] of  Grupo_Muscular
+)
+
+([ontologia_prototipo1_Class43] of  Barra
+
+	(calorias_por_minuto 6.8)
+	(duracion_max 39)
+	(duracion_min 6)
+	(ejercicio "FatMan Pullups")
+	(grupos_musculares [ontologia_prototipo1_Class26])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 75)
+	(repeticiones_min 2)
+	(series_max 80)
+	(series_min 3))
+
+([ontologia_prototipo1_Class44] of  Barra
+
+	(calorias_por_minuto 6.8)
+	(duracion_max 39)
+	(duracion_min 6)
+	(ejercicio "Dominadas abiertas")
+	(grupos_musculares [ontologia_prototipo1_Class26])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 75)
+	(repeticiones_min 2)
+	(series_max 80)
+	(series_min 3))
+
+([ontologia_prototipo1_Class45] of  Suelo
+
+	(calorias_por_minuto 4.5)
+	(duracion_max 28)
+	(duracion_min 6)
+	(ejercicio "Abdominales")
+	(grupos_musculares [ontologia_prototipo1_Class24])
+	(metas
+		[ontologia_prototipo1_Class18]
+		[ontologia_prototipo1_Class21])
+	(repeticiones_max 50)
+	(repeticiones_min 5)
+	(series_max 6)
+	(series_min 3))
+
+([ontologia_prototipo1_Class46] of  Maquina
+
+	(calorias_por_minuto 15.0)
+	(duracion_max 60)
+	(duracion_min 10)
+	(ejercicio "Cinta")
+	(grupos_musculares
+		[ontologia_prototipo1_Class30]
+		[ontologia_prototipo1_Class31])
+	(metas
+		[ontologia_prototipo1_Class21]
+		[ontologia_prototipo1_Class22]
+		[ontologia_prototipo1_Class23]))
+
+([ontologia_prototipo1_Class47] of  Maquina
+
+	(calorias_por_minuto 12.0)
+	(duracion_max 120)
+	(duracion_min 15)
+	(ejercicio "Bicicleta")
+	(grupos_musculares
+		[ontologia_prototipo1_Class30]
+		[ontologia_prototipo1_Class31])
+	(metas
+		[ontologia_prototipo1_Class21]
+		[ontologia_prototipo1_Class22]
+		[ontologia_prototipo1_Class23]))
