@@ -1,3 +1,5 @@
+# Datos del problema
+
 condiciones fisicaas generales:
 	peso
 	altura {indice masa corporal}
@@ -38,6 +40,11 @@ ejercicios con aparatos
 ejercicios con o sin pesas
 ejerciios de suelo
 ejercicios de estiramientos/flexibilidad
+
+
+
+
+# Recomendaciones
 
 restricciones / caracteristicas
 numero calorias quemadas por cantidad de tiempo

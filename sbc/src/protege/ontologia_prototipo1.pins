@@ -1,7 +1,18 @@
-; Tue May 17 00:53:09 CEST 2016
+; Tue May 17 13:15:32 CEST 2016
 ; 
-;+ (version "3.4.8")
-;+ (build "Build 629")
+;+ (version "3.5")
+;+ (build "Build 663")
+
+([ontologia_prototipo1_Class0] of  Maquina
+
+	(calorias_por_minuto 5.5)
+	(ejercicio "Press militar")
+	(grupos_musculares [ontologia_prototipo1_Class27])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 25)
+	(repeticiones_min 5)
+	(series_max 8)
+	(series_min 3))
 
 ([ontologia_prototipo1_Class18] of  Objetivo
 
@@ -10,6 +21,16 @@
 ([ontologia_prototipo1_Class19] of  Objetivo
 
 	(objetivo "Flexibilidad"))
+
+([ontologia_prototipo1_Class2] of  Pesas
+
+	(ejercicio "Elevaciones laterales")
+	(grupos_musculares [ontologia_prototipo1_Class27])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 18)
+	(repeticiones_min 5)
+	(series_max 6)
+	(series_min 4))
 
 ([ontologia_prototipo1_Class20] of  Objetivo
 
@@ -50,6 +71,16 @@
 ([ontologia_prototipo1_Class29] of  Grupo_Muscular
 
 	(grupo_muscular "Triceps"))
+
+([ontologia_prototipo1_Class3] of  Pesas
+
+	(ejercicio "Elevaciones de disco")
+	(grupos_musculares [ontologia_prototipo1_Class27])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 18)
+	(repeticiones_min 3)
+	(series_max 7)
+	(series_min 3))
 
 ([ontologia_prototipo1_Class30] of  Grupo_Muscular
 
@@ -128,8 +159,15 @@
 	(series_max 10)
 	(series_min 5))
 
-([ontologia_prototipo1_Class40] of  Grupo_Muscular
-)
+([ontologia_prototipo1_Class4] of  Pesas
+
+	(ejercicio "Curl con mancuernas")
+	(grupos_musculares [ontologia_prototipo1_Class28])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 8)
+	(repeticiones_min 15)
+	(series_max 3)
+	(series_min 6))
 
 ([ontologia_prototipo1_Class43] of  Barra
 
@@ -199,3 +237,53 @@
 		[ontologia_prototipo1_Class21]
 		[ontologia_prototipo1_Class22]
 		[ontologia_prototipo1_Class23]))
+
+([ontologia_prototipo1_Class5] of  Barra
+
+	(ejercicio "Curl Scott barra")
+	(grupos_musculares [ontologia_prototipo1_Class28])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 10)
+	(repeticiones_min 3)
+	(series_max 5)
+	(series_min 3))
+
+([ontologia_prototipo1_Class6] of  Maquina
+
+	(ejercicio "Extensiones cuerda")
+	(grupos_musculares [ontologia_prototipo1_Class29])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 25)
+	(repeticiones_min 5)
+	(series_max 10)
+	(series_min 5))
+
+([ontologia_prototipo1_Class7] of  Pesas
+
+	(ejercicio "Press triceps declinado")
+	(grupos_musculares [ontologia_prototipo1_Class29])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 10)
+	(repeticiones_min 3)
+	(series_max 8)
+	(series_min 3))
+
+([ontologia_prototipo1_Class8] of  Suelo
+
+	(ejercicio "Sentadillas")
+	(grupos_musculares [ontologia_prototipo1_Class30])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 50)
+	(repeticiones_min 5)
+	(series_max 7)
+	(series_min 3))
+
+([ontologia_prototipo1_Class9] of  Suelo
+
+	(ejercicio "Elevaciones de gemelos")
+	(grupos_musculares [ontologia_prototipo1_Class31])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 60)
+	(repeticiones_min 15)
+	(series_max 8)
+	(series_min 3))
