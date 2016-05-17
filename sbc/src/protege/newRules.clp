@@ -413,43 +413,55 @@
 ;============================== Preguntas =======================================
 ;================================================================================
 ; Obtiene una respuesta del conjunto de posibles valores
-(deffunction pregunta (?pregunta $?posibles-valores)
-  (bind $?lowcase-valores (create$))
-  (progn$ (?var ?posibles-valores
-    (bind $?lowcase-valores (insert$ $?lowcase-valores (+ (length $?lowcase-valores) 1) (lowcase ?var)))
-  )
-  (format t "¿%s? (%s) " ?pregunta (implode$ ?posibles-valores  (bind ?respuesta (read))
-  (while (not (member (lowcase ?respuesta) ?lowcase-valores)) do
-    (format t "¿%s? (%s) " ?pregunta (implode$ ?posibles-valores    (bind ?respuesta (read))
-  )
-  ?respuesta
+(deffunction pregunta-general (?pregunta) 
+        (format t "%s" ?pregunta) 
+        (bind ?respuesta (read)) 
+        ?respuesta
 )
 
-; Obtiene una respuesta 
-(deffunction pregunta-general (?pregunta)
-  (format t "¿%s? " ?pregunta)
-  (bind ?respuesta (read))
-  ?respuesta
+;;; Funcion para hacer una pregunta con respuesta en un rango dado
+(deffunction pregunta-num (?pregunta ?rangini ?rangfi) 
+        (format t "%s [%d, %d] " ?pregunta ?rangini ?rangfi) 
+        (bind ?respuesta (read)) 
+        (while (not(and(>= ?respuesta ?rangini)(<= ?respuesta ?rangfi))) do 
+                (format t "Â¿%s? [%d, %d] " ?pregunta ?rangini ?rangfi) 
+                (bind ?respuesta (read)) 
+        ) 
+        ?respuesta
 )
 
-; Realiza una pregunta binaria
-(deffunction pregunta-s-n (?pregunta)
-  (bind ?respuesta (pregunta ?pregunta si no s n))
-  (if (or (eq (lowcase ?respuesta) si) (eq (lowcase ?respuesta) s))
-    then TRUE 
-    else FALSE
-  )
+;;; Funcion para hacer una pregunta con un conjunto definido de valores de repuesta    
+(deffunction pregunta-lista (?pregunta $?valores_posibles) 
+        (format t "%s" ?pregunta)  
+        (bind ?resposta (readline))  
+        (bind ?res (str-explode ?resposta))   
+        ?res
 )
 
-; Funcion para hacer una pregunta con respuesta numerica unica
-(deffunction pregunta-num (?pregunta ?rangstart ?rangend)
-  (format t "%s [%d, %d] " ?pregunta ?rangstart ?rangend)
-  (bind ?respuesta (read))
-  (while (not(and(>= ?respuesta ?rangstart)(<= ?respuesta ?rangend))) do
-    (format t "%s [%d, %d] " ?pregunta ?rangstart ?rangend)
-    (bind ?respuesta (read))
-  )
-  ?respuesta
+;funcion para preguntar con unos valores predefinidos en los que la respuesta ha de ser uno de ellos
+(deffunction pregunta (?pregunta $?valores-permitidos)
+     (progn$
+        (?var ?valores-permitidos)
+        (lowcase ?var))
+     (format t "¿%s? (%s) " ?pregunta (implode$ ?valores-permitidos))
+     (bind ?respuesta (read))
+     (while (not (member (lowcase ?respuesta) ?valores-permitidos)) do
+        (format t "¿%s? (%s) " ?pregunta (implode$ ?valores-permitidos))
+        (bind ?respuesta (read))
+     )
+     ?respuesta
+ )
+
+
+
+ ;Funcion para preguntar rapidamente si o no
+(deffunction pregunta-sino (?pregunta)
+    ;(format t "%s" ?pregunta)
+    (bind ?respuesta (pregunta ?pregunta si no))
+    (if (or (eq (lowcase ?respuesta) si) (eq (lowcase ?respuesta) s))
+        then TRUE
+        else FALSE
+     )
 )
 
 ;;; Inicio de la solucion implementada
@@ -490,10 +502,9 @@
         (printout t "------- I'm no couch potato - Recomendador de rutinas --------" crlf)
         (printout t "--------------------------------------------------------------" crlf)
         (printout t crlf)
-        (assert (imprimeElevacionesLaterales 0))
-        (assert (imprimeCurlMancuernas 0))
         (focus recopilacion-usuario)
 )
+
 ;;; Modulo recopilacion
 (defmodule recopilacion-usuario
     (import MAIN ?ALL)
@@ -503,9 +514,10 @@
         (not (tengoEdad))
         =>
         (bind ?edad (pregunta-num "Cuantos años tienes: " 14 99))
-        (assert edad ?edad)
-        (assert tengoEdad)
+        (assert (edad ?edad))
+        (assert (tengoEdad))
         )
+
 (defrule pregunta-Altura "pregunta estatura"
     (not(tengoAltura))
     =>
@@ -513,6 +525,7 @@
     (assert (altura ?altura))
     (assert (tengoAltura))
     )
+
 (defrule pregunta-Peso "pregunta peso"
     (not (tengoPeso))
     =>
@@ -520,62 +533,126 @@
     (assert (peso ?peso))
     (assert (tengoPeso))
 )
+
 (defrule pregunta-Presion "pregunta presion sanguinea"
     (not (tengoPresionSanguinea))
     =>
-    (bind ?presionMaxima (pregunta-num "Presion sanguinea minima: " 0 200))
-    (assert (presionSanguineaMaxima ?presionMaxima))
-    (bind ?presionMinima (pregunta-num "Presion sanguinea maxima: " 0 300))
+    (bind ?presionMinima (pregunta-num "Presion sanguinea minima: " 0 200))
     (assert (presionSanguineaMinima ?presionMinima))
+    (bind ?presionMaxima (pregunta-num "Presion sanguinea maxima: " 0 300))
+    (assert (presionSanguineaMaxima ?presionMaxima))
     (assert (tengoPresionSanguinea))
     )
-(defrule pregunta-Problemas-Salud "pregunta problemas de salud"
-    (not (tengoProblemasSalud))
+(defrule pregunta-Objectivo "pregunta el objetivo del entrenamiento"
+    (not (tengoObjetivo))
     =>
-    (assert tengoProblemasSalud))
-(defrule pasa-modulo
-    (salience -2)
-    =>
-    (focus procesado)
+    (bind ?objetivo (pregunta "Cúal es el objetivo de tu entrenamiento" Musculacion Flexibilidad Fitness))
+    (assert (objetivo ?objetivo))
+    (assert (tengoObjetivo))
     )
+(defrule pregunta-Si-Prueba "pregunta si el usuaro ha hecho la prueba de intensidad"
+    (not (tengoSiPrueba))
+    =>
+    (bind ?resposta (pregunta-sino "Has realizado la prueba de intensidad recomendada"))
+    (assert (tengoSiPrueba))
+    if (eq ?resposta TRUE) then
+        (assert (haRealizadoPrueba))
+    )
+(defrule pregunta-Si-Tiene-Problemas-Salud "pregunta si el usuario tiene algun tipo de problema"
+    (not (tengoSiProblemaSalud))
+    =>
+    (bind ?resposta (pregunta-sino "Tiene usted algun problema de salud"))
+    (assert (tengoSiProblemaSalud))
+    if (eq ?resposta TRUE) then
+        (assert (tieneProblemasSalud))
+    )
+    )
+
+(defrule pregunta-Problemas-Salud "pregunta por los posibles problmas de salud del usuario"
+    (tieneProblemasSalud)
+    =>
+    (printout t "TODO: PEDIR problemas salud" crlf)
+    )
+
+(defrule pregunta-Resultados-Prueba "recopila los datos de la prueba"
+    (haRealizadoPrueba)
+    =>
+    (printout t "TODO: PEDIR datos" crlf)
+    )
+
+(defrule pasa-next "pregunta problemas de salud"
+    (declare (salience -1))
+    =>
+    (focus procesado))
+
+(defrule calcula-Indice-Masa "calculo del indice de masa muscular"
+    (altura ?altura)
+    (peso ?peso)
+    =>
+    (assert (masa (/ ?peso (* ?altura ?altura))))
+    )
+
 ;;; Modulo procesado de contenido ---------------------------------------------------
 
 (defmodule procesado
     (import MAIN ?ALL)
-    (import recopilacion-usuario deftemplate ?ALL)
+    (import recopilacion-usuario ?ALL)
     (export ?ALL)
 )
-(defrule random "Se añade todas las peliculas, luego se filtran"
-    (tengoEdad)
+        
+(defrule procesa-edad "segun edad se hacen cosas"
+    (edad ?edad)
         =>
-        (bind ?edad (pregunta-num "Que edad tienes: " 12 99))
         (if (< ?edad 18)
         then
-        (printout t "It's adolescente" crlf)
         (assert (edadBiologica adolescente))
         else
         (if (< ?edad 30)
                 then
-                (printout t "It's joven" crlf)
                 (assert (edadBiologica joven))
                 else
                 (if (< ?edad 60)
                         then
-                        (printout t "It's maduro" crlf)
                         (assert (edadBiologica  maduro))
                         else 
-                        (printout t "It's viejo" crlf)
                         (assert (edadBiologica viejo))
                         )
                 )
         )
         (assert (tengoEdad))
-)
+    )
+(defrule estado-obeso "la persona es obesa si masa mayor que 30"
+    (masa ?x&:(> ?x 30))
+    =>
+    (assert ( estado-fisico obeso))
+    )
+(defrule estado-sobrepeso "la persona tiene sobrepeso si masa entre 25 y 29.9"
+    (masa ?x&:(and (> ?x 25) (< ?x 30)))
+    =>
+    (assert ( estado-fisico sobrepeso))
+    )
+(defrule estado-peso-normal "la persona tiene peso normal si masa entre 18.5 y 24.9"
+    (masa ?x&:(and (> ?x 18.5) (< ?x 25)))
+    =>
+    (assert ( estado-fisico normal))
+    )
+(defrule estado-infrapeso "la persona sufre de infrapeso si masa menor que 18.5"
+    (masa ?x&:(< ?x 18.5))
+    =>
+    (assert ( estado-fisico infrapeso))
+    )
+
+(defrule next "pasa next module"
+    (declare (salience -1))
+    =>
+    (focus generacion))
 
 
 ;;; Módulo de generacion de respuestas -------------------------------------------------
 (defmodule generacion
     (import MAIN ?ALL)
+    (import recopilacion-usuario ?ALL)
+        (import procesado ?ALL)
     (export ?ALL)
 )
 (defrule crea-lista-recomendaciones "Se crea una lista de recomendaciones para ordenarlas"
@@ -589,11 +666,15 @@
     (assert (puedeTocarSuelo))
     (assert (puedeRemo))
     (assert (puedeBicicleta))
+    (focus presentacion)
 )
 
 ;;; Modulo de presentacion de resultados ----------------------------------------------------
 (defmodule presentacion
     (import MAIN ?ALL)
+    (import recopilacion-usuario ?ALL)
+    (import procesado ?ALL)
+    (import generacion ?ALL)
     (export ?ALL)
 )
 (defrule mostrar-respuesta "Muestra el contenido escogido"
