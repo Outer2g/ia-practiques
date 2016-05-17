@@ -1,0 +1,1 @@
+java -jar out/artifacts/busqueda_local_jar/busqueda-local.jar "$@"

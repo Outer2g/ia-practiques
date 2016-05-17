@@ -1,0 +1,3 @@
+(load prueba_ej.clp)
+(reset)
+(run)
