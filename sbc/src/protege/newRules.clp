@@ -502,6 +502,7 @@
         (printout t "------- I'm no couch potato - Recomendador de rutinas --------" crlf)
         (printout t "--------------------------------------------------------------" crlf)
         (printout t crlf)
+        (assert (numeroHabitos 0))
         (focus recopilacion-usuario)
 )
 
@@ -620,7 +621,40 @@
             )))
     (assert (tengoObjetivo))
     )
-
+(defrule pregunta-Habitos "pregunta habitos de la persona"
+    (not (tengoHabitos))
+    ?fHabitos <- (numeroHabitos ?nhabitos)
+    =>
+    (printout t crlf)
+    (printout t "1. Salir a correr" crlf)
+    (printout t "2. Salir en bicicleta" crlf)
+    (printout t "3. Escalada" crlf) 
+    (printout t "4. Ninguna" crlf)
+    (bind ?respuesta (pregunta-num "Cúal de estas actividades realizas" 1 4))
+    (if (eq ?respuesta 1)
+        then (assert (habito correr))
+            (retract ?fHabitos)
+            (assert (numeroHabitos (+ ?nhabitos 1))))
+    (if (eq ?respuesta 2)
+        then (assert (habito bicicleta))
+            (retract ?fHabitos)
+            (assert (numeroHabitos (+ ?nhabitos 1)))))
+    (if (eq ?respuesta 3)
+        then (assert (habito escalada))
+            (retract ?fHabitos)
+            (assert (numeroHabitos (+ ?nhabitos 1)))))
+    (if (eq ?respuesta 4))
+        then (assert (nopreguntesmas))
+    (assert (tengoHabitos))
+    )
+(defrule pregunta-Si-TieneMasHabitos "pregunta si la persona tiene mas habitos"
+    ?f <- (tengoHabitos)
+    (not (nopreguntesmas))
+    =>
+    (bind ?resposta (pregunta-sino "Realiza usted alguna otra actividad"))
+    (if (eq ?resposta TRUE) then
+        (retract ?f))
+    )
 (defrule pregunta-Resultados-Prueba "recopila los datos de la prueba"
     (haRealizadoPrueba)
     =>
@@ -688,7 +722,13 @@
     =>
     (assert ( estado-fisico infrapeso))
     )
-
+(defrule procesa-estado-fisico "procesa el estado fisico de la persona segun las actividades que haga"
+    (numeroHabitos ?x)
+    =>
+    (if (< ?x 4) then (assert (actividad-fisica poca))
+        else (if (and (> ?x 3) (< ?x 5)) then (assert (actividad-fisica moderada))
+            else (assert (actividad-fisica mucha))))
+    )
 (defrule next "pasa next module"
     (declare (salience -1))
     =>
@@ -732,6 +772,7 @@
     (printout t "--------------- Ejercicios que puedes realizar ---------------" crlf)
     (printout t "--------------------------------------------------------------" crlf)
     (printout t crlf)
+    (facts)
 )
 
 
