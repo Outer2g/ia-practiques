@@ -458,7 +458,7 @@
 (deffunction pregunta-sino (?pregunta)
     ;(format t "%s" ?pregunta)
     (bind ?respuesta (pregunta ?pregunta si no))
-    (if (or (eq (lowcase ?respuesta) si) (eq (lowcase ?respuesta) s))
+    (if (eq (lowcase ?respuesta) si)
         then TRUE
         else FALSE
      )
@@ -546,8 +546,19 @@
 (defrule pregunta-Objectivo "pregunta el objetivo del entrenamiento"
     (not (tengoObjetivo))
     =>
-    (bind ?objetivo (pregunta "Cúal es el objetivo de tu entrenamiento" Musculacion Flexibilidad Fitness))
-    (assert (objetivo ?objetivo))
+    (printout t crlf)
+    (printout t "1. Muscular" crlf)
+    (printout t "2. Fitness" crlf)
+    (printout t "3. Flexibilidad" crlf) 
+    (bind ?objetivo (pregunta-num "Que Objetivo tienes " 1 3))
+    (if (eq ?objetivo 1)
+            then 
+            (assert (objetivo Muscular))
+        else (if (eq ?objetivo 2)
+            then (assert (objetivo Fitness))
+        else (if (eq ?objetivo 3)
+            then (assert (objetivo Flexibilidad))
+            )))
     (assert (tengoObjetivo))
     )
 (defrule pregunta-Si-Prueba "pregunta si el usuaro ha hecho la prueba de intensidad"
@@ -555,23 +566,59 @@
     =>
     (bind ?resposta (pregunta-sino "Has realizado la prueba de intensidad recomendada"))
     (assert (tengoSiPrueba))
-    if (eq ?resposta TRUE) then
-        (assert (haRealizadoPrueba))
+    (if (eq ?resposta TRUE) then
+            (assert (haRealizadoPrueba)))
     )
 (defrule pregunta-Si-Tiene-Problemas-Salud "pregunta si el usuario tiene algun tipo de problema"
     (not (tengoSiProblemaSalud))
     =>
     (bind ?resposta (pregunta-sino "Tiene usted algun problema de salud"))
     (assert (tengoSiProblemaSalud))
-    if (eq ?resposta TRUE) then
-        (assert (tieneProblemasSalud))
+    (if (eq ?resposta TRUE) then
+        (assert (tieneProblemasSalud)))
     )
+    )
+(defrule pregunta-Tiempo-Diario "pregunta tiempo que quiere invertir diariamente"
+    (not (tengoTiempoDiario))
+    =>
+    (bind ?tiempo (pregunta-num "Cuanto tiempo le quieres dedicar diariamente(en minutos)" 30 240))
+    (assert (tiempoDiario ?tiempo))
     )
 
 (defrule pregunta-Problemas-Salud "pregunta por los posibles problmas de salud del usuario"
     (tieneProblemasSalud)
     =>
-    (printout t "TODO: PEDIR problemas salud" crlf)
+    (printout t crlf)
+    (printout t "1. Muscular" crlf)
+    (printout t "2. Cardio Vasculares" crlf)
+    (printout t "3. Respiratorios" crlf) 
+    (bind ?problema (pregunta-num "Que problemas de salud tienes: " 1 3))
+    (if (eq ?problema 1)
+            then 
+            (assert (problema Muscular))
+        else (if (eq ?problema 2)
+            then (assert (problema CardioVascular))
+        else (if (eq ?problema 3)
+            then (assert (problema Respiratorio))
+            )))
+    )
+(defrule pregunta-ProblemaEspecifico "pregunta problema especifico muscular"
+    (problema ?problema&:(eq ?problema Muscular))
+    =>
+    (printout t crlf)
+    (printout t "1. Hombro" crlf)
+    (printout t "2. Rodilla" crlf)
+    (printout t "3. Antebrazo" crlf) 
+    (bind ?respuesta (pregunta-num "Que problema muscular tienes" 1 3))
+    (if (eq ?respuesta 1)
+            then 
+            (assert (restriccion Hombro))
+        else (if (eq ?respuesta 2)
+            then (assert (restriccion Rodilla))
+        else (if (eq ?respuesta 3)
+            then (assert (restriccion Antebrazo))
+            )))
+    (assert (tengoObjetivo))
     )
 
 (defrule pregunta-Resultados-Prueba "recopila los datos de la prueba"
