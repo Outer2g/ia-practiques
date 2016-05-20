@@ -1,0 +1,41 @@
+Identificación
+- Descripción del problema
+- Análisis detallado de la viabilidad del SBC
+- Identificación de las fuentes de conocimiento
+- Descripción clara de los objetivos del problema y los resultados del sistema
+
+Conceptualización
+- Descripción de los conceptos del dominio
+- Descripción detallada de los problemas y subproblemas que intervienen en la resolución
+- Ejemplos del conocimiento experto extraído del dominio
+- Descripción informal del proceso de resolución y como se organizan los problemas y subproblemas
+
+Formalización
+- Explicación detallada de como se ha construido la ontología
+- Documentación detallada de la ontología (describir elementos, incluyendo grafo de jerarquía)
+- Detallamiento del proceso de razonamiento de cada subproblema identificado
+
+
+Implementación
+- La resolución del problema se divide en módulos usando los subproblemas identificados
+- Descripción de los diversos prototipos (etapas de desarrollo incremental mediante prototipado)
+
+Juegos de prueba
+- Incluir salida original del programa
+- Explicar adecuadamente la salida en función de las entradas y conocimiento  del sistema
+- Explicación de la elección de los juegos de prueba
+* Tiene que haber >= 6 JP
+* Tiene que haber alguno que no hayamos usado en el desarrollo
+
+Implementación en Clips
+* Hay que usar deftemplates y objetos
+
+Calidad
+* Cobertura de casos extremos
+* Buena presentación
+
+
+
+Novedades respecto al ejemplo de TV
+- Incluir salida original del programa
+- Ejemplos del conocimiento experto del dominio
