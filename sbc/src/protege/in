@@ -1,4 +1,0 @@
-(load rules.clp)
-(reset)
-(run)
-(facts)
