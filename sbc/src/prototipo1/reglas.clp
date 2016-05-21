@@ -848,10 +848,19 @@
 (defrule procesa-estado-fisico "procesa el estado fisico de la persona segun las actividades que haga"
     (numeroHabitos ?x)
     =>
+
     (if (< ?x 4) then (assert (actividad-fisica poca))
         else (if (and (> ?x 3) (< ?x 5)) then (assert (actividad-fisica moderada))
             else (assert (actividad-fisica mucha))))
     )
+(defrule procesa-presion "procesa la presion sanguinea"
+	(presionSanguineaMaxima ?presionMaxima)
+	(presionSanguineaMinima ?presionMinima)
+	=>
+	(if (and (> ?presionMaxima 130) (> ?presionMinima 90)) then (assert (tension Alta))
+        else (if (and (< ?presionMaxima 90) (< ?presionMinima 61)) then (assert (tension Baja)))
+        else (assert (tension Normal)))
+	)
 (defrule next "pasa next module"
     (declare (salience -1))
     =>
@@ -865,6 +874,14 @@
         (import procesado ?ALL)
     (export ?ALL)
     )
+(defrule considera-tension "si tension alta -> baja intensidad"
+	(declare (salience 10))
+	(tension Alta)
+	?f<-(intensidadBasica ?intensity)
+	=>
+	(retract ?f)
+	(assert (intensidad 20))
+	)
 ;Problema: no se puede igualar ?obj con ?grupo
 (defrule haz-magia
 	?obj<-(object (is-a Grupo_Muscular) (grupo_muscular "Gemelos"))
@@ -894,7 +911,7 @@
 )
 (defrule considera-rodilla-problemas "comprueba si puede hacer ejercicios de pierna"
     (restriccion Rodilla)
-    (intensidadBasica ?intesidadBasic)
+    (intensidad ?intesidadBasic)
     (object (is-a Maquina) (ejercicio "Cinta") (duracion_min ?duracion))
     (object (is-a Maquina) (ejercicio "Bicicleta") (duracion_min ?duracionBici))
     (object (is-a Suelo) (ejercicio "Elevaciones de gemelos") (duracion_min ?duracionEle))
@@ -906,7 +923,7 @@
 )
 (defrule considera-rodilla-normal "considera que puede hacer ejercicios de pierna"
     (not (restriccion Rodilla))
-    (intensidadBasica ?intesidadBasic)
+    (intensidad ?intesidadBasic)
     (objetivo ?objetivo)
     =>
     (if (eq ?objetivo Adelgazar) then (bind ?duracion 45)
