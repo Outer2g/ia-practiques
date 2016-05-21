@@ -651,7 +651,7 @@
     (printout t crlf)
     (printout t "1. Muscular" crlf)
     (printout t "2. Adelgazar" crlf)
-    (printout t "3. Flexibilidad" crlf)
+    (printout t "3. Mantenimiento" crlf)
     (bind ?objetivo (pregunta-num "Que Objetivo tienes " 1 3))
     (if (eq ?objetivo 1)
             then
@@ -659,7 +659,7 @@
         else (if (eq ?objetivo 2)
             then (assert (objetivo Adelgazar))
         else (if (eq ?objetivo 3)
-            then (assert (objetivo Flexibilidad))
+            then (assert (objetivo Mantenimiento))
             )))
     (assert (tengoObjetivo))
     )
@@ -821,7 +821,7 @@
         else (assert (nrepeticionesBasicas 12)))
 )
 (defrule estado-articulaciones "la persona tiene problemas de articulaciones, entonces no puede hacer pesas"
-    (problema Articulaciones)
+    (or (problema Articulaciones) (restriccion Antebrazo))
     =>
     (assert (noPuedePesas))
     )
@@ -865,6 +865,14 @@
         (import procesado ?ALL)
     (export ?ALL)
     )
+;Problema: no se puede igualar ?obj con ?grupo
+(defrule haz-magia
+	?obj<-(object (is-a Grupo_Muscular) (grupo_muscular "Gemelos"))
+	(object (is-a Maquina) (ejercicio ?ejercicio)(grupos_musculares $?grupos ?grupo))
+	=>
+	(assert (prueba ?obj))
+	(assert (pruebaGrup ?grupo))
+	)
 
 (defrule considera-hombro-problemas "Tiene en cuenta la lesion para los ejercicios con maquina"
     (or (restriccion Hombro) (edadBiologica ?edadBiologica&:(eq ?edadBiologica viejo)))
