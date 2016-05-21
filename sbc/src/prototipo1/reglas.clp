@@ -546,7 +546,7 @@
 (deftemplate ejercicio-Repeticiones "Template del ejercicio que ha de realizar el usuario con que repeticiones y series"
     (slot nombre_ejercicio)
     (slot nrepeticiones)
-    (slot nseries)
+    (slot nseries (default 4)) 
 )
 (deftemplate ejercicio-Intensidad "Template del ejercicio que ha de realizar el usuario con que intensidad y duracion"
     (slot nombre_ejercicio)
@@ -578,7 +578,6 @@
         (printout t "--------------------------------------------------------------" crlf)
         (printout t crlf)
         (assert (numeroHabitos 0))
-        (assert (intensidad 50))
         (focus recopilacion-usuario)
 )
 
@@ -760,7 +759,13 @@
     (import recopilacion-usuario ?ALL)
     (export ?ALL)
 )
-        
+
+(defrule init_intensidad "intensidad basica"
+    (not (tengoIntensidad))
+    =>
+    (assert (tengoIntensidad))
+    (assert (intensidad 50))
+    )
 (defrule procesa-edad "segun edad se hacen cosas"
     (edad ?edad)
         =>
@@ -843,12 +848,22 @@
     (if (eq edad viejo) then (retract ?f)
                                 (assert (- ?intensidad 15)))
     )
-(defrule comprueba-hombro "comprueba si puede hacer los ejercicios de Hombro "
+(defrule considera-hombro-problemas "comprueba si puede hacer los ejercicios de Hombro "
     (restriccion Hombro)
+    (edadBiologica ?edadBiologica&:(neq edadBiologica viejo))
+    (nrepeticionesBasicas ?nrepesBasic)
     =>
-    (assert (noPuedePressMilitar))
+    (assert (ejercicio-Repeticiones (nombre_ejercicio PressMilitar) (nrepeticiones (/ ?nrepesBasic 4))))
     (assert (noPuedeElevacionesLaterales))
     (assert (noPuedeElevacionesDeDisco))
+)
+(defrule considera-hombro-normal
+    (not (restriccion Hombro))
+    (nrepeticionesBasicas ?nrepesBasic)
+    =>
+    (assert (ejercicio-Repeticiones (nombre_ejercicio PressMilitar) (nrepeticiones ?nrepesBasic)))
+    (assert (ejercicio-Repeticiones (nombre_ejercicio ElevacionesLaterales) (nrepeticiones ?nrepesBasic)))
+    (assert (ejercicio-Repeticiones (nombre_ejercicio ElevacionesDeDisco) (nrepeticiones ?nrepesBasic)))
 )
 (defrule comprueba-rodilla "comprueba si puede hacer ejercicios de pierna"
     (restriccion Rodilla)
