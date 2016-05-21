@@ -188,7 +188,7 @@
 ;================================================================================
 ;============================== Instancias ======================================
 ;================================================================================
-(definstances instancies 
+(definstances instancies
 ([ontologia_prototipo1_Class0] of  Maquina
 
 	(calorias_por_minuto 5.5)
@@ -326,13 +326,6 @@
 	(repeticiones_min 3)
 	(series_max 8)
 	(series_min 4))
-
-([ontologia_prototipo1_Class37] of  %3AINSTANCE-ANNOTATION
-
-	(%3AANNOTATED-INSTANCE [ontologia_prototipo1_Class22])
-	(%3AANNOTATION-TEXT "Nose en q ejercicios ponerlo")
-	(%3ACREATION-TIMESTAMP "2016.05.17 00:17:00.881 CEST")
-	(%3ACREATOR "albert"))
 
 ([ontologia_prototipo1_Class38] of  Maquina
 
@@ -686,7 +679,7 @@
     (if (eq ?resposta TRUE) then
         (assert (tieneProblemasSalud)))
     )
-    
+
 (defrule pregunta-Tiempo-Diario "pregunta tiempo que quiere invertir diariamente"
     (not (tengoTiempoDiario))
     =>
