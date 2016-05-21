@@ -6,6 +6,7 @@
 ;================================================================================
 ;============================== Clases ==========================================
 ;================================================================================
+(defmodule MAIN (export ?ALL))
 
 (defclass %3ACLIPS_TOP_LEVEL_SLOT_CLASS "Fake class to save top-level slot information"
 	(is-a USER)
@@ -160,33 +161,34 @@
 		(create-accessor read-write)))
 
 (defclass Suelo
-	(is-a Ejercicio)
+	(is-a Ejercicio) (pattern-match reactive)
 	(role concrete))
 
 (defclass Maquina
-	(is-a Ejercicio)
+	(is-a Ejercicio) (pattern-match reactive)
 	(role concrete))
 
 (defclass Pesas "Quiza incluir el atributo pesas_base"
-	(is-a Ejercicio)
+	(is-a Ejercicio) (pattern-match reactive)
 	(role concrete))
 
 (defclass Estiramiento
-	(is-a Ejercicio)
+	(is-a Ejercicio) (pattern-match reactive)
 	(role concrete))
 
 (defclass Equilibrio
-	(is-a Ejercicio)
+	(is-a Ejercicio) (pattern-match reactive)
 	(role concrete))
 
 (defclass Barra
-	(is-a Ejercicio)
+	(is-a Ejercicio) (pattern-match reactive)
 	(role concrete))
 
 
 ;================================================================================
 ;============================== Instancias ======================================
 ;================================================================================
+(definstances instancies 
 ([ontologia_prototipo1_Class0] of  Maquina
 
 	(calorias_por_minuto 5.5)
@@ -506,7 +508,7 @@
 	(series_min 3))
 
 
-
+);;Close instances
 ;================================================================================
 ;============================== Preguntas =======================================
 ;================================================================================
@@ -598,7 +600,6 @@
 
 
 ;;; Declaracion de reglas y hechos ---------------------
-(defmodule MAIN (export ?ALL))
 
 (defrule comienzo "regla inicial"
     (declare (salience 10))
@@ -685,7 +686,7 @@
     (if (eq ?resposta TRUE) then
         (assert (tieneProblemasSalud)))
     )
-    )
+    
 (defrule pregunta-Tiempo-Diario "pregunta tiempo que quiere invertir diariamente"
     (not (tengoTiempoDiario))
     =>
@@ -749,18 +750,18 @@
     (if (eq ?respuesta 2)
         then (assert (habito bicicleta))
             (retract ?fHabitos)
-            (assert (numeroHabitos (+ ?nhabitos 1)))))
+            (assert (numeroHabitos (+ ?nhabitos 1))))
     (if (eq ?respuesta 3)
         then (assert (habito escalada))
             (retract ?fHabitos)
-            (assert (numeroHabitos (+ ?nhabitos 1)))))
-    (if (eq ?respuesta 4))
-        then (assert (nopreguntesmas))
+            (assert (numeroHabitos (+ ?nhabitos 1))))
+    (if (eq ?respuesta 4)
+        then (assert (nopreguntesmashabitos)))
     (assert (tengoHabitos))
     )
 (defrule pregunta-Si-TieneMasHabitos "pregunta si la persona tiene mas habitos"
     ?f <- (tengoHabitos)
-    (not (nopreguntesmas))
+    (not (nopreguntesmashabitos))
     =>
     (bind ?resposta (pregunta-sino "Realiza usted alguna otra actividad"))
     (if (eq ?resposta TRUE) then
@@ -796,7 +797,7 @@
     (not (tengoIntensidad))
     =>
     (assert (tengoIntensidad))
-    (assert (intensidad 50))
+    (assert (intensidadBasica 50))
     )
 (defrule procesa-edad "segun edad se hacen cosas"
     (edad ?edad)
@@ -827,9 +828,9 @@
         else (assert (nrepeticionesBasicas 12)))
 )
 (defrule estado-articulaciones "la persona tiene problemas de articulaciones, entonces no puede hacer pesas"
-    (not (problema Articulaciones))
+    (problema Articulaciones)
     =>
-    (assert (puedePesas))
+    (assert (noPuedePesas))
     )
 (defrule estado-obeso "la persona es obesa si masa mayor que 30"
     (masa ?x&:(> ?x 30))
@@ -870,19 +871,9 @@
     (import recopilacion-usuario ?ALL)
         (import procesado ?ALL)
     (export ?ALL)
-)
-(defrule considera-edad "Considera edad para saber la intensidad de los Ejercicios"
-    ?f<-(intensidad ?intensidad)
-    (edadBiologica ?edad)
-    =>
-    (if (eq edad joven) then (retract ?f)
-                                (assert (+ ?intensidad 30)))
-    (if (eq edad viejo) then (retract ?f)
-                                (assert (- ?intensidad 15)))
     )
 (defrule considera-hombro-problemas "comprueba si puede hacer los ejercicios de Hombro "
-    (restriccion Hombro)
-    (edadBiologica ?edadBiologica&:(neq edadBiologica viejo))
+    (or (restriccion Hombro) (edadBiologica ?edadBiologica&:(eq ?edadBiologica viejo)))
     (nrepeticionesBasicas ?nrepesBasic)
     =>
     (assert (ejercicio-Repeticiones (nombre_ejercicio PressMilitar) (nrepeticiones (/ ?nrepesBasic 4))))
@@ -890,19 +881,37 @@
     (assert (noPuedeElevacionesDeDisco))
 )
 (defrule considera-hombro-normal
-    (not (restriccion Hombro))
+    (and (not (restriccion Hombro)) (edadBiologica ?edadBiologica&:(neq ?edadBiologica viejo)))
     (nrepeticionesBasicas ?nrepesBasic)
     =>
     (assert (ejercicio-Repeticiones (nombre_ejercicio PressMilitar) (nrepeticiones ?nrepesBasic)))
     (assert (ejercicio-Repeticiones (nombre_ejercicio ElevacionesLaterales) (nrepeticiones ?nrepesBasic)))
     (assert (ejercicio-Repeticiones (nombre_ejercicio ElevacionesDeDisco) (nrepeticiones ?nrepesBasic)))
 )
-(defrule comprueba-rodilla "comprueba si puede hacer ejercicios de pierna"
+(defrule considera-rodilla-problemas "comprueba si puede hacer ejercicios de pierna"
     (restriccion Rodilla)
+    (intensidadBasica ?intesidadBasic)
+    (object (is-a Maquina) (ejercicio ?ejercicio&:(eq ?ejercicio "Cinta")) (duracion_min ?duracion))
     =>
-    (assert (noPuedeCinta))
-    (assert (noPuedeBicicleta))
+    (assert (ejercicio-Intensidad (nombre_ejercicio Cinta) (intensidad (/ ?intesidadBasic 4)) (duracion ?duracion)))
 )
+(defrule considera-rodilla-normal "considera que puede hacer ejercicios de pierna"
+    (not (restriccion Rodilla))
+    (intensidadBasica ?intesidadBasic)
+    (objetivo ?objetivo)
+    =>
+    (if (eq ?objetivo Adelgazar) then (bind ?duracion 45)
+        else (bind ?duracion 30))
+    (assert (ejercicio-Intensidad (nombre_ejercicio Cinta) (intensidad ?intesidadBasic) (duracion ?duracion)))
+    (assert (ejercicio-Intensidad (nombre_ejercicio Bicicleta) (intensidad ?intesidadBasic) (duracion ?duracion)))
+    (assert (ejercicio-Intensidad (nombre_ejercicio ElevacionesGemelos) (intensidad ?intesidadBasic) (duracion ?duracion)))
+    )
+
+(defrule considera-problemas-articulaciones "Si tiene problemas en las articulaciones, mejor que no haga pesas"
+	(restriccion Rodilla)
+	=>
+	(printout t "holi" crlf)
+	)
 (defrule pasa-next-module
     (declare (salience -1))
     =>
