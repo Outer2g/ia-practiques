@@ -1,506 +1,538 @@
-; Tue May 17 13:15:32 CEST 2016
-; 
-;+ (version "3.5")
-;+ (build "Build 663")
+; Sat May 21 14:14:29 CEST 2016
+;
+;+ (version "3.4.8")
+;+ (build "Build 629")
 
+;================================================================================
+;============================== Clases ==========================================
+;================================================================================
 
 (defclass %3ACLIPS_TOP_LEVEL_SLOT_CLASS "Fake class to save top-level slot information"
-    (is-a USER)
-    (role abstract)
-    (single-slot ejercicio
-;+      (comment "Nombre del ejercicio en cuestion")
-        (type STRING)
-;+      (cardinality 1 1)
-        (create-accessor read-write))
-    (single-slot objetivo
-;+      (comment "Nombre del objetivo en cuestion")
-        (type STRING)
-;+      (cardinality 1 1)
-        (create-accessor read-write))
-    (single-slot series_max
-;+      (comment "Numero maximo de series (grupos de repeticiones) a realizar")
-        (type INTEGER)
-        (range 1 %3FVARIABLE)
-;+      (cardinality 0 1)
-        (create-accessor read-write))
-    (single-slot grupo_muscular
-;+      (comment "Nombre del grupo muscular en cuestion")
-        (type STRING)
-;+      (cardinality 1 1)
-        (create-accessor read-write))
-    (multislot grupos_musculares
-;+      (comment "Grupos musculares trabajados con el ejercicio")
-        (type INSTANCE)
-;+      (allowed-classes Grupo_Muscular)
-        (create-accessor read-write))
-    (multislot metas
-;+      (comment "Conjunto de objetivos que se consiguen o mejoran realizando el ejercicio")
-        (type INSTANCE)
-;+      (allowed-classes Objetivo)
-        (cardinality 1 ?VARIABLE)
-        (create-accessor read-write))
-    (single-slot calorias_por_minuto
-;+      (comment "Calorias quemadas por minuto en la realizacion del ejercicio")
-        (type FLOAT)
-        (range 0.0 %3FVARIABLE)
-;+      (cardinality 1 1)
-        (create-accessor read-write))
-    (single-slot duracion_max
-;+      (comment "Duracion maxima del ejercicio en minutos")
-        (type INTEGER)
-        (range 1 %3FVARIABLE)
-;+      (cardinality 1 1)
-        (create-accessor read-write))
-    (single-slot repeticiones_min
-;+      (comment "Numero minimo de repeticiones a realizar")
-        (type INTEGER)
-        (range 1 %3FVARIABLE)
-;+      (cardinality 0 1)
-        (create-accessor read-write))
-    (single-slot repeticiones_max
-;+      (comment "Numero maximo de repeticiones a realizar")
-        (type INTEGER)
-        (range 1 %3FVARIABLE)
-;+      (cardinality 0 1)
-        (create-accessor read-write))
-    (single-slot duracion_min
-;+      (comment "Duracion minima del ejercicio en minutos")
-        (type INTEGER)
-        (range 1 %3FVARIABLE)
-;+      (cardinality 1 1)
-        (create-accessor read-write))
-    (single-slot series_min
-;+      (comment "Numero minimo de series (grupos de repeticiones) a realizar")
-        (type INTEGER)
-        (range 1 %3FVARIABLE)
-;+      (cardinality 0 1)
-        (create-accessor read-write)))
+	(is-a USER)
+	(role abstract)
+	(single-slot ejercicio
+;+		(comment "Nombre del ejercicio en cuestion")
+		(type STRING)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot objetivo
+;+		(comment "Nombre del objetivo en cuestion")
+		(type STRING)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot series_max
+;+		(comment "Numero maximo de series (grupos de repeticiones) a realizar")
+		(type INTEGER)
+		(range 1 ?VARIABLE)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot grupo_muscular
+;+		(comment "Nombre del grupo muscular en cuestion")
+		(type STRING)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(multislot grupos_musculares
+;+		(comment "Grupos musculares trabajados con el ejercicio")
+		(type INSTANCE)
+;+		(allowed-classes Grupo_Muscular)
+		(create-accessor read-write))
+	(multislot metas
+;+		(comment "Conjunto de objetivos que se consiguen o mejoran realizando el ejercicio")
+		(type INSTANCE)
+;+		(allowed-classes Objetivo)
+		(cardinality 1 ?VARIABLE)
+		(create-accessor read-write))
+	(single-slot calorias_por_minuto
+;+		(comment "Calorias quemadas por minuto en la realizacion del ejercicio")
+		(type FLOAT)
+		(range 0.0 ?VARIABLE)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot duracion_max
+;+		(comment "Duracion maxima del ejercicio en minutos")
+		(type INTEGER)
+		(range 1 ?VARIABLE)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot repeticiones_min
+;+		(comment "Numero minimo de repeticiones a realizar")
+		(type INTEGER)
+		(range 1 ?VARIABLE)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot repeticiones_max
+;+		(comment "Numero maximo de repeticiones a realizar")
+		(type INTEGER)
+		(range 1 ?VARIABLE)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot duracion_min
+;+		(comment "Duracion minima del ejercicio en minutos")
+		(type INTEGER)
+		(range 1 ?VARIABLE)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot series_min
+;+		(comment "Numero minimo de series (grupos de repeticiones) a realizar")
+		(type INTEGER)
+		(range 1 ?VARIABLE)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
 
 (defclass Objetivo
-    (is-a USER)
-    (role concrete)
-    (single-slot objetivo
-;+      (comment "Nombre del objetivo en cuestion")
-        (type STRING)
-;+      (cardinality 1 1)
-        (create-accessor read-write)))
+	(is-a USER)
+	(role concrete)
+	(single-slot objetivo
+;+		(comment "Nombre del objetivo en cuestion")
+		(type STRING)
+;+		(cardinality 1 1)
+		(create-accessor read-write)))
 
 (defclass Grupo_Muscular
-    (is-a USER)
-    (role concrete)
-    (single-slot grupo_muscular
-;+      (comment "Nombre del grupo muscular en cuestion")
-        (type STRING)
-;+      (cardinality 1 1)
-        (create-accessor read-write)))
+	(is-a USER)
+	(role concrete)
+	(single-slot grupo_muscular
+;+		(comment "Nombre del grupo muscular en cuestion")
+		(type STRING)
+;+		(cardinality 1 1)
+		(create-accessor read-write)))
 
 (defclass Ejercicio
-    (is-a USER)
-    (role abstract)
-    (single-slot duracion_max
-;+      (comment "Duracion maxima del ejercicio en minutos")
-        (type INTEGER)
-        (range 1 %3FVARIABLE)
-;+      (cardinality 1 1)
-        (create-accessor read-write))
-    (single-slot repeticiones_max
-;+      (comment "Numero maximo de repeticiones a realizar")
-        (type INTEGER)
-        (range 1 %3FVARIABLE)
-;+      (cardinality 0 1)
-        (create-accessor read-write))
-    (single-slot repeticiones_min
-;+      (comment "Numero minimo de repeticiones a realizar")
-        (type INTEGER)
-        (range 1 %3FVARIABLE)
-;+      (cardinality 0 1)
-        (create-accessor read-write))
-    (single-slot ejercicio
-;+      (comment "Nombre del ejercicio en cuestion")
-        (type STRING)
-;+      (cardinality 1 1)
-        (create-accessor read-write))
-    (multislot grupos_musculares
-;+      (comment "Grupos musculares trabajados con el ejercicio")
-        (type INSTANCE)
-;+      (allowed-classes Grupo_Muscular)
-        (create-accessor read-write))
-    (single-slot duracion_min
-;+      (comment "Duracion minima del ejercicio en minutos")
-        (type INTEGER)
-        (range 1 %3FVARIABLE)
-;+      (cardinality 1 1)
-        (create-accessor read-write))
-    (multislot metas
-;+      (comment "Conjunto de objetivos que se consiguen o mejoran realizando el ejercicio")
-        (type INSTANCE)
-;+      (allowed-classes Objetivo)
-        (cardinality 1 ?VARIABLE)
-        (create-accessor read-write))
-    (single-slot series_min
-;+      (comment "Numero minimo de series (grupos de repeticiones) a realizar")
-        (type INTEGER)
-        (range 1 %3FVARIABLE)
-;+      (cardinality 0 1)
-        (create-accessor read-write))
-    (single-slot calorias_por_minuto
-;+      (comment "Calorias quemadas por minuto en la realizacion del ejercicio")
-        (type FLOAT)
-        (range 0.0 %3FVARIABLE)
-;+      (cardinality 1 1)
-        (create-accessor read-write))
-    (single-slot series_max
-;+      (comment "Numero maximo de series (grupos de repeticiones) a realizar")
-        (type INTEGER)
-        (range 1 %3FVARIABLE)
-;+      (cardinality 0 1)
-        (create-accessor read-write)))
+	(is-a USER)
+	(role abstract)
+	(single-slot duracion_max
+;+		(comment "Duracion maxima del ejercicio en minutos")
+		(type INTEGER)
+		(range 1 ?VARIABLE)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot repeticiones_max
+;+		(comment "Numero maximo de repeticiones a realizar")
+		(type INTEGER)
+		(range 1 ?VARIABLE)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot repeticiones_min
+;+		(comment "Numero minimo de repeticiones a realizar")
+		(type INTEGER)
+		(range 1 ?VARIABLE)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot ejercicio
+;+		(comment "Nombre del ejercicio en cuestion")
+		(type STRING)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(multislot grupos_musculares
+;+		(comment "Grupos musculares trabajados con el ejercicio")
+		(type INSTANCE)
+;+		(allowed-classes Grupo_Muscular)
+		(create-accessor read-write))
+	(single-slot duracion_min
+;+		(comment "Duracion minima del ejercicio en minutos")
+		(type INTEGER)
+		(range 1 ?VARIABLE)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(multislot metas
+;+		(comment "Conjunto de objetivos que se consiguen o mejoran realizando el ejercicio")
+		(type INSTANCE)
+;+		(allowed-classes Objetivo)
+		(cardinality 1 ?VARIABLE)
+		(create-accessor read-write))
+	(single-slot series_min
+;+		(comment "Numero minimo de series (grupos de repeticiones) a realizar")
+		(type INTEGER)
+		(range 1 ?VARIABLE)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot calorias_por_minuto
+;+		(comment "Calorias quemadas por minuto en la realizacion del ejercicio")
+		(type FLOAT)
+		(range 0.0 ?VARIABLE)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot series_max
+;+		(comment "Numero maximo de series (grupos de repeticiones) a realizar")
+		(type INTEGER)
+		(range 1 ?VARIABLE)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
 
 (defclass Suelo
-    (is-a Ejercicio)
-    (role concrete))
+	(is-a Ejercicio)
+	(role concrete))
 
 (defclass Maquina
-    (is-a Ejercicio)
-    (role concrete))
+	(is-a Ejercicio)
+	(role concrete))
 
-(defclass Pesas "Quiza incluir el atributo pesas_base?"
-    (is-a Ejercicio)
-    (role concrete))
+(defclass Pesas "Quiza incluir el atributo pesas_base"
+	(is-a Ejercicio)
+	(role concrete))
 
 (defclass Estiramiento
-    (is-a Ejercicio)
-    (role concrete))
+	(is-a Ejercicio)
+	(role concrete))
 
 (defclass Equilibrio
-    (is-a Ejercicio)
-    (role concrete))
+	(is-a Ejercicio)
+	(role concrete))
 
 (defclass Barra
-    (is-a Ejercicio)
-    (role concrete))
+	(is-a Ejercicio)
+	(role concrete))
+
+
 ;================================================================================
 ;============================== Instancias ======================================
 ;================================================================================
-(definstances instancies  
-;; Tue May 17 13:15:32 CEST 2016
-; 
-;+ (version "3.5")
-;+ (build "Build 663")
-
 ([ontologia_prototipo1_Class0] of  Maquina
 
-    (calorias_por_minuto 5.5)
-    (ejercicio "Press militar")
-    (grupos_musculares [ontologia_prototipo1_Class27])
-    (metas [ontologia_prototipo1_Class18])
-    (repeticiones_max 25)
-    (repeticiones_min 5)
-    (series_max 8)
-    (series_min 3))
+	(calorias_por_minuto 5.5)
+	(duracion_max 25)
+	(duracion_min 6)
+	(ejercicio "Press militar")
+	(grupos_musculares [ontologia_prototipo1_Class27])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 25)
+	(repeticiones_min 5)
+	(series_max 8)
+	(series_min 3))
 
 ([ontologia_prototipo1_Class18] of  Objetivo
 
-    (objetivo "Musculacion"))
+	(objetivo "Musculacion"))
 
 ([ontologia_prototipo1_Class19] of  Objetivo
 
-    (objetivo "Flexibilidad"))
+	(objetivo "Flexibilidad"))
 
 ([ontologia_prototipo1_Class2] of  Pesas
 
-    (ejercicio "Elevaciones laterales")
-    (grupos_musculares [ontologia_prototipo1_Class27])
-    (metas [ontologia_prototipo1_Class18])
-    (repeticiones_max 18)
-    (repeticiones_min 5)
-    (series_max 6)
-    (series_min 4))
+	(calorias_por_minuto 4.5)
+	(duracion_max 15)
+	(duracion_min 8)
+	(ejercicio "Elevaciones laterales")
+	(grupos_musculares [ontologia_prototipo1_Class27])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 18)
+	(repeticiones_min 5)
+	(series_max 6)
+	(series_min 4))
 
 ([ontologia_prototipo1_Class20] of  Objetivo
 
-    (objetivo "Equilibrio"))
+	(objetivo "Equilibrio"))
 
 ([ontologia_prototipo1_Class21] of  Objetivo
 
-    (objetivo "Mantenimiento"))
+	(objetivo "Mantenimiento"))
 
 ([ontologia_prototipo1_Class22] of  Objetivo
 
-    (objetivo "Forma"))
+	(objetivo "Forma"))
 
 ([ontologia_prototipo1_Class23] of  Objetivo
 
-    (objetivo "Adelgazar"))
+	(objetivo "Adelgazar"))
 
 ([ontologia_prototipo1_Class24] of  Grupo_Muscular
 
-    (grupo_muscular "Abdominales"))
+	(grupo_muscular "Abdominales"))
 
 ([ontologia_prototipo1_Class25] of  Grupo_Muscular
 
-    (grupo_muscular "Pectorales"))
+	(grupo_muscular "Pectorales"))
 
 ([ontologia_prototipo1_Class26] of  Grupo_Muscular
 
-    (grupo_muscular "Espalda"))
+	(grupo_muscular "Espalda"))
 
 ([ontologia_prototipo1_Class27] of  Grupo_Muscular
 
-    (grupo_muscular "Hombro"))
+	(grupo_muscular "Hombro"))
 
 ([ontologia_prototipo1_Class28] of  Grupo_Muscular
 
-    (grupo_muscular "Biceps"))
+	(grupo_muscular "Biceps"))
 
 ([ontologia_prototipo1_Class29] of  Grupo_Muscular
 
-    (grupo_muscular "Triceps"))
+	(grupo_muscular "Triceps"))
 
 ([ontologia_prototipo1_Class3] of  Pesas
 
-    (ejercicio "Elevaciones de disco")
-    (grupos_musculares [ontologia_prototipo1_Class27])
-    (metas [ontologia_prototipo1_Class18])
-    (repeticiones_max 18)
-    (repeticiones_min 3)
-    (series_max 7)
-    (series_min 3))
+	(calorias_por_minuto 4.0)
+	(duracion_max 20)
+	(duracion_min 6)
+	(ejercicio "Elevaciones de disco")
+	(grupos_musculares [ontologia_prototipo1_Class27])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 18)
+	(repeticiones_min 3)
+	(series_max 7)
+	(series_min 3))
 
 ([ontologia_prototipo1_Class30] of  Grupo_Muscular
 
-    (grupo_muscular "Quadriceps"))
+	(grupo_muscular "Quadriceps"))
 
 ([ontologia_prototipo1_Class31] of  Grupo_Muscular
 
-    (grupo_muscular "Gemelos"))
+	(grupo_muscular "Gemelos"))
 
 ([ontologia_prototipo1_Class32] of  Pesas
 
-    (calorias_por_minuto 6.56)
-    (duracion_max 15)
-    (duracion_min 6)
-    (ejercicio "Press Banca")
-    (grupos_musculares [ontologia_prototipo1_Class25])
-    (metas [ontologia_prototipo1_Class18])
-    (repeticiones_max 15)
-    (repeticiones_min 2)
-    (series_max 5)
-    (series_min 3))
+	(calorias_por_minuto 6.56)
+	(duracion_max 15)
+	(duracion_min 6)
+	(ejercicio "Press Banca")
+	(grupos_musculares [ontologia_prototipo1_Class25])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 15)
+	(repeticiones_min 2)
+	(series_max 5)
+	(series_min 3))
 
 ([ontologia_prototipo1_Class35] of  Pesas
 
-    (calorias_por_minuto 4.5)
-    (duracion_max 20)
-    (duracion_min 6)
-    (ejercicio "Pullover")
-    (repeticiones_max 20)
-    (repeticiones_min 5)
-    (series_max 8)
-    (series_min 3))
+	(calorias_por_minuto 4.5)
+	(duracion_max 20)
+	(duracion_min 6)
+	(ejercicio "Pullover")
+	(grupos_musculares [ontologia_prototipo1_Class25])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 20)
+	(repeticiones_min 5)
+	(series_max 8)
+	(series_min 3))
 
 ([ontologia_prototipo1_Class36] of  Suelo
 
-    (calorias_por_minuto 5.0)
-    (duracion_max 40)
-    (duracion_min 8)
-    (ejercicio "Flexiones")
-    (grupos_musculares
-        [ontologia_prototipo1_Class25]
-        [ontologia_prototipo1_Class29])
-    (metas
-        [ontologia_prototipo1_Class18]
-        [ontologia_prototipo1_Class21])
-    (repeticiones_max 100)
-    (repeticiones_min 3)
-    (series_max 8)
-    (series_min 4))
+	(calorias_por_minuto 5.0)
+	(duracion_max 40)
+	(duracion_min 8)
+	(ejercicio "Flexiones")
+	(grupos_musculares
+		[ontologia_prototipo1_Class25]
+		[ontologia_prototipo1_Class29])
+	(metas
+		[ontologia_prototipo1_Class18]
+		[ontologia_prototipo1_Class21])
+	(repeticiones_max 100)
+	(repeticiones_min 3)
+	(series_max 8)
+	(series_min 4))
 
 ([ontologia_prototipo1_Class37] of  %3AINSTANCE-ANNOTATION
 
-    (%3AANNOTATED-INSTANCE [ontologia_prototipo1_Class22])
-    (%3AANNOTATION-TEXT "Nose en q ejercicios ponerlo")
-    (%3ACREATION-TIMESTAMP "2016.05.17 00:17:00.881 CEST")
-    (%3ACREATOR "albert"))
+	(%3AANNOTATED-INSTANCE [ontologia_prototipo1_Class22])
+	(%3AANNOTATION-TEXT "Nose en q ejercicios ponerlo")
+	(%3ACREATION-TIMESTAMP "2016.05.17 00:17:00.881 CEST")
+	(%3ACREATOR "albert"))
 
 ([ontologia_prototipo1_Class38] of  Maquina
 
-    (calorias_por_minuto 9.5)
-    (ejercicio "Remo")
-    (grupos_musculares [ontologia_prototipo1_Class26])
-    (metas [ontologia_prototipo1_Class18])
-    (series_max 10))
+	(calorias_por_minuto 9.5)
+	(duracion_max 37)
+	(duracion_min 8)
+	(ejercicio "Remo")
+	(grupos_musculares [ontologia_prototipo1_Class26])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 60)
+	(repeticiones_min 10)
+	(series_max 10)
+	(series_min 4))
 
 ([ontologia_prototipo1_Class39] of  Maquina
 
-    (calorias_por_minuto 3.5)
-    (duracion_max 25)
-    (duracion_min 10)
-    (ejercicio "Polea tras-nuca")
-    (grupos_musculares [ontologia_prototipo1_Class26])
-    (metas [ontologia_prototipo1_Class18])
-    (repeticiones_max 15)
-    (repeticiones_min 5)
-    (series_max 10)
-    (series_min 5))
+	(calorias_por_minuto 3.5)
+	(duracion_max 25)
+	(duracion_min 10)
+	(ejercicio "Polea tras-nuca")
+	(grupos_musculares [ontologia_prototipo1_Class26])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 15)
+	(repeticiones_min 5)
+	(series_max 10)
+	(series_min 5))
 
 ([ontologia_prototipo1_Class4] of  Pesas
 
-    (ejercicio "Curl con mancuernas")
-    (grupos_musculares [ontologia_prototipo1_Class28])
-    (metas [ontologia_prototipo1_Class18])
-    (repeticiones_max 8)
-    (repeticiones_min 15)
-    (series_max 3)
-    (series_min 6))
+	(calorias_por_minuto 4.5)
+	(duracion_max 16)
+	(duracion_min 7)
+	(ejercicio "Curl con mancuernas")
+	(grupos_musculares [ontologia_prototipo1_Class28])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 15)
+	(repeticiones_min 8)
+	(series_max 6)
+	(series_min 3))
 
 ([ontologia_prototipo1_Class43] of  Barra
 
-    (calorias_por_minuto 6.8)
-    (duracion_max 39)
-    (duracion_min 6)
-    (ejercicio "FatMan Pullups")
-    (grupos_musculares [ontologia_prototipo1_Class26])
-    (metas [ontologia_prototipo1_Class18])
-    (repeticiones_max 75)
-    (repeticiones_min 2)
-    (series_max 80)
-    (series_min 3))
+	(calorias_por_minuto 6.8)
+	(duracion_max 39)
+	(duracion_min 6)
+	(ejercicio "FatMan Pullups")
+	(grupos_musculares [ontologia_prototipo1_Class26])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 75)
+	(repeticiones_min 2)
+	(series_max 80)
+	(series_min 3))
 
 ([ontologia_prototipo1_Class44] of  Barra
 
-    (calorias_por_minuto 6.8)
-    (duracion_max 39)
-    (duracion_min 6)
-    (ejercicio "Dominadas abiertas")
-    (grupos_musculares [ontologia_prototipo1_Class26])
-    (metas [ontologia_prototipo1_Class18])
-    (repeticiones_max 75)
-    (repeticiones_min 2)
-    (series_max 80)
-    (series_min 3))
+	(calorias_por_minuto 6.8)
+	(duracion_max 39)
+	(duracion_min 6)
+	(ejercicio "Dominadas abiertas")
+	(grupos_musculares [ontologia_prototipo1_Class26])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 75)
+	(repeticiones_min 2)
+	(series_max 80)
+	(series_min 3))
 
 ([ontologia_prototipo1_Class45] of  Suelo
 
-    (calorias_por_minuto 4.5)
-    (duracion_max 28)
-    (duracion_min 6)
-    (ejercicio "Abdominales")
-    (grupos_musculares [ontologia_prototipo1_Class24])
-    (metas
-        [ontologia_prototipo1_Class18]
-        [ontologia_prototipo1_Class21])
-    (repeticiones_max 50)
-    (repeticiones_min 5)
-    (series_max 6)
-    (series_min 3))
+	(calorias_por_minuto 4.5)
+	(duracion_max 28)
+	(duracion_min 6)
+	(ejercicio "Abdominales")
+	(grupos_musculares [ontologia_prototipo1_Class24])
+	(metas
+		[ontologia_prototipo1_Class18]
+		[ontologia_prototipo1_Class21])
+	(repeticiones_max 50)
+	(repeticiones_min 5)
+	(series_max 6)
+	(series_min 3))
 
 ([ontologia_prototipo1_Class46] of  Maquina
 
-    (calorias_por_minuto 15.0)
-    (duracion_max 60)
-    (duracion_min 10)
-    (ejercicio "Cinta")
-    (grupos_musculares
-        [ontologia_prototipo1_Class30]
-        [ontologia_prototipo1_Class31])
-    (metas
-        [ontologia_prototipo1_Class21]
-        [ontologia_prototipo1_Class22]
-        [ontologia_prototipo1_Class23]))
+	(calorias_por_minuto 15.0)
+	(duracion_max 60)
+	(duracion_min 10)
+	(ejercicio "Cinta")
+	(grupos_musculares
+		[ontologia_prototipo1_Class30]
+		[ontologia_prototipo1_Class31])
+	(metas
+		[ontologia_prototipo1_Class21]
+		[ontologia_prototipo1_Class22]
+		[ontologia_prototipo1_Class23]))
 
 ([ontologia_prototipo1_Class47] of  Maquina
 
-    (calorias_por_minuto 12.0)
-    (duracion_max 120)
-    (duracion_min 15)
-    (ejercicio "Bicicleta")
-    (grupos_musculares
-        [ontologia_prototipo1_Class30]
-        [ontologia_prototipo1_Class31])
-    (metas
-        [ontologia_prototipo1_Class21]
-        [ontologia_prototipo1_Class22]
-        [ontologia_prototipo1_Class23]))
+	(calorias_por_minuto 12.0)
+	(duracion_max 120)
+	(duracion_min 15)
+	(ejercicio "Bicicleta")
+	(grupos_musculares
+		[ontologia_prototipo1_Class30]
+		[ontologia_prototipo1_Class31])
+	(metas
+		[ontologia_prototipo1_Class21]
+		[ontologia_prototipo1_Class22]
+		[ontologia_prototipo1_Class23]))
 
 ([ontologia_prototipo1_Class5] of  Barra
 
-    (ejercicio "Curl Scott barra")
-    (grupos_musculares [ontologia_prototipo1_Class28])
-    (metas [ontologia_prototipo1_Class18])
-    (repeticiones_max 10)
-    (repeticiones_min 3)
-    (series_max 5)
-    (series_min 3))
+	(calorias_por_minuto 4.5)
+	(duracion_max 12)
+	(duracion_min 6)
+	(ejercicio "Curl Scott barra")
+	(grupos_musculares [ontologia_prototipo1_Class28])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 10)
+	(repeticiones_min 3)
+	(series_max 5)
+	(series_min 3))
 
 ([ontologia_prototipo1_Class6] of  Maquina
 
-    (ejercicio "Extensiones cuerda")
-    (grupos_musculares [ontologia_prototipo1_Class29])
-    (metas [ontologia_prototipo1_Class18])
-    (repeticiones_max 25)
-    (repeticiones_min 5)
-    (series_max 10)
-    (series_min 5))
+	(calorias_por_minuto 3.8)
+	(duracion_max 30)
+	(duracion_min 10)
+	(ejercicio "Extensiones cuerda")
+	(grupos_musculares [ontologia_prototipo1_Class29])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 25)
+	(repeticiones_min 5)
+	(series_max 10)
+	(series_min 5))
 
 ([ontologia_prototipo1_Class7] of  Pesas
 
-    (ejercicio "Press triceps declinado")
-    (grupos_musculares [ontologia_prototipo1_Class29])
-    (metas [ontologia_prototipo1_Class18])
-    (repeticiones_max 10)
-    (repeticiones_min 3)
-    (series_max 8)
-    (series_min 3))
+	(calorias_por_minuto 4.5)
+	(duracion_max 18)
+	(duracion_min 6)
+	(ejercicio "Press triceps declinado")
+	(grupos_musculares [ontologia_prototipo1_Class29])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 10)
+	(repeticiones_min 3)
+	(series_max 8)
+	(series_min 3))
 
 ([ontologia_prototipo1_Class8] of  Suelo
 
-    (ejercicio "Sentadillas")
-    (grupos_musculares [ontologia_prototipo1_Class30])
-    (metas [ontologia_prototipo1_Class18])
-    (repeticiones_max 50)
-    (repeticiones_min 5)
-    (series_max 7)
-    (series_min 3))
+	(calorias_por_minuto 3.5)
+	(duracion_max 35)
+	(duracion_min 6)
+	(ejercicio "Sentadillas")
+	(grupos_musculares [ontologia_prototipo1_Class30])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 50)
+	(repeticiones_min 5)
+	(series_max 7)
+	(series_min 3))
 
 ([ontologia_prototipo1_Class9] of  Suelo
 
-    (ejercicio "Elevaciones de gemelos")
-    (grupos_musculares [ontologia_prototipo1_Class31])
-    (metas [ontologia_prototipo1_Class18])
-    (repeticiones_max 60)
-    (repeticiones_min 15)
-    (series_max 8)
-    (series_min 3))
-))
+	(calorias_por_minuto 3.5)
+	(duracion_max 26)
+	(duracion_min 7)
+	(ejercicio "Elevaciones de gemelos")
+	(grupos_musculares [ontologia_prototipo1_Class31])
+	(metas [ontologia_prototipo1_Class18])
+	(repeticiones_max 60)
+	(repeticiones_min 15)
+	(series_max 8)
+	(series_min 3))
 
-)
+
+
 ;================================================================================
 ;============================== Preguntas =======================================
 ;================================================================================
 ; Obtiene una respuesta del conjunto de posibles valores
-(deffunction pregunta-general (?pregunta) 
-        (format t "%s" ?pregunta) 
-        (bind ?respuesta (read)) 
+(deffunction pregunta-general (?pregunta)
+        (format t "%s" ?pregunta)
+        (bind ?respuesta (read))
         ?respuesta
 )
 
 ;;; Funcion para hacer una pregunta con respuesta en un rango dado
-(deffunction pregunta-num (?pregunta ?rangini ?rangfi) 
-        (format t "%s [%d, %d] " ?pregunta ?rangini ?rangfi) 
-        (bind ?respuesta (read)) 
-        (while (not(and(>= ?respuesta ?rangini)(<= ?respuesta ?rangfi))) do 
-                (format t "Â¿%s? [%d, %d] " ?pregunta ?rangini ?rangfi) 
-                (bind ?respuesta (read)) 
-        ) 
+(deffunction pregunta-num (?pregunta ?rangini ?rangfi)
+        (format t "%s [%d, %d] " ?pregunta ?rangini ?rangfi)
+        (bind ?respuesta (read))
+        (while (not(and(>= ?respuesta ?rangini)(<= ?respuesta ?rangfi))) do
+                (format t "Â¿%s? [%d, %d] " ?pregunta ?rangini ?rangfi)
+                (bind ?respuesta (read))
+        )
         ?respuesta
 )
 
-;;; Funcion para hacer una pregunta con un conjunto definido de valores de repuesta    
-(deffunction pregunta-lista (?pregunta $?valores_posibles) 
-        (format t "%s" ?pregunta)  
-        (bind ?resposta (readline))  
-        (bind ?res (str-explode ?resposta))   
+;;; Funcion para hacer una pregunta con un conjunto definido de valores de repuesta
+(deffunction pregunta-lista (?pregunta $?valores_posibles)
+        (format t "%s" ?pregunta)
+        (bind ?resposta (readline))
+        (bind ?res (str-explode ?resposta))
         ?res
 )
 
@@ -546,7 +578,7 @@
 (deftemplate ejercicio-Repeticiones "Template del ejercicio que ha de realizar el usuario con que repeticiones y series"
     (slot nombre_ejercicio)
     (slot nrepeticiones)
-    (slot nseries (default 4)) 
+    (slot nseries (default 4))
 )
 (deftemplate ejercicio-Intensidad "Template del ejercicio que ha de realizar el usuario con que intensidad y duracion"
     (slot nombre_ejercicio)
@@ -562,9 +594,9 @@
 
 
 ;;; Fin declaracion de funciones -----------------------
-    
-    
-    
+
+
+
 ;;; Declaracion de reglas y hechos ---------------------
 (defmodule MAIN (export ?ALL))
 
@@ -625,10 +657,10 @@
     (printout t crlf)
     (printout t "1. Muscular" crlf)
     (printout t "2. Adelgazar" crlf)
-    (printout t "3. Flexibilidad" crlf) 
+    (printout t "3. Flexibilidad" crlf)
     (bind ?objetivo (pregunta-num "Que Objetivo tienes " 1 3))
     (if (eq ?objetivo 1)
-            then 
+            then
             (assert (objetivo Muscular))
         else (if (eq ?objetivo 2)
             then (assert (objetivo Adelgazar))
@@ -667,11 +699,11 @@
     (printout t crlf)
     (printout t "1. Muscular" crlf)
     (printout t "2. Cardio Vasculares" crlf)
-    (printout t "3. Respiratorios" crlf) 
+    (printout t "3. Respiratorios" crlf)
     (printout t "4. Problemas en Articulaciones")
     (bind ?problema (pregunta-num "Que problemas de salud tienes: " 1 4))
     (if (eq ?problema 1)
-            then 
+            then
             (assert (problema Muscular))
         else (if (eq ?problema 2)
             then (assert (problema CardioVascular))
@@ -691,7 +723,7 @@
 
     (bind ?respuesta (pregunta-num "Que problema muscular tienes" 1 3))
     (if (eq ?respuesta 1)
-            then 
+            then
             (assert (restriccion Hombro))
         else (if (eq ?respuesta 2)
             then (assert (restriccion Rodilla))
@@ -707,7 +739,7 @@
     (printout t crlf)
     (printout t "1. Salir a correr" crlf)
     (printout t "2. Salir en bicicleta" crlf)
-    (printout t "3. Escalada" crlf) 
+    (printout t "3. Escalada" crlf)
     (printout t "4. Ninguna" crlf)
     (bind ?respuesta (pregunta-num "Cúal de estas actividades realizas" 1 4))
     (if (eq ?respuesta 1)
@@ -780,7 +812,7 @@
                 (if (< ?edad 60)
                         then
                         (assert (edadBiologica  maduro))
-                        else 
+                        else
                         (assert (edadBiologica viejo))
                         )
                 )
