@@ -865,13 +865,16 @@
         (import procesado ?ALL)
     (export ?ALL)
     )
-(defrule considera-hombro-problemas "comprueba si puede hacer los ejercicios de Hombro "
+
+(defrule considera-hombro-problemas "Tiene en cuenta la lesion para los ejercicios con maquina"
     (or (restriccion Hombro) (edadBiologica ?edadBiologica&:(eq ?edadBiologica viejo)))
     (nrepeticionesBasicas ?nrepesBasic)
+    ;?grupoMuscular <- (object (is-a Grupo_Muscular) (grupo_muscular "Hombro"))
+    ;(object (is-a Maquina) (ejercicio ?ejercicio) (grupos_musculares ))
     =>
+    (printout t crlf)
+    (printout t "--------------------------------------------------------------" crlf)
     (assert (ejercicio-Repeticiones (nombre_ejercicio PressMilitar) (nrepeticiones (/ ?nrepesBasic 4))))
-    (assert (noPuedeElevacionesLaterales))
-    (assert (noPuedeElevacionesDeDisco))
 )
 (defrule considera-hombro-normal
     (and (not (restriccion Hombro)) (edadBiologica ?edadBiologica&:(neq ?edadBiologica viejo)))
@@ -884,9 +887,14 @@
 (defrule considera-rodilla-problemas "comprueba si puede hacer ejercicios de pierna"
     (restriccion Rodilla)
     (intensidadBasica ?intesidadBasic)
-    (object (is-a Maquina) (ejercicio ?ejercicio&:(eq ?ejercicio "Cinta")) (duracion_min ?duracion))
+    (object (is-a Maquina) (ejercicio "Cinta") (duracion_min ?duracion))
+    (object (is-a Maquina) (ejercicio "Bicicleta") (duracion_min ?duracionBici))
+    (object (is-a Suelo) (ejercicio "Elevaciones de gemelos") (duracion_min ?duracionEle))
+
     =>
     (assert (ejercicio-Intensidad (nombre_ejercicio Cinta) (intensidad (/ ?intesidadBasic 4)) (duracion ?duracion)))
+    (assert (ejercicio-Intensidad (nombre_ejercicio Bicicleta) (intensidad (/ ?intesidadBasic 4)) (duracion ?duracionBici)))
+    (assert (ejercicio-Intensidad (nombre_ejercicio ElevacionesGemelos) (intensidad (/ ?intesidadBasic 4)) (duracion ?duracionEle)))
 )
 (defrule considera-rodilla-normal "considera que puede hacer ejercicios de pierna"
     (not (restriccion Rodilla))
@@ -901,9 +909,10 @@
     )
 
 (defrule considera-problemas-articulaciones "Si tiene problemas en las articulaciones, mejor que no haga pesas"
-	(restriccion Rodilla)
+	(noPuedePesas)
+	(object (is-a Pesas) (ejercicio ?ejercicio))
 	=>
-	(printout t "holi" crlf)
+	(assert (noPuedo ?ejercicio))
 	)
 (defrule pasa-next-module
     (declare (salience -1))
