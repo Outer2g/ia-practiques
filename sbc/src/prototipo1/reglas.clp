@@ -574,6 +574,7 @@
     (slot nombre_ejercicio)
     (slot nrepeticiones)
     (slot nseries (default 4))
+    (slot grupo_muscular)
 )
 (deftemplate ejercicio-Intensidad "Template del ejercicio que ha de realizar el usuario con que intensidad y duracion"
     (slot nombre_ejercicio)
@@ -874,13 +875,21 @@
         (import procesado ?ALL)
     (export ?ALL)
     )
-(defrule considera-tension "si tension alta -> baja intensidad"
+(defrule considera-tension-alta "si tension alta -> baja intensidad"
 	(declare (salience 10))
 	(tension Alta)
 	?f<-(intensidadBasica ?intensity)
 	=>
 	(retract ?f)
 	(assert (intensidad 20))
+	)
+(defrule considera-tension-normal
+	(declare (salience 10))
+	(tension ?ten&:(neq ?ten Alta))
+	?f<-(intensidadBasica ?intensity)
+	=>
+	(retract ?f)
+	(assert (intensidad ?intensity))
 	)
 ;Problema: no se puede igualar ?obj con ?grupo
 (defrule haz-magia
@@ -899,15 +908,15 @@
     =>
     (printout t crlf)
     (printout t "--------------------------------------------------------------" crlf)
-    (assert (ejercicio-Repeticiones (nombre_ejercicio PressMilitar) (nrepeticiones (/ ?nrepesBasic 4))))
+    (assert (ejercicio-Repeticiones (nombre_ejercicio PressMilitar) (nrepeticiones (/ ?nrepesBasic 4)) (grupo_muscular Hombro)))
 )
 (defrule considera-hombro-normal
     (and (not (restriccion Hombro)) (edadBiologica ?edadBiologica&:(neq ?edadBiologica viejo)))
     (nrepeticionesBasicas ?nrepesBasic)
     =>
-    (assert (ejercicio-Repeticiones (nombre_ejercicio PressMilitar) (nrepeticiones ?nrepesBasic)))
-    (assert (ejercicio-Repeticiones (nombre_ejercicio ElevacionesLaterales) (nrepeticiones ?nrepesBasic)))
-    (assert (ejercicio-Repeticiones (nombre_ejercicio ElevacionesDeDisco) (nrepeticiones ?nrepesBasic)))
+    (assert (ejercicio-Repeticiones (nombre_ejercicio PressMilitar) (nrepeticiones ?nrepesBasic) (grupo_muscular Hombro)))
+    (assert (ejercicio-Repeticiones (nombre_ejercicio ElevacionesLaterales) (nrepeticiones ?nrepesBasic) (grupo_muscular Hombro)))
+    (assert (ejercicio-Repeticiones (nombre_ejercicio ElevacionesDeDisco) (nrepeticiones ?nrepesBasic) (grupo_muscular Hombro)))
 )
 (defrule considera-rodilla-problemas "comprueba si puede hacer ejercicios de pierna"
     (restriccion Rodilla)
@@ -954,15 +963,93 @@
     (export ?ALL)
 )
 (defrule mostrar-respuesta "Muestra el contenido escogido"
-    (declare (salience 1))
+    (declare (salience 10))
     =>
     (printout t crlf)
     (printout t "--------------------------------------------------------------" crlf)
-    (printout t "--------------- Ejercicios que puedes realizar ---------------" crlf)
+    (printout t "------------- Horario recomendado para la semana -------------" crlf)
     (printout t "--------------------------------------------------------------" crlf)
     (printout t crlf)
+    (assert (tiempoLunes 0))
+    (assert (tiempoMartes 0))
+    (assert (tiempoMiercoles 0))
+    (assert (tiempoJueves 0))
+    (assert (tiempoViernes 0))
+    (assert (tiempoSabado 0))
+    (assert (tiempoDomingo 0))
     (facts)
 )
+(defrule mostrar-lunes "Muestra cabecera lunes"
+	(declare (salience 9))
+	(not (HeMostradoLunes))
+	=>
+	(assert (HeMostradoLunes))
+    (printout t crlf)
+    (printout t "Lunes: Pectoral" crlf)
+    (printout t crlf)
+    (printout t "--------------------------------------------------------------" crlf))
+(defrule mostrar-lunes-Pectoral "Muestra contenido del lunes"
+	(declare (salience 8))
+	?ejerc<-(ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones ?nrepes) (nseries ?nseries) (grupo_muscular Pectoral))
+	(tiempoDiario ?tiempoDiario)
+	?factTime<-(tiempoLunes ?tiempoLunes)
+	(test (< ?tiempoLunes ?tiempoDiario))
+	=>
+	(bind ?tiempo (+ ?tiempoLunes (+ (* ?nrepes 0.1) ?nseries)))
+	(retract ?factTime)
+	(retract ?ejerc)
+	(assert (tiempoLunes ?tiempo))
+    (printout t crlf)
+    (printout t ?ejercicio crlf)
+	)
+
+(defrule rellena-lunes "Rellena con cardio el lunes"
+	(declare (salience 8))
+	?factTime<- (tiempoLunes ?tiempoLunes)
+	(test (< ?tiempoLunes 30.0))
+	(ejercicio-Intensidad (nombre_ejercicio ?ejercicio) (intensidad ?intensidad)(duracion ?duracion))
+	=>
+	(retract ?factTime)
+	(assert (tiempoLunes (+ ?tiempoLunes ?duracion)))
+    (printout t crlf)
+    (printout t ?ejercicio crlf)
+	)
+
+(defrule mostrar-martes "Muestra cabecera martes"
+	(declare (salience 8))
+	(not (HeMostradoMartes))
+	=>
+	(assert (HeMostradoMartes))
+    (printout t crlf)
+    (printout t "Martes: Hombro" crlf)
+    (printout t crlf)
+    (printout t "--------------------------------------------------------------" crlf))
+(defrule mostrar-lunes-Hombro "Muestra contenido del martes"
+	(declare (salience 7))
+	?ejerc<-(ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones ?nrepes) (nseries ?nseries) (grupo_muscular Hombro))
+	(tiempoDiario ?tiempoDiario)
+	?factTime<-(tiempoMartes ?tiempoDia)
+	(test (< ?tiempoDia ?tiempoDiario))
+	=>
+	(bind ?tiempo (+ ?tiempoDia (+ (* ?nrepes 0.1) ?nseries)))
+	(retract ?factTime)
+	(retract ?ejerc)
+	(assert (tiempoMartes ?tiempo))
+    (printout t crlf)
+    (printout t ?ejercicio crlf)
+	)
+
+(defrule rellena-martes "Rellena con cardio el martes"
+	(declare (salience 6))
+	?factTime<- (tiempoMartes ?tiempoDia)
+	(test (< ?tiempoDia 30.0))
+	(ejercicio-Intensidad (nombre_ejercicio ?ejercicio) (intensidad ?intensidad)(duracion ?duracion))
+	=>
+	(retract ?factTime)
+	(assert (tiempoMartes (+ ?tiempoDia ?duracion)))
+    (printout t crlf)
+    (printout t ?ejercicio crlf)
+	)
 
 
 ; ;;; Fin declaracion de reglas ------------------------------
