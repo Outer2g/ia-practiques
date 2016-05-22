@@ -1024,7 +1024,7 @@
     (printout t "Martes: Hombro" crlf)
     (printout t crlf)
     (printout t "--------------------------------------------------------------" crlf))
-(defrule mostrar-lunes-Hombro "Muestra contenido del martes"
+(defrule mostrar-martes-Hombro "Muestra contenido del martes"
 	(declare (salience 7))
 	?ejerc<-(ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones ?nrepes) (nseries ?nseries) (grupo_muscular Hombro))
 	(tiempoDiario ?tiempoDiario)
@@ -1051,5 +1051,114 @@
     (printout t ?ejercicio crlf)
 	)
 
+(defrule mostrar-miercoles "Muestra cabecera miercoles"
+	(declare (salience 5))
+	(not (HemostradoMiercoles))
+	=>
+	(assert (HemostradoMiercoles))
+    (printout t crlf)
+    (printout t "Miercoles: Espalda" crlf)
+    (printout t crlf)
+    (printout t "--------------------------------------------------------------" crlf))
+(defrule mostrar-miercoles-Espalda "Muestra contenido del miercoles"
+	(declare (salience 4))
+	?ejerc<-(ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones ?nrepes) (nseries ?nseries) (grupo_muscular Espalda))
+	(tiempoDiario ?tiempoDiario)
+	?factTime<-(tiempoMiercoles ?tiempoDia)
+	(test (< ?tiempoDia ?tiempoDiario))
+	=>
+	(bind ?tiempo (+ ?tiempoDia (+ (* ?nrepes 0.1) ?nseries)))
+	(retract ?factTime)
+	(retract ?ejerc)
+	(assert (tiempoMiercoles ?tiempo))
+    (printout t crlf)
+    (printout t ?ejercicio crlf)
+	)
+
+(defrule rellena-martes "Rellena con cardio el miercoles"
+	(declare (salience 3))
+	?factTime<- (tiempoMiercoles ?tiempoDia)
+	(test (< ?tiempoDia 30.0))
+	(ejercicio-Intensidad (nombre_ejercicio ?ejercicio) (intensidad ?intensidad)(duracion ?duracion))
+	=>
+	(retract ?factTime)
+	(assert (tiempoMiercoles (+ ?tiempoDia ?duracion)))
+    (printout t crlf)
+    (printout t ?ejercicio crlf)
+	)
+
+
+(defrule mostrar-jueves "Muestra cabecera jueves"
+	(declare (salience 2))
+	(not (HemostradoJueves))
+	=>
+	(assert (HemostradoJueves))
+    (printout t crlf)
+    (printout t "Jueves: Biceps" crlf)
+    (printout t crlf)
+    (printout t "--------------------------------------------------------------" crlf))
+(defrule mostrar-jueves-Biceps "Muestra contenido del jueves"
+	(declare (salience 1))
+	?ejerc<-(ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones ?nrepes) (nseries ?nseries) (grupo_muscular Biceps))
+	(tiempoDiario ?tiempoDiario)
+	?factTime<-(tiempoJueves ?tiempoDia)
+	(test (< ?tiempoDia ?tiempoDiario))
+	=>
+	(bind ?tiempo (+ ?tiempoDia (+ (* ?nrepes 0.1) ?nseries)))
+	(retract ?factTime)
+	(retract ?ejerc)
+	(assert (tiempoJueves ?tiempo))
+    (printout t crlf)
+    (printout t ?ejercicio crlf)
+	)
+
+(defrule rellena-jueves "Rellena con cardio el jueves"
+	(declare (salience 0))
+	?factTime<- (tiempoJueves ?tiempoDia)
+	(test (< ?tiempoDia 30.0))
+	(ejercicio-Intensidad (nombre_ejercicio ?ejercicio) (intensidad ?intensidad)(duracion ?duracion))
+	=>
+	(retract ?factTime)
+	(assert (tiempoJueves (+ ?tiempoDia ?duracion)))
+    (printout t crlf)
+    (printout t ?ejercicio crlf)
+	)
+
+
+(defrule mostrar-viernes "Muestra cabecera viernes"
+	(declare (salience -1))
+	(not (HemostradoViernes))
+	=>
+	(assert (HemostradoViernes))
+    (printout t crlf)
+    (printout t "Viernes: Triceps" crlf)
+    (printout t crlf)
+    (printout t "--------------------------------------------------------------" crlf))
+(defrule mostrar-viernes-Triceps "Muestra contenido del jueves"
+	(declare (salience -2))
+	?ejerc<-(ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones ?nrepes) (nseries ?nseries) (grupo_muscular Biceps))
+	(tiempoDiario ?tiempoDiario)
+	?factTime<-(tiempoViernes ?tiempoDia)
+	(test (< ?tiempoDia ?tiempoDiario))
+	=>
+	(bind ?tiempo (+ ?tiempoDia (+ (* ?nrepes 0.1) ?nseries)))
+	(retract ?factTime)
+	(retract ?ejerc)
+	(assert (tiempoViernes ?tiempo))
+    (printout t crlf)
+    (printout t ?ejercicio crlf)
+	)
+
+(defrule rellena-viernes "Rellena con cardio el miercoles"
+	(declare (salience -3))
+	?factTime<- (tiempoViernes ?tiempoDia)
+	(test (< ?tiempoDia 30.0))
+	(ejercicio-Intensidad (nombre_ejercicio ?ejercicio) (intensidad ?intensidad)(duracion ?duracion))
+	=>
+	(retract ?factTime)
+	(assert (tiempoViernes (+ ?tiempoDia ?duracion)))
+    (printout t crlf)
+    (printout t ?ejercicio crlf)
+	)
 
 ; ;;; Fin declaracion de reglas ------------------------------
