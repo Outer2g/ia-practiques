@@ -588,7 +588,6 @@
 ;;; Declaracion de funciones --------------------------
 
 
-
 ;;; Fin declaracion de funciones -----------------------
 
 
@@ -891,55 +890,82 @@
 	(retract ?f)
 	(assert (intensidad ?intensity))
 	)
-;Problema: no se puede igualar ?obj con ?grupo
-(defrule haz-magia
-	?obj<-(object (is-a Grupo_Muscular) (grupo_muscular "Gemelos"))
-	(object (is-a Maquina) (ejercicio ?ejercicio)(grupos_musculares $?grupos ?grupo))
-	=>
-	(assert (prueba ?obj))
-	(assert (pruebaGrup ?grupo))
-	)
+
 
 (defrule considera-hombro-problemas "Tiene en cuenta la lesion para los ejercicios con maquina"
     (or (restriccion Hombro) (edadBiologica ?edadBiologica&:(eq ?edadBiologica viejo)))
     (nrepeticionesBasicas ?nrepesBasic)
-    ;?grupoMuscular <- (object (is-a Grupo_Muscular) (grupo_muscular "Hombro"))
-    ;(object (is-a Maquina) (ejercicio ?ejercicio) (grupos_musculares ))
+    ?grupoMuscular <- (object (is-a Grupo_Muscular) (grupo_muscular "Hombro"))
+    (object (is-a Maquina) (ejercicio ?ejercicio) (grupos_musculares $?grupos))
     =>
-    (printout t crlf)
-    (printout t "--------------------------------------------------------------" crlf)
-    (assert (ejercicio-Repeticiones (nombre_ejercicio PressMilitar) (nrepeticiones (/ ?nrepesBasic 4)) (grupo_muscular Hombro)))
+    (progn$ (?elemento $?grupos)
+		(bind ?grupo (instance-address * ?elemento))
+		(if (eq ?grupo ?grupoMuscular)
+		 then 
+			(assert (ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones (/ ?nrepesBasic 4)) (grupo_muscular Hombro)))
+			)
+	)
 )
-(defrule considera-hombro-normal
+(defrule considera-hombro-normal-maquinas
     (and (not (restriccion Hombro)) (edadBiologica ?edadBiologica&:(neq ?edadBiologica viejo)))
     (nrepeticionesBasicas ?nrepesBasic)
+    ?grupoMuscular <- (object (is-a Grupo_Muscular) (grupo_muscular "Hombro"))
+    (object (is-a Maquina) (ejercicio ?ejercicio) (grupos_musculares $?grupos))
     =>
-    (assert (ejercicio-Repeticiones (nombre_ejercicio PressMilitar) (nrepeticiones ?nrepesBasic) (grupo_muscular Hombro)))
-    (assert (ejercicio-Repeticiones (nombre_ejercicio ElevacionesLaterales) (nrepeticiones ?nrepesBasic) (grupo_muscular Hombro)))
-    (assert (ejercicio-Repeticiones (nombre_ejercicio ElevacionesDeDisco) (nrepeticiones ?nrepesBasic) (grupo_muscular Hombro)))
+    (progn$ (?elemento $?grupos)
+		(bind ?grupo (instance-address * ?elemento))
+		(if (eq ?grupo ?grupoMuscular)
+		 then 
+			(assert (ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones ?nrepesBasic) (grupo_muscular Hombro)))
+			)
+	)
 )
+(defrule considera-hombro-normal-pesas
+	(and (not (restriccion Hombro)) (edadBiologica ?edadBiologica&:(neq ?edadBiologica viejo)))
+    (nrepeticionesBasicas ?nrepesBasic)
+    ?grupoMuscular <- (object (is-a Grupo_Muscular) (grupo_muscular "Hombro"))
+    (object (is-a Pesas) (ejercicio ?ejercicio) (grupos_musculares $?grupos))
+    =>
+    (progn$ (?elemento $?grupos)
+		(bind ?grupo (instance-address * ?elemento))
+		(if (eq ?grupo ?grupoMuscular)
+		 then 
+			(assert (ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones ?nrepesBasic) (grupo_muscular Hombro)))
+			)
+	)
+	)
 (defrule considera-rodilla-problemas "comprueba si puede hacer ejercicios de pierna"
     (restriccion Rodilla)
     (intensidad ?intesidadBasic)
-    (object (is-a Maquina) (ejercicio "Cinta") (duracion_min ?duracion))
-    (object (is-a Maquina) (ejercicio "Bicicleta") (duracion_min ?duracionBici))
-    (object (is-a Suelo) (ejercicio "Elevaciones de gemelos") (duracion_min ?duracionEle))
-
+    ?grupoMuscular <- (object (is-a Grupo_Muscular) (grupo_muscular "Quadriceps"|"Gemelos"))
+    (object (is-a Maquina|Suelo) (ejercicio ?ejercicio) (duracion_min ?duracion) (grupos_musculares $?grupos))
     =>
-    (assert (ejercicio-Intensidad (nombre_ejercicio Cinta) (intensidad (/ ?intesidadBasic 4)) (duracion ?duracion)))
-    (assert (ejercicio-Intensidad (nombre_ejercicio Bicicleta) (intensidad (/ ?intesidadBasic 4)) (duracion ?duracionBici)))
-    (assert (ejercicio-Intensidad (nombre_ejercicio ElevacionesGemelos) (intensidad (/ ?intesidadBasic 4)) (duracion ?duracionEle)))
+
+    (progn$ (?elemento $?grupos)
+		(bind ?grupo (instance-address * ?elemento))
+		(if (eq ?grupo ?grupoMuscular)
+		 then 
+			(assert (ejercicio-Intensidad (nombre_ejercicio ?ejercicio) (intensidad (/ ?intesidadBasic 4)) (duracion ?duracion)))
+			)
+	)
 )
 (defrule considera-rodilla-normal "considera que puede hacer ejercicios de pierna"
     (not (restriccion Rodilla))
     (intensidad ?intesidadBasic)
     (objetivo ?objetivo)
+    ?grupoMuscular <- (object (is-a Grupo_Muscular) (grupo_muscular "Quadriceps"|"Gemelos"))
+    (object (is-a Maquina|Suelo) (ejercicio ?ejercicio) (grupos_musculares $?grupos))
     =>
     (if (eq ?objetivo Adelgazar) then (bind ?duracion 45)
         else (bind ?duracion 30))
-    (assert (ejercicio-Intensidad (nombre_ejercicio Cinta) (intensidad ?intesidadBasic) (duracion ?duracion)))
-    (assert (ejercicio-Intensidad (nombre_ejercicio Bicicleta) (intensidad ?intesidadBasic) (duracion ?duracion)))
-    (assert (ejercicio-Intensidad (nombre_ejercicio ElevacionesGemelos) (intensidad ?intesidadBasic) (duracion ?duracion)))
+
+    (progn$ (?elemento $?grupos)
+		(bind ?grupo (instance-address * ?elemento))
+		(if (eq ?grupo ?grupoMuscular)
+		 then 
+			(assert (ejercicio-Intensidad (nombre_ejercicio ?ejercicio) (intensidad ?intesidadBasic) (duracion ?duracion)))
+			)
+	)
     )
 
 (defrule considera-problemas-articulaciones "Si tiene problemas en las articulaciones, mejor que no haga pesas"
