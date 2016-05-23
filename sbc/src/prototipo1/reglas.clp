@@ -663,14 +663,6 @@
             )))
     (assert (tengoObjetivo))
     )
-(defrule pregunta-Si-Prueba "pregunta si el usuaro ha hecho la prueba de intensidad"
-    (not (tengoSiPrueba))
-    =>
-    (bind ?resposta (pregunta-sino "Has realizado la prueba de intensidad recomendada"))
-    (assert (tengoSiPrueba))
-    (if (eq ?resposta TRUE) then
-            (assert (haRealizadoPrueba)))
-    )
 (defrule pregunta-Si-Tiene-Problemas-Salud "pregunta si el usuario tiene algun tipo de problema"
     (not (tengoSiProblemaSalud))
     =>
@@ -678,34 +670,49 @@
     (assert (tengoSiProblemaSalud))
     (if (eq ?resposta TRUE) then
         (assert (tieneProblemasSalud)))
-    )
+)
 
 (defrule pregunta-Tiempo-Diario "pregunta tiempo que quiere invertir diariamente"
     (not (tengoTiempoDiario))
     =>
     (bind ?tiempo (pregunta-num "Cuanto tiempo le quieres dedicar diariamente(en minutos)" 30 240))
     (assert (tiempoDiario ?tiempo))
-    )
+)
 
 (defrule pregunta-Problemas-Salud "pregunta por los posibles problmas de salud del usuario"
     (tieneProblemasSalud)
+    (not (heAcabado))
     =>
     (printout t crlf)
     (printout t "1. Muscular" crlf)
     (printout t "2. Cardio Vasculares" crlf)
     (printout t "3. Respiratorios" crlf)
     (printout t "4. Problemas en Articulaciones" crlf)
-    (bind ?problema (pregunta-num "Que problemas de salud tienes: " 1 4))
+    (printout t "5. Ninguno" crlf)
+    (bind ?problema (pregunta-num "Que problemas de salud tienes: " 1 5))
     (if (eq ?problema 1)
             then
             (assert (problema Muscular))
         else (if (eq ?problema 2)
             then (assert (problema CardioVascular))
+    (assert (heAcabado))
         else (if (eq ?problema 3)
             then (assert (problema Respiratorio))
+    (assert (heAcabado))
         else (if (eq ?problema 4)
             then (assert (problema Articulaciones))
+    (assert (heAcabado))
+        else (assert (nopreguntesmasproblemas))
+    (assert (heAcabado))
             ))))
+    )
+(defrule pregunta-Si-TieneMasproblemas "pregunta si la persona tiene mas problemas de salud"
+    ?f <- (heAcabado)
+    (not (nopreguntesmasproblemas))
+    =>
+    (bind ?resposta (pregunta-sino "Tiene usted algun otro problema "))
+    (if (eq ?resposta TRUE) then
+        (retract ?f))
     )
 (defrule pregunta-ProblemaEspecifico "pregunta problema especifico muscular"
     (problema ?problema&:(eq ?problema Muscular))
@@ -724,9 +731,10 @@
         else (if (eq ?respuesta 3)
             then (assert (restriccion Antebrazo))
             )))
-    (assert (tengoObjetivo))
+    (assert (heAcabado))
     )
 (defrule pregunta-Habitos "pregunta habitos de la persona"
+	(declare (salience -1))
     (not (tengoHabitos))
     ?fHabitos <- (numeroHabitos ?nhabitos)
     =>
@@ -734,8 +742,11 @@
     (printout t "1. Salir a correr" crlf)
     (printout t "2. Salir en bicicleta" crlf)
     (printout t "3. Escalada" crlf)
-    (printout t "4. Ninguna" crlf)
-    (bind ?respuesta (pregunta-num "Cúal de estas actividades realizas" 1 4))
+    (printout t "4. Natacion" crlf)
+    (printout t "5. Tenis" crlf)
+    (printout t "6. Paddel" crlf)
+    (printout t "7. Ninguna" crlf)
+    (bind ?respuesta (pregunta-num "Cúal de estas actividades realizas" 1 7))
     (if (eq ?respuesta 1)
         then (assert (habito correr))
             (retract ?fHabitos)
@@ -749,9 +760,21 @@
             (retract ?fHabitos)
             (assert (numeroHabitos (+ ?nhabitos 1))))
     (if (eq ?respuesta 4)
+        then (assert (habito natacion))
+            (retract ?fHabitos)
+            (assert (numeroHabitos (+ ?nhabitos 1))))
+    (if (eq ?respuesta 5)
+        then (assert (habito tenis))
+            (retract ?fHabitos)
+            (assert (numeroHabitos (+ ?nhabitos 1))))
+    (if (eq ?respuesta 6)
+        then (assert (habito paddel))
+            (retract ?fHabitos)
+            (assert (numeroHabitos (+ ?nhabitos 1))))
+    (if (eq ?respuesta 7)
         then (assert (nopreguntesmashabitos)))
     (assert (tengoHabitos))
-    )
+)
 (defrule pregunta-Si-TieneMasHabitos "pregunta si la persona tiene mas habitos"
     ?f <- (tengoHabitos)
     (not (nopreguntesmashabitos))
@@ -759,11 +782,6 @@
     (bind ?resposta (pregunta-sino "Realiza usted alguna otra actividad"))
     (if (eq ?resposta TRUE) then
         (retract ?f))
-    )
-(defrule pregunta-Resultados-Prueba "recopila los datos de la prueba"
-    (haRealizadoPrueba)
-    =>
-    (printout t "TODO: PEDIR datos" crlf)
     )
 
 (defrule pasa-next "pregunta problemas de salud"
@@ -816,9 +834,9 @@
 (defrule procesa-objetivo "segun el objetivo, se le recomendara unas repeticiones o intensidades basicas"
     (objetivo ?objetivo)
     =>
-    (if (eq ?objetivo Muscular) then (assert (nrepeticionesBasicas 8))
-        else (if (eq ?objetivo Adelgazar) then (assert (nrepeticionesBasicas 15)))
-        else (assert (nrepeticionesBasicas 12)))
+    (if (eq ?objetivo Muscular) then (assert (nrepeticionesBasicas 8)))
+    (if (eq ?objetivo Adelgazar) then (assert (nrepeticionesBasicas 12)))
+    (if (eq ?objetivo Mantenimiento) then (assert (nrepeticionesBasicas 15)))
 )
 (defrule estado-articulaciones "la persona tiene problemas de articulaciones, entonces no puede hacer pesas"
     (or (problema Articulaciones) (restriccion Antebrazo) (edadBiologica ?edad&:(eq ?edad viejo)))
@@ -874,14 +892,25 @@
         (import procesado ?ALL)
     (export ?ALL)
     )
-(defrule considera-tension-alta "si tension alta -> baja intensidad"
+(defrule calcula-intensidad "si tension alta -> baja intensidad"
 	(declare (salience 10))
-	(tension Alta)
+	(tension ?tension)
 	?f<-(intensidadBasica ?intensity)
+	(estado-fisico ?estado)
+	(actividad-fisica ?actividad)
 	=>
 	(retract ?f)
-	(assert (intensidad 20))
-	)
+	(bind ?intensidadFinal ?intensity)
+	"si tension alta o baja, restamos 30, si no se queda igual"
+	(if (or (eq ?tension Alta) (eq ?tension Baja)) then (bind ?intensidadFinal (- ?intensidadFinal 30)))
+	"si sobrepeso o obeso, se decrementaf en -5 y -10 respectivamente, si no se queda igual"
+	(if (eq ?estado sobrepeso) then (bind ?intensidadFinal (+ ?intensidadFinal -5))
+		else (if (eq ?estado obeso) then (bind ?intensidadFinal (+ ?intensidadFinal -10))))
+	"si esta acostumbrado a hacer actividad fisica, sube, si no, no"
+	(if (eq ?actividad moderada) then (bind ?intensidadFinal (+ ?intensidadFinal 10))
+		else (if (eq ?actividad mucha) then (bind ?intensidadFinal (+ ?intensidadFinal 30))))
+	(assert (intensidad ?intensidadFinal))
+)
 (defrule considera-tension-normal
 	(declare (salience 10))
 	(tension ?ten&:(neq ?ten Alta))
@@ -889,8 +918,7 @@
 	=>
 	(retract ?f)
 	(assert (intensidad ?intensity))
-	)
-
+)
 (defrule considera-pecho-normal "Tiene en cuenta pecho sin problemas del usuario"
 	(not (restriccion pecho))
     (nrepeticionesBasicas ?nrepesBasic)
@@ -994,11 +1022,13 @@
     (not (restriccion Rodilla))
     (intensidad ?intesidadBasic)
     (objetivo ?objetivo)
+    (estado-fisico ?estado)
     ?grupoMuscular <- (object (is-a Grupo_Muscular) (grupo_muscular "Quadriceps"|"Gemelos"))
     (object (is-a Maquina|Pesas|Suelo|Barra) (ejercicio ?ejercicio) (grupos_musculares $?grupos))
     =>
     (if (eq ?objetivo Adelgazar) then (bind ?duracion 45)
         else (bind ?duracion 30))
+    (if (eq ?estado obeso) then (bind ?duracion (+ ?duracion 15)))
 
     (progn$ (?elemento $?grupos)
 		(bind ?grupo (instance-address * ?elemento))
@@ -1030,7 +1060,7 @@
     (export ?ALL)
 )
 (defrule mostrar-respuesta "Muestra el contenido escogido"
-    (declare (salience 10))
+    (declare (salience 100))
     =>
     (printout t crlf)
     (printout t "--------------------------------------------------------------" crlf)
@@ -1044,20 +1074,20 @@
     (assert (tiempoViernes 0))
     (assert (tiempoSabado 0))
     (assert (tiempoDomingo 0))
-    (facts)
-)
+    	)
 (defrule mostrar-lunes "Muestra cabecera lunes"
-	(declare (salience 9))
+	(declare (salience 99))
 	(not (HeMostradoLunes))
 	=>
 	(assert (HeMostradoLunes))
     (printout t crlf)
     (printout t "Lunes: Pectoral" crlf)
     (printout t crlf)
+    (printout t "Ejercicio 		numero repeticiones 	numero series" crlf)
     (printout t "--------------------------------------------------------------" crlf)
 )
 (defrule mostrar-lunes-Pectoral "Muestra contenido del lunes"
-	(declare (salience 8))
+	(declare (salience 98))
 	?ejerc<-(ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones ?nrepes) (nseries ?nseries) (grupo_muscular Pectoral))
 	(not (noPuedo ?ej&:(eq ?ej ?ejercicio)))
 	(tiempoDiario ?tiempoDiario)
@@ -1069,11 +1099,19 @@
 	(retract ?ejerc)
 	(assert (tiempoLunes ?tiempo))
     (printout t crlf)
-    (printout t ?ejercicio crlf)
+    (printout t ?ejercicio "			" ?nrepes "			" ?nseries crlf)
+    (assert (heDeRellenarLunes))
 	)
-
+(defrule rellena-cabezera-lunes
+	(declare (salience 97))
+	(heDeRellenarLunes)
+	=>
+    (printout t crlf)
+    (printout t "Ejercicio 			intensidad 	  duracion" crlf)
+    (printout t "--------------------------------------------------------------" crlf)
+	)
 (defrule rellena-lunes "Rellena con cardio el lunes"
-	(declare (salience 8))
+	(declare (salience 96))
 	?factTime<- (tiempoLunes ?tiempoLunes)
 	(test (< ?tiempoLunes 30.0))
 	(ejercicio-Intensidad (nombre_ejercicio ?ejercicio) (intensidad ?intensidad)(duracion ?duracion))
@@ -1082,11 +1120,11 @@
 	(retract ?factTime)
 	(assert (tiempoLunes (+ ?tiempoLunes ?duracion)))
     (printout t crlf)
-    (printout t ?ejercicio crlf)
+    (printout t ?ejercicio "			" ?intensidad "			" ?duracion crlf)
 	)
 
 (defrule mostrar-martes "Muestra cabecera martes"
-	(declare (salience 8))
+	(declare (salience 95))
 	(not (HeMostradoMartes))
 	=>
 	(assert (HeMostradoMartes))
@@ -1096,7 +1134,7 @@
     (printout t "--------------------------------------------------------------" crlf)
 )
 (defrule mostrar-martes-Hombro "Muestra contenido del martes"
-	(declare (salience 7))
+	(declare (salience 94))
 	?ejerc<-(ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones ?nrepes) (nseries ?nseries) (grupo_muscular Hombro))
 	(not (noPuedo ?ej&:(eq ?ej ?ejercicio)))
 	(tiempoDiario ?tiempoDiario)
@@ -1108,11 +1146,19 @@
 	(retract ?ejerc)
 	(assert (tiempoMartes ?tiempo))
     (printout t crlf)
-    (printout t ?ejercicio crlf)
+    (printout t ?ejercicio "			" ?nrepes "			" ?nseries crlf)
+    (assert (heDeRellenarMartes))
 	)
-
+(defrule rellena-cabezera-martes
+	(declare (salience 92))
+	(heDeRellenarMartes)
+	=>
+    (printout t crlf)
+    (printout t "Ejercicio 			intensidad 		duracion" crlf)
+    (printout t "--------------------------------------------------------------" crlf)
+	)
 (defrule rellena-martes "Rellena con cardio el martes"
-	(declare (salience 6))
+	(declare (salience 91))
 	?factTime<- (tiempoMartes ?tiempoDia)
 	(test (< ?tiempoDia 30.0))
 	(ejercicio-Intensidad (nombre_ejercicio ?ejercicio) (intensidad ?intensidad)(duracion ?duracion))
@@ -1121,11 +1167,11 @@
 	(retract ?factTime)
 	(assert (tiempoMartes (+ ?tiempoDia ?duracion)))
     (printout t crlf)
-    (printout t ?ejercicio crlf)
-)
+    (printout t ?ejercicio "			" ?intensidad "			" ?duracion crlf)
+    )
 
 (defrule mostrar-miercoles "Muestra cabecera miercoles"
-	(declare (salience 5))
+	(declare (salience 90))
 	(not (HemostradoMiercoles))
 	=>
 	(assert (HemostradoMiercoles))
@@ -1135,7 +1181,7 @@
     (printout t "--------------------------------------------------------------" crlf)
 )
 (defrule mostrar-miercoles-Espalda "Muestra contenido del miercoles"
-	(declare (salience 4))
+	(declare (salience 89))
 	?ejerc<-(ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones ?nrepes) (nseries ?nseries) (grupo_muscular Espalda))
 	(not (noPuedo ?ej&:(eq ?ej ?ejercicio)))
 	(tiempoDiario ?tiempoDiario)
@@ -1147,11 +1193,19 @@
 	(retract ?ejerc)
 	(assert (tiempoMiercoles ?tiempo))
     (printout t crlf)
-    (printout t ?ejercicio crlf)
+    (printout t ?ejercicio "			" ?nrepes "			" ?nseries crlf)
+    (assert (heDeRellenarMiercoles))
 	)
-
-(defrule rellena-martes "Rellena con cardio el miercoles"
-	(declare (salience 3))
+(defrule rellena-cabezera-miercoles
+	(declare (salience 88))
+	(heDeRellenarMiercoles)
+	=>
+    (printout t crlf)
+    (printout t "Ejercicio 			intensidad 		duracion" crlf)
+    (printout t "--------------------------------------------------------------" crlf)
+	)
+(defrule rellena-miercoles "Rellena con cardio el miercoles"
+	(declare (salience 87))
 	?factTime<- (tiempoMiercoles ?tiempoDia)
 	(test (< ?tiempoDia 30.0))
 	(ejercicio-Intensidad (nombre_ejercicio ?ejercicio) (intensidad ?intensidad)(duracion ?duracion))
@@ -1160,12 +1214,12 @@
 	(retract ?factTime)
 	(assert (tiempoMiercoles (+ ?tiempoDia ?duracion)))
     (printout t crlf)
-    (printout t ?ejercicio crlf)
+    (printout t ?ejercicio "			" ?intensidad "			" ?duracion crlf)
 	)
 
 
 (defrule mostrar-jueves "Muestra cabecera jueves"
-	(declare (salience 2))
+	(declare (salience 86))
 	(not (HemostradoJueves))
 	=>
 	(assert (HemostradoJueves))
@@ -1175,7 +1229,7 @@
     (printout t "--------------------------------------------------------------" crlf)
 )
 (defrule mostrar-jueves-Biceps "Muestra contenido del jueves"
-	(declare (salience 1))
+	(declare (salience 85))
 	?ejerc<-(ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones ?nrepes) (nseries ?nseries) (grupo_muscular Biceps))
 	(not (noPuedo ?ej&:(eq ?ej ?ejercicio)))
 	(tiempoDiario ?tiempoDiario)
@@ -1187,11 +1241,19 @@
 	(retract ?ejerc)
 	(assert (tiempoJueves ?tiempo))
     (printout t crlf)
-    (printout t ?ejercicio crlf)
+    (printout t ?ejercicio "			" ?nrepes "			" ?nseries crlf)
+    (assert (heDeRellenarJueves))
 	)
-
+(defrule rellena-cabezera-jueves
+	(declare (salience 84))
+	(heDeRellenarJueves)
+	=>
+    (printout t crlf)
+    (printout t "Ejercicio 			intensidad 		duracion" crlf)
+    (printout t "--------------------------------------------------------------" crlf)
+	)
 (defrule rellena-jueves "Rellena con cardio el jueves"
-	(declare (salience 0))
+	(declare (salience 83))
 	?factTime<- (tiempoJueves ?tiempoDia)
 	(test (< ?tiempoDia 30.0))
 	(ejercicio-Intensidad (nombre_ejercicio ?ejercicio) (intensidad ?intensidad)(duracion ?duracion))
@@ -1200,12 +1262,12 @@
 	(retract ?factTime)
 	(assert (tiempoJueves (+ ?tiempoDia ?duracion)))
     (printout t crlf)
-    (printout t ?ejercicio crlf)
+    (printout t ?ejercicio "			" ?intensidad "			" ?duracion crlf)
 	)
 
 
 (defrule mostrar-viernes "Muestra cabecera viernes"
-	(declare (salience -1))
+	(declare (salience 82))
 	(not (HemostradoViernes))
 	=>
 	(assert (HemostradoViernes))
@@ -1213,8 +1275,8 @@
     (printout t "Viernes: Triceps" crlf)
     (printout t crlf)
     (printout t "--------------------------------------------------------------" crlf))
-(defrule mostrar-viernes-Triceps "Muestra contenido del jueves"
-	(declare (salience -2))
+(defrule mostrar-viernes-Triceps "Muestra contenido del viernes"
+	(declare (salience 81))
 	?ejerc<-(ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones ?nrepes) (nseries ?nseries) (grupo_muscular Triceps))
 	(not (noPuedo ?ej&:(eq ?ej ?ejercicio)))
 	(tiempoDiario ?tiempoDiario)
@@ -1226,11 +1288,19 @@
 	(retract ?ejerc)
 	(assert (tiempoViernes ?tiempo))
     (printout t crlf)
-    (printout t ?ejercicio crlf)
+    (printout t ?ejercicio "			" ?nrepes "			" ?nseries crlf)
+    (assert (hedeRellenarViernes))
 	)
-
+(defrule rellena-cabezera-viernes
+	(declare (salience 80))
+	(hedeRellenarViernes)
+	=>
+    (printout t crlf)
+    (printout t "Ejercicio 			intensidad 		duracion" crlf)
+    (printout t "--------------------------------------------------------------" crlf)
+	)
 (defrule rellena-viernes "Rellena con cardio el miercoles"
-	(declare (salience -3))
+	(declare (salience 79))
 	?factTime<- (tiempoViernes ?tiempoDia)
 	(test (< ?tiempoDia 30.0))
 	(ejercicio-Intensidad (nombre_ejercicio ?ejercicio) (intensidad ?intensidad)(duracion ?duracion))
@@ -1239,7 +1309,7 @@
 	(retract ?factTime)
 	(assert (tiempoViernes (+ ?tiempoDia ?duracion)))
     (printout t crlf)
-    (printout t ?ejercicio crlf)
+    (printout t ?ejercicio "			" ?intensidad "			" ?duracion crlf)
 	)
 
 ; ;;; Fin declaracion de reglas ------------------------------
