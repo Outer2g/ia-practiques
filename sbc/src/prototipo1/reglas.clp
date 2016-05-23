@@ -694,7 +694,7 @@
     (printout t "1. Muscular" crlf)
     (printout t "2. Cardio Vasculares" crlf)
     (printout t "3. Respiratorios" crlf)
-    (printout t "4. Problemas en Articulaciones")
+    (printout t "4. Problemas en Articulaciones" crlf)
     (bind ?problema (pregunta-num "Que problemas de salud tienes: " 1 4))
     (if (eq ?problema 1)
             then
@@ -821,7 +821,7 @@
         else (assert (nrepeticionesBasicas 12)))
 )
 (defrule estado-articulaciones "la persona tiene problemas de articulaciones, entonces no puede hacer pesas"
-    (or (problema Articulaciones) (restriccion Antebrazo))
+    (or (problema Articulaciones) (restriccion Antebrazo) (edadBiologica ?edad&:(eq ?edad viejo)))
     =>
     (assert (noPuedePesas))
     )
@@ -891,7 +891,62 @@
 	(assert (intensidad ?intensity))
 	)
 
-
+(defrule considera-pecho-normal "Tiene en cuenta pecho sin problemas del usuario"
+	(not (restriccion pecho))
+    (nrepeticionesBasicas ?nrepesBasic)
+    ?grupoMuscular <- (object (is-a Grupo_Muscular) (grupo_muscular "Pectorales"))
+    (object (is-a Maquina|Pesas|Suelo|Barra) (ejercicio ?ejercicio) (grupos_musculares $?grupos))
+    =>
+    (progn$ (?elemento $?grupos)
+		(bind ?grupo (instance-address * ?elemento))
+		(if (eq ?grupo ?grupoMuscular)
+		 then 
+			(assert (ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones ?nrepesBasic ) (grupo_muscular Pectoral)))
+			)
+	)
+	)
+(defrule considera-espalda-normal "Tiene ne cuenta ejercicios de espalda sin problemas del usuario"
+	(not (restriccion espalda))
+    (nrepeticionesBasicas ?nrepesBasic)
+    ?grupoMuscular <- (object (is-a Grupo_Muscular) (grupo_muscular "Espalda"))
+    (object (is-a Maquina|Pesas|Suelo|Barra) (ejercicio ?ejercicio) (grupos_musculares $?grupos))
+    =>
+    (progn$ (?elemento $?grupos)
+		(bind ?grupo (instance-address * ?elemento))
+		(if (eq ?grupo ?grupoMuscular)
+		 then 
+			(assert (ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones ?nrepesBasic ) (grupo_muscular Espalda)))
+			)
+	)
+)
+(defrule considera-Biceps-normal "tiene en cuenta ejercicios de biceps sin problmeas del usuario"
+	(not (restriccion biceps))
+    (nrepeticionesBasicas ?nrepesBasic)
+    ?grupoMuscular <- (object (is-a Grupo_Muscular) (grupo_muscular "Biceps"))
+    (object (is-a Maquina|Pesas|Barra) (ejercicio ?ejercicio) (grupos_musculares $?grupos))
+    =>
+    (progn$ (?elemento $?grupos)
+		(bind ?grupo (instance-address * ?elemento))
+		(if (eq ?grupo ?grupoMuscular)
+		 then 
+			(assert (ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones ?nrepesBasic ) (grupo_muscular Biceps)))
+			)
+	)
+)
+(defrule considera-Triceps-normal "tiene en cuenta ejercicios de triceps sin problmeas del usuario"
+	(not (restriccion triceps))
+    (nrepeticionesBasicas ?nrepesBasic)
+    ?grupoMuscular <- (object (is-a Grupo_Muscular) (grupo_muscular "Triceps"))
+    (object (is-a Maquina|Pesas|Suelo|Barra) (ejercicio ?ejercicio) (grupos_musculares $?grupos))
+    =>
+    (progn$ (?elemento $?grupos)
+		(bind ?grupo (instance-address * ?elemento))
+		(if (eq ?grupo ?grupoMuscular)
+		 then 
+			(assert (ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones ?nrepesBasic ) (grupo_muscular Triceps)))
+			)
+	)
+)
 (defrule considera-hombro-problemas "Tiene en cuenta la lesion para los ejercicios con maquina"
     (or (restriccion Hombro) (edadBiologica ?edadBiologica&:(eq ?edadBiologica viejo)))
     (nrepeticionesBasicas ?nrepesBasic)
@@ -906,11 +961,11 @@
 			)
 	)
 )
-(defrule considera-hombro-normal-maquinas
+(defrule considera-hombro-normal
     (and (not (restriccion Hombro)) (edadBiologica ?edadBiologica&:(neq ?edadBiologica viejo)))
     (nrepeticionesBasicas ?nrepesBasic)
     ?grupoMuscular <- (object (is-a Grupo_Muscular) (grupo_muscular "Hombro"))
-    (object (is-a Maquina) (ejercicio ?ejercicio) (grupos_musculares $?grupos))
+    (object (is-a Maquina|Pesas|Suelo|Barra) (ejercicio ?ejercicio) (grupos_musculares $?grupos))
     =>
     (progn$ (?elemento $?grupos)
 		(bind ?grupo (instance-address * ?elemento))
@@ -920,20 +975,6 @@
 			)
 	)
 )
-(defrule considera-hombro-normal-pesas
-	(and (not (restriccion Hombro)) (edadBiologica ?edadBiologica&:(neq ?edadBiologica viejo)))
-    (nrepeticionesBasicas ?nrepesBasic)
-    ?grupoMuscular <- (object (is-a Grupo_Muscular) (grupo_muscular "Hombro"))
-    (object (is-a Pesas) (ejercicio ?ejercicio) (grupos_musculares $?grupos))
-    =>
-    (progn$ (?elemento $?grupos)
-		(bind ?grupo (instance-address * ?elemento))
-		(if (eq ?grupo ?grupoMuscular)
-		 then 
-			(assert (ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones ?nrepesBasic) (grupo_muscular Hombro)))
-			)
-	)
-	)
 (defrule considera-rodilla-problemas "comprueba si puede hacer ejercicios de pierna"
     (restriccion Rodilla)
     (intensidad ?intesidadBasic)
@@ -954,7 +995,7 @@
     (intensidad ?intesidadBasic)
     (objetivo ?objetivo)
     ?grupoMuscular <- (object (is-a Grupo_Muscular) (grupo_muscular "Quadriceps"|"Gemelos"))
-    (object (is-a Maquina|Suelo) (ejercicio ?ejercicio) (grupos_musculares $?grupos))
+    (object (is-a Maquina|Pesas|Suelo|Barra) (ejercicio ?ejercicio) (grupos_musculares $?grupos))
     =>
     (if (eq ?objetivo Adelgazar) then (bind ?duracion 45)
         else (bind ?duracion 30))
@@ -970,7 +1011,7 @@
 
 (defrule considera-problemas-articulaciones "Si tiene problemas en las articulaciones, mejor que no haga pesas"
 	(noPuedePesas)
-	(object (is-a Pesas) (ejercicio ?ejercicio))
+	(object (is-a Pesas|Barra) (ejercicio ?ejercicio))
 	=>
 	(assert (noPuedo ?ejercicio))
 	)
@@ -1013,10 +1054,12 @@
     (printout t crlf)
     (printout t "Lunes: Pectoral" crlf)
     (printout t crlf)
-    (printout t "--------------------------------------------------------------" crlf))
+    (printout t "--------------------------------------------------------------" crlf)
+)
 (defrule mostrar-lunes-Pectoral "Muestra contenido del lunes"
 	(declare (salience 8))
 	?ejerc<-(ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones ?nrepes) (nseries ?nseries) (grupo_muscular Pectoral))
+	(not (noPuedo ?ej&:(eq ?ej ?ejercicio)))
 	(tiempoDiario ?tiempoDiario)
 	?factTime<-(tiempoLunes ?tiempoLunes)
 	(test (< ?tiempoLunes ?tiempoDiario))
@@ -1034,6 +1077,7 @@
 	?factTime<- (tiempoLunes ?tiempoLunes)
 	(test (< ?tiempoLunes 30.0))
 	(ejercicio-Intensidad (nombre_ejercicio ?ejercicio) (intensidad ?intensidad)(duracion ?duracion))
+	(not (noPuedo ?ej&:(eq ?ej ?ejercicio)))
 	=>
 	(retract ?factTime)
 	(assert (tiempoLunes (+ ?tiempoLunes ?duracion)))
@@ -1049,10 +1093,12 @@
     (printout t crlf)
     (printout t "Martes: Hombro" crlf)
     (printout t crlf)
-    (printout t "--------------------------------------------------------------" crlf))
+    (printout t "--------------------------------------------------------------" crlf)
+)
 (defrule mostrar-martes-Hombro "Muestra contenido del martes"
 	(declare (salience 7))
 	?ejerc<-(ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones ?nrepes) (nseries ?nseries) (grupo_muscular Hombro))
+	(not (noPuedo ?ej&:(eq ?ej ?ejercicio)))
 	(tiempoDiario ?tiempoDiario)
 	?factTime<-(tiempoMartes ?tiempoDia)
 	(test (< ?tiempoDia ?tiempoDiario))
@@ -1070,12 +1116,13 @@
 	?factTime<- (tiempoMartes ?tiempoDia)
 	(test (< ?tiempoDia 30.0))
 	(ejercicio-Intensidad (nombre_ejercicio ?ejercicio) (intensidad ?intensidad)(duracion ?duracion))
+	(not (noPuedo ?ej&:(eq ?ej ?ejercicio)))
 	=>
 	(retract ?factTime)
 	(assert (tiempoMartes (+ ?tiempoDia ?duracion)))
     (printout t crlf)
     (printout t ?ejercicio crlf)
-	)
+)
 
 (defrule mostrar-miercoles "Muestra cabecera miercoles"
 	(declare (salience 5))
@@ -1085,10 +1132,12 @@
     (printout t crlf)
     (printout t "Miercoles: Espalda" crlf)
     (printout t crlf)
-    (printout t "--------------------------------------------------------------" crlf))
+    (printout t "--------------------------------------------------------------" crlf)
+)
 (defrule mostrar-miercoles-Espalda "Muestra contenido del miercoles"
 	(declare (salience 4))
 	?ejerc<-(ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones ?nrepes) (nseries ?nseries) (grupo_muscular Espalda))
+	(not (noPuedo ?ej&:(eq ?ej ?ejercicio)))
 	(tiempoDiario ?tiempoDiario)
 	?factTime<-(tiempoMiercoles ?tiempoDia)
 	(test (< ?tiempoDia ?tiempoDiario))
@@ -1106,6 +1155,7 @@
 	?factTime<- (tiempoMiercoles ?tiempoDia)
 	(test (< ?tiempoDia 30.0))
 	(ejercicio-Intensidad (nombre_ejercicio ?ejercicio) (intensidad ?intensidad)(duracion ?duracion))
+	(not (noPuedo ?ej&:(eq ?ej ?ejercicio)))
 	=>
 	(retract ?factTime)
 	(assert (tiempoMiercoles (+ ?tiempoDia ?duracion)))
@@ -1122,10 +1172,12 @@
     (printout t crlf)
     (printout t "Jueves: Biceps" crlf)
     (printout t crlf)
-    (printout t "--------------------------------------------------------------" crlf))
+    (printout t "--------------------------------------------------------------" crlf)
+)
 (defrule mostrar-jueves-Biceps "Muestra contenido del jueves"
 	(declare (salience 1))
 	?ejerc<-(ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones ?nrepes) (nseries ?nseries) (grupo_muscular Biceps))
+	(not (noPuedo ?ej&:(eq ?ej ?ejercicio)))
 	(tiempoDiario ?tiempoDiario)
 	?factTime<-(tiempoJueves ?tiempoDia)
 	(test (< ?tiempoDia ?tiempoDiario))
@@ -1143,6 +1195,7 @@
 	?factTime<- (tiempoJueves ?tiempoDia)
 	(test (< ?tiempoDia 30.0))
 	(ejercicio-Intensidad (nombre_ejercicio ?ejercicio) (intensidad ?intensidad)(duracion ?duracion))
+	(not (noPuedo ?ej&:(eq ?ej ?ejercicio)))
 	=>
 	(retract ?factTime)
 	(assert (tiempoJueves (+ ?tiempoDia ?duracion)))
@@ -1162,7 +1215,8 @@
     (printout t "--------------------------------------------------------------" crlf))
 (defrule mostrar-viernes-Triceps "Muestra contenido del jueves"
 	(declare (salience -2))
-	?ejerc<-(ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones ?nrepes) (nseries ?nseries) (grupo_muscular Biceps))
+	?ejerc<-(ejercicio-Repeticiones (nombre_ejercicio ?ejercicio) (nrepeticiones ?nrepes) (nseries ?nseries) (grupo_muscular Triceps))
+	(not (noPuedo ?ej&:(eq ?ej ?ejercicio)))
 	(tiempoDiario ?tiempoDiario)
 	?factTime<-(tiempoViernes ?tiempoDia)
 	(test (< ?tiempoDia ?tiempoDiario))
@@ -1180,6 +1234,7 @@
 	?factTime<- (tiempoViernes ?tiempoDia)
 	(test (< ?tiempoDia 30.0))
 	(ejercicio-Intensidad (nombre_ejercicio ?ejercicio) (intensidad ?intensidad)(duracion ?duracion))
+	(not (noPuedo ?ej&:(eq ?ej ?ejercicio)))
 	=>
 	(retract ?factTime)
 	(assert (tiempoViernes (+ ?tiempoDia ?duracion)))
