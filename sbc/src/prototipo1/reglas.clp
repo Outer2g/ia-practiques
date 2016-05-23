@@ -912,14 +912,6 @@
 		else (if (eq ?actividad mucha) then (bind ?intensidadFinal (+ ?intensidadFinal 30))))
 	(assert (intensidad ?intensidadFinal))
 )
-(defrule considera-tension-normal
-	(declare (salience 10))
-	(tension ?ten&:(neq ?ten Alta))
-	?f<-(intensidadBasica ?intensity)
-	=>
-	(retract ?f)
-	(assert (intensidad ?intensity))
-)
 (defrule considera-pecho-normal "Tiene en cuenta pecho sin problemas del usuario"
 	(not (restriccion pecho))
     (nrepeticionesBasicas ?nrepesBasic)
