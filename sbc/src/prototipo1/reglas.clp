@@ -284,7 +284,7 @@
 
 	(grupo_muscular "Gemelos"))
 
-([ontologia_prototipo1_Class32] of  Pesas
+([ontologia_prototipo1_Class32] of  Maquina
 
 	(calorias_por_minuto 6.56)
 	(duracion_max 15)
@@ -715,7 +715,7 @@
         (retract ?f))
     )
 (defrule pregunta-ProblemaEspecifico "pregunta problema especifico muscular"
-    (problema ?problema&:(eq ?problema Muscular))
+    ?f<-(problema ?problema&:(eq ?problema Muscular))
     =>
     (printout t crlf)
     (printout t "1. Hombro" crlf)
@@ -732,6 +732,7 @@
             then (assert (restriccion Antebrazo))
             )))
     (assert (heAcabado))
+    (retract ?f)
     )
 (defrule pregunta-Habitos "pregunta habitos de la persona"
 	(declare (salience -1))
@@ -1029,6 +1030,7 @@
     (if (eq ?objetivo Adelgazar) then (bind ?duracion 45)
         else (bind ?duracion 30))
     (if (eq ?estado obeso) then (bind ?duracion (+ ?duracion 15)))
+    (if (eq ?estado infrapeso) then (bind ?duracion (- ?duracion 15)))
 
     (progn$ (?elemento $?grupos)
 		(bind ?grupo (instance-address * ?elemento))
@@ -1072,7 +1074,6 @@
     (assert (tiempoMiercoles 0))
     (assert (tiempoJueves 0))
     (assert (tiempoViernes 0))
-    (facts)
     	)
 (defrule mostrar-lunes "Muestra cabecera lunes"
 	(declare (salience 99))
@@ -1161,9 +1162,10 @@
 	(declare (salience 91))
 	?factTime<- (tiempoMartes ?tiempoDia)
 	(test (< ?tiempoDia 30.0))
-	(ejercicio-Intensidad (nombre_ejercicio ?ejercicio) (intensidad ?intensidad)(duracion ?duracion))
+	?ej<-(ejercicio-Intensidad (nombre_ejercicio ?ejercicio) (intensidad ?intensidad)(duracion ?duracion))
 	(not (noPuedo ?ej&:(eq ?ej ?ejercicio)))
 	=>
+	(retract ?ej)
 	(retract ?factTime)
 	(assert (tiempoMartes (+ ?tiempoDia ?duracion)))
     (printout t crlf)
