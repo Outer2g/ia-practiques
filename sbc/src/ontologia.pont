@@ -1,0 +1,181 @@
+; Sat May 21 14:14:29 CEST 2016
+; 
+;+ (version "3.4.8")
+;+ (build "Build 629")
+
+
+(defclass %3ACLIPS_TOP_LEVEL_SLOT_CLASS "Fake class to save top-level slot information"
+	(is-a USER)
+	(role abstract)
+	(single-slot ejercicio
+;+		(comment "Nombre del ejercicio en cuestion")
+		(type STRING)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot objetivo
+;+		(comment "Nombre del objetivo en cuestion")
+		(type STRING)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot series_max
+;+		(comment "Numero maximo de series (grupos de repeticiones) a realizar")
+		(type INTEGER)
+		(range 1 %3FVARIABLE)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot grupo_muscular
+;+		(comment "Nombre del grupo muscular en cuestion")
+		(type STRING)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(multislot grupos_musculares
+;+		(comment "Grupos musculares trabajados con el ejercicio")
+		(type INSTANCE)
+;+		(allowed-classes Grupo_Muscular)
+		(create-accessor read-write))
+	(multislot metas
+;+		(comment "Conjunto de objetivos que se consiguen o mejoran realizando el ejercicio")
+		(type INSTANCE)
+;+		(allowed-classes Objetivo)
+		(cardinality 1 ?VARIABLE)
+		(create-accessor read-write))
+	(single-slot calorias_por_minuto
+;+		(comment "Calorias quemadas por minuto en la realizacion del ejercicio")
+		(type FLOAT)
+		(range 0.0 %3FVARIABLE)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot duracion_max
+;+		(comment "Duracion maxima del ejercicio en minutos")
+		(type INTEGER)
+		(range 1 %3FVARIABLE)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot repeticiones_min
+;+		(comment "Numero minimo de repeticiones a realizar")
+		(type INTEGER)
+		(range 1 %3FVARIABLE)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot repeticiones_max
+;+		(comment "Numero maximo de repeticiones a realizar")
+		(type INTEGER)
+		(range 1 %3FVARIABLE)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot duracion_min
+;+		(comment "Duracion minima del ejercicio en minutos")
+		(type INTEGER)
+		(range 1 %3FVARIABLE)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot series_min
+;+		(comment "Numero minimo de series (grupos de repeticiones) a realizar")
+		(type INTEGER)
+		(range 1 %3FVARIABLE)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Objetivo
+	(is-a USER)
+	(role concrete)
+	(single-slot objetivo
+;+		(comment "Nombre del objetivo en cuestion")
+		(type STRING)
+;+		(cardinality 1 1)
+		(create-accessor read-write)))
+
+(defclass Grupo_Muscular
+	(is-a USER)
+	(role concrete)
+	(single-slot grupo_muscular
+;+		(comment "Nombre del grupo muscular en cuestion")
+		(type STRING)
+;+		(cardinality 1 1)
+		(create-accessor read-write)))
+
+(defclass Ejercicio
+	(is-a USER)
+	(role abstract)
+	(single-slot duracion_max
+;+		(comment "Duracion maxima del ejercicio en minutos")
+		(type INTEGER)
+		(range 1 %3FVARIABLE)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot repeticiones_max
+;+		(comment "Numero maximo de repeticiones a realizar")
+		(type INTEGER)
+		(range 1 %3FVARIABLE)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot repeticiones_min
+;+		(comment "Numero minimo de repeticiones a realizar")
+		(type INTEGER)
+		(range 1 %3FVARIABLE)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot ejercicio
+;+		(comment "Nombre del ejercicio en cuestion")
+		(type STRING)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(multislot grupos_musculares
+;+		(comment "Grupos musculares trabajados con el ejercicio")
+		(type INSTANCE)
+;+		(allowed-classes Grupo_Muscular)
+		(create-accessor read-write))
+	(single-slot duracion_min
+;+		(comment "Duracion minima del ejercicio en minutos")
+		(type INTEGER)
+		(range 1 %3FVARIABLE)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(multislot metas
+;+		(comment "Conjunto de objetivos que se consiguen o mejoran realizando el ejercicio")
+		(type INSTANCE)
+;+		(allowed-classes Objetivo)
+		(cardinality 1 ?VARIABLE)
+		(create-accessor read-write))
+	(single-slot series_min
+;+		(comment "Numero minimo de series (grupos de repeticiones) a realizar")
+		(type INTEGER)
+		(range 1 %3FVARIABLE)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot calorias_por_minuto
+;+		(comment "Calorias quemadas por minuto en la realizacion del ejercicio")
+		(type FLOAT)
+		(range 0.0 %3FVARIABLE)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot series_max
+;+		(comment "Numero maximo de series (grupos de repeticiones) a realizar")
+		(type INTEGER)
+		(range 1 %3FVARIABLE)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Suelo
+	(is-a Ejercicio)
+	(role concrete))
+
+(defclass Maquina
+	(is-a Ejercicio)
+	(role concrete))
+
+(defclass Pesas "Quiza incluir el atributo pesas_base"
+	(is-a Ejercicio)
+	(role concrete))
+
+(defclass Estiramiento
+	(is-a Ejercicio)
+	(role concrete))
+
+(defclass Equilibrio
+	(is-a Ejercicio)
+	(role concrete))
+
+(defclass Barra
+	(is-a Ejercicio)
+	(role concrete))
