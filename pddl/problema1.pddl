@@ -1,5 +1,6 @@
 (define (problem days-v1)
   (:domain gym-program)
+
   (:objects 
 	e1 e2 e3 - Ejercicio
 	d1 d2 d3 d4 d5 d6 d7 d8 d9 d10 d11 d12 d13 d14 d15 - Dia)
@@ -18,8 +19,9 @@
    (= (objetivo-ejercicio e3) 10)
 
    
-   (precursor e1 e2) (precursor e1 e3))
+   (preparador e1 e2) (preparador e1 e3))
   (:goal
    (forall (?e -Ejercicio) (completado ?e))
   )
 )
+

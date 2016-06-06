@@ -8,20 +8,26 @@
 	(completar-dia ?d - Dia)
   )
 
-  (:types Ejercicio Dia)
+  (:types Ejercicio Dia Nivel)
 
   (:predicates
-	(precursor ?e - Ejercicio ?ee - Ejercicio)
+	(preparador ?e - Ejercicio ?ee - Ejercicio)
 	(finalizado ?d - Dia)
+	(puedoHacer ?e - Ejercicio)
 	(completado ?e - Ejercicio)
-	(at ?d - Dia ?e - Ejercicio)
-  )
+	(hazloen ?d - Dia ?e - Ejercicio)
+  )	
+  	(:action haz-ejercicio
+  		:parameters (?d - Dia ?e - Ejercicio)
+  		:precondition (and (completado ?e ) (puedoHacer ?e) (<= (nivel-ejercicio ?e) (objetivo-ejercicio ?e)))
+  		:effect (and( not (completado ?e))  (increase (nivel-ejercicio ?e) 1) (hazloen ?d ?e))
+  	)
+  	(:action check-Capacidad
+  		:parameters (?e - Ejercicio  ?ee - Ejercicio)
+  		:precondition (and (completado ?e) (preparador ?e ?ee))
+  		:effect (puedoHacer ?ee)
 
-	(:action level-up
-	    :parameters (?d - Dia ?e - Ejercicio ?ee - Ejercicio)
-	    :precondition (and (not(at ?d ?ee)) (not(at ?d ?e)) (precursor ?e ?ee))
-	    :effect (and (increase (nivel-ejercicio ?ee) 1) (at ?d ?ee) (at ?d ?e))
-	)
+  	)
 
 	(:action finalizar-entrenamiento-ejercicio
 		:parameters (?e - Ejercicio)
