@@ -1,0 +1,15 @@
+(load reglas.clp)
+(reset)
+(run)
+21
+1.9
+180
+110
+160
+1
+si
+1
+2
+no
+120
+7
